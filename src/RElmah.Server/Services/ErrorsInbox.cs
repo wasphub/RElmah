@@ -1,24 +1,26 @@
 ﻿using System;
+using System.Reactive.Subjects;
 using RElmah.Server.Domain;
 
 namespace RElmah.Server.Services
 {
     class ErrorsInbox : IErrorsInbox
     {
+        private readonly Subject<ErrorDescriptor> _errors;
+
         public ErrorsInbox()
         {
-            
+            _errors = new Subject<ErrorDescriptor>();
         }
 
         public void Post(ErrorDescriptor descriptor)
         {
-            
-
+            _errors.OnNext(descriptor);
         }
 
         public IObservable<ErrorDescriptor> GetErrors()
         {
-            return null;
+            return _errors;
         }
     }
 }
