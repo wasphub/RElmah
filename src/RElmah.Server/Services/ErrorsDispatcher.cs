@@ -1,21 +1,25 @@
 ﻿using System;
-using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
+using RElmah.Server.Domain;
 using RElmah.Server.Hubs;
 
 namespace RElmah.Server.Services
 {
     public class ErrorsDispatcher : IErrorsDispatcher
     {
+        private readonly IConfigurationProvider _configuration;
         private readonly IHubContext _context = GlobalHost.ConnectionManager.GetHubContext<Frontend>();
 
-        public ErrorsDispatcher(IErrorsInbox inbox, IConfigurationProvider configuration)
+        public ErrorsDispatcher(IConfigurationProvider configuration)
         {
-            var es1 =
-                from e in inbox.GetErrors()
-                select e;
+            _configuration = configuration;
+        }
 
-            es1.Subscribe(p => _context.Clients.Groups(configuration.GetGroups(p)).dispatch(p));
+        public Task Dispatch(ErrorPayload payload)
+        {
+            var groups = _configuration.GetGroups(payload);
+            return _context.Clients.Groups(groups).dispatch(payload);
         }
     }
 }

@@ -6,20 +6,20 @@ using RElmah.Server.Domain;
 
 namespace RElmah.Web.Server.Controllers
 {
-    [Route("/post-error")]
     public class RElmahController : ApiController
     {
         private readonly IErrorsInbox _inbox;
 
-        public RElmahController(IErrorsInbox inbox)
+        public RElmahController(IErrorsInbox inbox, IErrorsDispatcher dispatcher)
         {
             _inbox = inbox;
         }
 
         [HttpPost]
-        public HttpResponseMessage Post(string error)
+        public HttpResponseMessage PostError(HttpRequestMessage request)
         {
-            _inbox.Post(new ErrorPayload { Message = error });
+            _inbox.Post(new ErrorPayload { Message = "Foo" });
+
             return new HttpResponseMessage(HttpStatusCode.Accepted);
         }
     }

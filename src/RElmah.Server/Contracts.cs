@@ -18,6 +18,7 @@ namespace RElmah.Server
 
     public interface IErrorsDispatcher
     {
+        Task Dispatch(ErrorPayload payload);
     }
 
     public interface IConfigurationProvider

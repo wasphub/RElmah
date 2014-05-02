@@ -72,9 +72,11 @@
     <Compile Include="Domain\ErrorPayload.cs" />
     <Compile Include="Hubs\Frontend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ConfigurationProvider.cs" />
     <Compile Include="Services\ErrorsDispatcher.cs" />
     <Compile Include="Services\ErrorsInbox.cs" />
-    <Compile Include="Services\NullErrorsBacklog.cs" />
+    <Compile Include="Services\Nulls\NullErrorsBacklog.cs" />
+    <Compile Include="Services\Nulls\NullErrorsDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
