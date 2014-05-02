@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using RElmah.Server.Domain;
 
 namespace RElmah.Server
@@ -7,5 +8,15 @@ namespace RElmah.Server
     {
         void Post(ErrorDescriptor descriptor);
         IObservable<ErrorDescriptor> GetErrors();
+    }
+
+    public interface IErrorsBacklog
+    {
+        Task Store(ErrorDescriptor descriptor);
+    }
+
+    public interface IErrorsDispatcher
+    {
+        Task Dispatch(ErrorDescriptor descriptor);
     }
 }

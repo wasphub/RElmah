@@ -15,13 +15,14 @@ namespace RElmah.Server.Tests
         public async Task PostSingleError()
         {
             var inbox = new Services.ErrorsInbox();
+
             var newThreadScheduler = NewThreadScheduler.Default;
 
             var es1 =
                 from e in inbox.GetErrors()
                 select e.Message;
 
-            es1.Subscribe(s => Debug.WriteLine("1: {0}", s));
+            es1.Subscribe(s => Debug.WriteLine(s));
 
             newThreadScheduler.Schedule(TimeSpan.FromSeconds(1), () => inbox.Post(new ErrorDescriptor { Message = "Foo" }));
 
