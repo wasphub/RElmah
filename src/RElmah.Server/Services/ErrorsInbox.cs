@@ -4,7 +4,7 @@ using RElmah.Server.Domain;
 
 namespace RElmah.Server.Services
 {
-    class ErrorsInbox : IErrorsInbox
+    public class ErrorsInbox : IErrorsInbox
     {
         private readonly Subject<ErrorDescriptor> _errors;
 
