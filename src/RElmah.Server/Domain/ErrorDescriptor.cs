@@ -1,6 +1,7 @@
 ﻿namespace RElmah.Server.Domain
 {
-    class ErrorDescriptor
+    internal class ErrorDescriptor
     {
+        public string Message { get; set; }
     }
 }
