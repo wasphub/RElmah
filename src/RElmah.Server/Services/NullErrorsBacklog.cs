@@ -5,7 +5,7 @@ namespace RElmah.Server.Services
 {
     public class NullErrorsBacklog : IErrorsBacklog
     {
-        public Task Store(ErrorDescriptor descriptor)
+        public Task Store(ErrorPayload payload)
         {
             return Task.FromResult<object>(null);
         }

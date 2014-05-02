@@ -7,7 +7,7 @@ namespace RElmah.Server.Services
     public class ErrorsInbox : IErrorsInbox
     {
         private readonly IErrorsBacklog _backlog;
-        private readonly Subject<ErrorDescriptor> _errors;
+        private readonly Subject<ErrorPayload> _errors;
 
         public ErrorsInbox() : this(new NullErrorsBacklog())
         {
@@ -16,16 +16,16 @@ namespace RElmah.Server.Services
         public ErrorsInbox(IErrorsBacklog backlog)
         {
             _backlog = backlog;
-            _errors = new Subject<ErrorDescriptor>();
+            _errors = new Subject<ErrorPayload>();
         }
 
-        public void Post(ErrorDescriptor descriptor)
+        public void Post(ErrorPayload payload)
         {
-            _backlog.Store(descriptor);
-            _errors.OnNext(descriptor);
+            _backlog.Store(payload);
+            _errors.OnNext(payload);
         }
 
-        public IObservable<ErrorDescriptor> GetErrors()
+        public IObservable<ErrorPayload> GetErrors()
         {
             return _errors;
         }

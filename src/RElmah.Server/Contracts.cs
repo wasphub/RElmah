@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using RElmah.Server.Domain;
 
@@ -6,17 +7,22 @@ namespace RElmah.Server
 {
     public interface IErrorsInbox
     {
-        void Post(ErrorDescriptor descriptor);
-        IObservable<ErrorDescriptor> GetErrors();
+        void Post(ErrorPayload payload);
+        IObservable<ErrorPayload> GetErrors();
     }
 
     public interface IErrorsBacklog
     {
-        Task Store(ErrorDescriptor descriptor);
+        Task Store(ErrorPayload payload);
     }
 
     public interface IErrorsDispatcher
     {
-        Task Dispatch(ErrorDescriptor descriptor);
+    }
+
+    public interface IConfigurationProvider
+    {
+        IEnumerable<Cluster> Clusters { get; }
+        IList<string> GetGroups(ErrorPayload payload);
     }
 }

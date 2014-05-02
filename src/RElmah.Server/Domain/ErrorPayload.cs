@@ -1,6 +1,6 @@
 ﻿namespace RElmah.Server.Domain
 {
-    public class ErrorDescriptor
+    public class ErrorPayload
     {
         public string Message { get; set; }
     }

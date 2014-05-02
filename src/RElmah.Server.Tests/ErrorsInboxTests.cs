@@ -24,7 +24,7 @@ namespace RElmah.Server.Tests
 
             es1.Subscribe(s => Debug.WriteLine(s));
 
-            newThreadScheduler.Schedule(TimeSpan.FromSeconds(1), () => inbox.Post(new ErrorDescriptor { Message = "Foo" }));
+            newThreadScheduler.Schedule(TimeSpan.FromSeconds(1), () => inbox.Post(new ErrorPayload { Message = "Foo" }));
 
             Assert.AreEqual(1, await es1.Take(1).Count());
         }
