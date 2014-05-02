@@ -10,7 +10,7 @@ namespace RElmah.Web.Server.Controllers
     {
         private readonly IErrorsInbox _inbox;
 
-        public RElmahController(IErrorsInbox inbox, IErrorsDispatcher dispatcher)
+        public RElmahController(IErrorsInbox inbox)
         {
             _inbox = inbox;
         }
