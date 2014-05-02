@@ -12,6 +12,7 @@ namespace RElmah.Server.Services
         public ErrorsInbox() : this(new NullErrorsBacklog())
         {
         }
+
         public ErrorsInbox(IErrorsBacklog backlog)
         {
             _backlog = backlog;

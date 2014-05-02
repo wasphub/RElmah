@@ -1,20 +1,23 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNet.SignalR;
 using RElmah.Server.Domain;
+using RElmah.Server.Hubs;
 
 namespace RElmah.Server.Services
 {
     public class ErrorsDispatcher : IErrorsDispatcher
     {
-        private readonly IErrorsBacklog _errorsBacklog;
+        private readonly IErrorsInbox _inbox;
+        private readonly IHubContext _context = GlobalHost.ConnectionManager.GetHubContext<Frontend>();
 
-        public ErrorsDispatcher(IErrorsBacklog errorsBacklog)
+        public ErrorsDispatcher(IErrorsInbox inbox)
         {
-            _errorsBacklog = errorsBacklog;
+            _inbox = inbox;
         }
 
         public Task Dispatch(ErrorDescriptor descriptor)
         {
-            return Task.FromResult<object>(null);
+            return _context.Clients.All.dispatch(descriptor);
         }
     }
 }
