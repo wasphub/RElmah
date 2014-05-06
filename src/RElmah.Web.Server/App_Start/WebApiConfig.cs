@@ -54,6 +54,11 @@ namespace RElmah.Web.Server
                 routeTemplate: "relmah/post-error",
                 defaults: new { controller = "RElmah", action = "PostError" }
             );
+            config.Routes.MapHttpRoute(
+                name: "RandomApi",
+                routeTemplate: "relmah/random-error",
+                defaults: new { controller = "RElmah", action = "RandomError" }
+            );
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

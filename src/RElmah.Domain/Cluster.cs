@@ -1,4 +1,4 @@
-﻿namespace RElmah.Server.Domain
+﻿namespace RElmah.Domain
 {
     public class Cluster
     {

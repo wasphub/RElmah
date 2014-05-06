@@ -1,28 +1,29 @@
 ﻿using System;
 using System.Reactive.Subjects;
 using Microsoft.AspNet.SignalR.Client;
+using RElmah.Domain;
 
 namespace RElmah.Client
 {
     public class Connection : IDisposable
     {
         private readonly HubConnection _connection;
-        private readonly Subject<int> _subject;
+        private readonly Subject<ErrorPayload> _subject;
 
         public Connection(string endpoint)
         {
-            _subject = new Subject<int>();
+            _subject = new Subject<ErrorPayload>();
 
             _connection = new HubConnection(endpoint);
 
             var random = new Random();
             var proxy = _connection.CreateHubProxy("relmah");
-            proxy.On<dynamic>("dispatch", p => _subject.OnNext(random.Next(100)));
+            proxy.On<ErrorPayload>("dispatch", p => _subject.OnNext(p));
 
             _connection.Start();
         }
 
-        public IObservable<int> Errors { get { return _subject; } } 
+        public IObservable<dynamic> Errors { get { return _subject; } } 
 
         public void Dispose()
         {

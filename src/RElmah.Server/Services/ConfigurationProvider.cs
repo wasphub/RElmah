@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using RElmah.Server.Domain;
+using RElmah.Domain;
 
 namespace RElmah.Server.Services
 {

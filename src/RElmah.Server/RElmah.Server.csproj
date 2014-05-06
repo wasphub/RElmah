@@ -68,8 +68,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts.cs" />
-    <Compile Include="Domain\Cluster.cs" />
-    <Compile Include="Domain\ErrorPayload.cs" />
     <Compile Include="Extensions\AppBuilderExtensions.cs" />
     <Compile Include="Hubs\Frontend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,7 +80,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\RElmah.Domain\RElmah.Domain.csproj">
+      <Project>{a0872048-ce38-4f86-8388-7b887fa2f5a9}</Project>
+      <Name>RElmah.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

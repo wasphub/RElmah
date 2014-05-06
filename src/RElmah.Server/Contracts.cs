@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using RElmah.Server.Domain;
+using RElmah.Domain;
 
 namespace RElmah.Server
 {
