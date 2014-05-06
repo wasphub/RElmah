@@ -39,11 +39,11 @@ namespace RElmah.Web.Server
     {
         public static void Register(HttpConfiguration config)
         {
+            TinyIoCContainer.Current.Register(typeof(RElmahController));
+
             TinyIoCContainer.Current.Register(typeof(IErrorsInbox), typeof(ErrorsInbox)).AsSingleton();
             TinyIoCContainer.Current.Register(typeof(IErrorsDispatcher), typeof(ErrorsDispatcher)).AsSingleton();
             TinyIoCContainer.Current.Register(typeof(IConfigurationProvider), typeof(ConfigurationProvider)).AsSingleton();
-
-            TinyIoCContainer.Current.Register(typeof(RElmahController));
 
             GlobalConfiguration.Configuration.DependencyResolver = new TinyIocDependencyResolver();
 

@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/jquery-1.6.4.js"></script>
+    <script src="Scripts/jquery.signalR-2.0.3.js"></script>
+    <script src="http://localhost:50360/signalr/hubs"></script>
+    <script>
+
+        $(function() {
+            var hub = $.connection.hub,
+                relmah = $.connection.relmah;
+
+            hub.url = "http://localhost:50360/signalr";
+
+            relmah.client.dispatch = function (p) {
+                console.log(p);
+            };
+
+            hub.start();
+        });
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

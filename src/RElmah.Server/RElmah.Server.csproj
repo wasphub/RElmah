@@ -70,6 +70,7 @@
     <Compile Include="Contracts.cs" />
     <Compile Include="Domain\Cluster.cs" />
     <Compile Include="Domain\ErrorPayload.cs" />
+    <Compile Include="Extensions\AppBuilderExtensions.cs" />
     <Compile Include="Hubs\Frontend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConfigurationProvider.cs" />
@@ -81,9 +82,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

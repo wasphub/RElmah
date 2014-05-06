@@ -13,6 +13,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lab", "Lab", "{6E56F07B-967
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Web.Server", "RElmah.Web.Server\RElmah.Web.Server.csproj", "{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RElmah.Web.Client", "http://localhost:8515", "{191DF7BB-2CAB-4B32-8592-D60A055DD6E8}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "true"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_8515"
+		Debug.AspNetCompiler.PhysicalPath = "RElmah.Web.Client\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_8515\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_8515"
+		Release.AspNetCompiler.PhysicalPath = "RElmah.Web.Client\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_8515\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "RElmah.Web.Client\"
+		DefaultWebSiteLanguage = "Visual Basic"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +53,10 @@ Global
 		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{191DF7BB-2CAB-4B32-8592-D60A055DD6E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{191DF7BB-2CAB-4B32-8592-D60A055DD6E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{191DF7BB-2CAB-4B32-8592-D60A055DD6E8}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{191DF7BB-2CAB-4B32-8592-D60A055DD6E8}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,5 +64,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BEEE3777-7A66-4292-9796-1BC95B0125FA} = {B7832457-4AE2-47F2-BCBD-F9F6B89DBC5A}
 		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56} = {6E56F07B-9679-4B42-B3B5-B603BD1053F7}
+		{191DF7BB-2CAB-4B32-8592-D60A055DD6E8} = {6E56F07B-9679-4B42-B3B5-B603BD1053F7}
 	EndGlobalSection
 EndGlobal

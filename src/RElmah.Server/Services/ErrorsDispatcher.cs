@@ -19,7 +19,7 @@ namespace RElmah.Server.Services
         public Task Dispatch(ErrorPayload payload)
         {
             var groups = _configuration.GetGroups(payload);
-            return _context.Clients.Groups(groups).dispatch(payload);
+            return _context.Clients.All.dispatch(payload);
         }
     }
 }
