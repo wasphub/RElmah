@@ -21,7 +21,7 @@ namespace RElmah.Server.Extensions
             registry.RegisterAsSingleton(typeof(IErrorsInbox),           typeof(ErrorsInbox));
             registry.RegisterAsSingleton(typeof(IErrorsDispatcher),      typeof(ErrorsDispatcher));
 
-            return builder.UseRElmahMiddleware<RElmahMiddleware>(configuration);
+            return builder.UseRElmahMiddleware<RElmahMiddleware>(configuration, GlobalHost.DependencyResolver);
         }
 
         static IAppBuilder UseRElmahMiddleware<T>(this IAppBuilder builder, params object[] args)

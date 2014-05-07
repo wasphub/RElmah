@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using RElmah.Server.Extensions;
 using RElmah.Server.Middleware.Handlers;
-using TinyIoC;
 
 namespace RElmah.Server.Middleware
 {
@@ -17,12 +17,12 @@ namespace RElmah.Server.Middleware
 
         private readonly IDictionary<string, Func<IErrorsInbox, IDictionary<string, object>, Task>> _dispatchers;
 
-        public RElmahMiddleware(OwinMiddleware next, Configuration configuration)
+        public RElmahMiddleware(OwinMiddleware next, Configuration configuration, IDependencyResolver resolver)
             : base(next)
         {
             const string relmah = "relmah";
 
-            _inbox = TinyIoCContainer.Current.Resolve<IErrorsInbox>();
+            _inbox = resolver.Resolve<IErrorsInbox>();
 
             _relmahPostEndpoint   = new PathString(string.Format("/{0}/post-error",   configuration.Root ?? relmah));
             _relmahRandomEndpoint = new PathString(string.Format("/{0}/random-error", configuration.Root ?? relmah));
