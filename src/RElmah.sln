@@ -39,6 +39,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Client", "RElmah.Cli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Domain", "RElmah.Domain\RElmah.Domain.csproj", "{A0872048-CE38-4F86-8388-7B887FA2F5A9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{7F9EC164-CDE7-42E5-9222-171F8A33F1C5}"
+	ProjectSection(SolutionItems) = preProject
+		Common\CommonVersionInfo.cs = Common\CommonVersionInfo.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
