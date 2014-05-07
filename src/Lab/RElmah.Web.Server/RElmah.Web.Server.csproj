@@ -115,11 +115,11 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RElmah.Domain\RElmah.Domain.csproj">
+    <ProjectReference Include="..\..\RElmah.Domain\RElmah.Domain.csproj">
       <Project>{a0872048-ce38-4f86-8388-7b887fa2f5a9}</Project>
       <Name>RElmah.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RElmah.Server\RElmah.Server.csproj">
+    <ProjectReference Include="..\..\RElmah.Server\RElmah.Server.csproj">
       <Project>{1796d127-ca82-4131-8a99-8359c305ba0e}</Project>
       <Name>RElmah.Server</Name>
     </ProjectReference>

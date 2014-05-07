@@ -7,33 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Server", "RElmah.Ser
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B7832457-4AE2-47F2-BCBD-F9F6B89DBC5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Server.Tests", "RElmah.Server.Tests\RElmah.Server.Tests.csproj", "{BEEE3777-7A66-4292-9796-1BC95B0125FA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lab", "Lab", "{6E56F07B-9679-4B42-B3B5-B603BD1053F7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Web.Server", "RElmah.Web.Server\RElmah.Web.Server.csproj", "{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}"
-EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RElmah.Web.Client", "http://localhost:8515", "{191DF7BB-2CAB-4B32-8592-D60A055DD6E8}"
-	ProjectSection(WebsiteProperties) = preProject
-		UseIISExpress = "true"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_8515"
-		Debug.AspNetCompiler.PhysicalPath = "RElmah.Web.Client\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_8515\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_8515"
-		Release.AspNetCompiler.PhysicalPath = "RElmah.Web.Client\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_8515\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		SlnRelativePath = "RElmah.Web.Client\"
-		DefaultWebSiteLanguage = "Visual Basic"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Client", "RElmah.Client\RElmah.Client.csproj", "{FF97FAA2-B0A1-4E4A-971C-1005018B325C}"
 EndProject
@@ -42,6 +16,31 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{7F9EC164-CDE7-42E5-9222-171F8A33F1C5}"
 	ProjectSection(SolutionItems) = preProject
 		Common\CommonVersionInfo.cs = Common\CommonVersionInfo.cs
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Web.Server", "Lab\RElmah.Web.Server\RElmah.Web.Server.csproj", "{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Server.Tests", "Tests\RElmah.Server.Tests\RElmah.Server.Tests.csproj", "{BEEE3777-7A66-4292-9796-1BC95B0125FA}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RElmah.Web.SimpleClient", "http://localhost:16324", "{81D8F5DD-ADE6-4740-BC1C-CB65020B4CEC}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "true"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_16324"
+		Debug.AspNetCompiler.PhysicalPath = "Lab\RElmah.Web.SimpleClient\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_16324\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_16324"
+		Release.AspNetCompiler.PhysicalPath = "Lab\RElmah.Web.SimpleClient\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_16324\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "Lab\RElmah.Web.SimpleClient\"
 	EndProjectSection
 EndProject
 Global
@@ -54,18 +53,6 @@ Global
 		{1796D127-CA82-4131-8A99-8359C305BA0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1796D127-CA82-4131-8A99-8359C305BA0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1796D127-CA82-4131-8A99-8359C305BA0E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BEEE3777-7A66-4292-9796-1BC95B0125FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BEEE3777-7A66-4292-9796-1BC95B0125FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BEEE3777-7A66-4292-9796-1BC95B0125FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BEEE3777-7A66-4292-9796-1BC95B0125FA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}.Release|Any CPU.Build.0 = Release|Any CPU
-		{191DF7BB-2CAB-4B32-8592-D60A055DD6E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{191DF7BB-2CAB-4B32-8592-D60A055DD6E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{191DF7BB-2CAB-4B32-8592-D60A055DD6E8}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{191DF7BB-2CAB-4B32-8592-D60A055DD6E8}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{FF97FAA2-B0A1-4E4A-971C-1005018B325C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FF97FAA2-B0A1-4E4A-971C-1005018B325C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF97FAA2-B0A1-4E4A-971C-1005018B325C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -74,6 +61,18 @@ Global
 		{A0872048-CE38-4F86-8388-7B887FA2F5A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0872048-CE38-4F86-8388-7B887FA2F5A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0872048-CE38-4F86-8388-7B887FA2F5A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEEE3777-7A66-4292-9796-1BC95B0125FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEEE3777-7A66-4292-9796-1BC95B0125FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEEE3777-7A66-4292-9796-1BC95B0125FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEEE3777-7A66-4292-9796-1BC95B0125FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81D8F5DD-ADE6-4740-BC1C-CB65020B4CEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81D8F5DD-ADE6-4740-BC1C-CB65020B4CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81D8F5DD-ADE6-4740-BC1C-CB65020B4CEC}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{81D8F5DD-ADE6-4740-BC1C-CB65020B4CEC}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +80,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BEEE3777-7A66-4292-9796-1BC95B0125FA} = {B7832457-4AE2-47F2-BCBD-F9F6B89DBC5A}
 		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56} = {6E56F07B-9679-4B42-B3B5-B603BD1053F7}
-		{191DF7BB-2CAB-4B32-8592-D60A055DD6E8} = {6E56F07B-9679-4B42-B3B5-B603BD1053F7}
+		{81D8F5DD-ADE6-4740-BC1C-CB65020B4CEC} = {6E56F07B-9679-4B42-B3B5-B603BD1053F7}
 	EndGlobalSection
 EndGlobal
