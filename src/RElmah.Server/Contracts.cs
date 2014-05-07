@@ -26,4 +26,10 @@ namespace RElmah.Server
         IEnumerable<Cluster> Clusters { get; }
         IList<string> GetGroups(ErrorPayload payload);
     }
+
+    public interface IDependencyRegistry
+    {
+        void Register(Type serviceType, Type implementationType);
+        void RegisterAsSingleton(Type serviceType, Type implementationType);
+    }
 }

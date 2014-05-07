@@ -8,6 +8,6 @@
 var c = new Connection("http://localhost:50360/");
 var q = 
 	from x in c.Errors
-	where x.Message.Contains("more")
-	select x.Message;
+	//where x.Error.Message.Contains("more")
+	select x.ApplicationName;
 q.DumpLive();

@@ -14,9 +14,10 @@ namespace RElmah.Web.Server
             app.Map("/signalr", builder =>
             {
                 builder.UseCors(CorsOptions.AllowAll);
-                builder.RunRElmah();
+                builder.RunSignalR();
             });
-            app.MapRElmah();
+
+            app.RunRElmah();
         }
     }
 }

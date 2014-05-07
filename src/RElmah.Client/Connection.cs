@@ -16,7 +16,6 @@ namespace RElmah.Client
 
             _connection = new HubConnection(endpoint);
 
-            var random = new Random();
             var proxy = _connection.CreateHubProxy("relmah");
             proxy.On<ErrorPayload>("dispatch", p => _subject.OnNext(p));
 
