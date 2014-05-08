@@ -6,8 +6,10 @@
 </Query>
 
 var c = new Connection("http://localhost:50360/");
+
 var q = 
 	from x in c.Errors
-	//where x.Error.Message.Contains("more")
-	select x.ApplicationName;
+	where x.Error.Message.StartsWith("B")
+	select x.Error.Message;
+	
 q.DumpLive();

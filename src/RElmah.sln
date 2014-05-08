@@ -43,6 +43,28 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RElmah.Web.SimpleClient", "
 		SlnRelativePath = "Lab\RElmah.Web.SimpleClient\"
 	EndProjectSection
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RElmah.Web.Source", "http://localhost:17155", "{595B7855-BF97-4427-B060-0B6837178F91}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "true"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_17155"
+		Debug.AspNetCompiler.PhysicalPath = "Lab\RElmah.Web.Source\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_17155\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_17155"
+		Release.AspNetCompiler.PhysicalPath = "Lab\RElmah.Web.Source\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_17155\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "Lab\RElmah.Web.Source\"
+		DefaultWebSiteLanguage = "Visual Basic"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +95,10 @@ Global
 		{81D8F5DD-ADE6-4740-BC1C-CB65020B4CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81D8F5DD-ADE6-4740-BC1C-CB65020B4CEC}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{81D8F5DD-ADE6-4740-BC1C-CB65020B4CEC}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{595B7855-BF97-4427-B060-0B6837178F91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{595B7855-BF97-4427-B060-0B6837178F91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{595B7855-BF97-4427-B060-0B6837178F91}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{595B7855-BF97-4427-B060-0B6837178F91}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,5 +107,6 @@ Global
 		{BEEE3777-7A66-4292-9796-1BC95B0125FA} = {B7832457-4AE2-47F2-BCBD-F9F6B89DBC5A}
 		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56} = {6E56F07B-9679-4B42-B3B5-B603BD1053F7}
 		{81D8F5DD-ADE6-4740-BC1C-CB65020B4CEC} = {6E56F07B-9679-4B42-B3B5-B603BD1053F7}
+		{595B7855-BF97-4427-B060-0B6837178F91} = {6E56F07B-9679-4B42-B3B5-B603BD1053F7}
 	EndGlobalSection
 EndGlobal

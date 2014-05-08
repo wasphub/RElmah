@@ -1,0 +1,5 @@
+﻿@{
+    var r = new Random();
+    var messages = new[] {"Crash", "Bum", "Bang"};
+    throw new Exception(messages[r.Next(3)] + "!");
+}
