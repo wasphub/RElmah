@@ -4,25 +4,59 @@
     <title></title>
     <script src="Scripts/jquery-1.6.4.js"></script>
     <script src="Scripts/jquery.signalR-2.0.3.js"></script>
-    <script src="http://localhost:50360/signalr/hubs"></script>
+    
+    <script src="Scripts/rx.js"></script>
+    <script src="Scripts/rx.async.js"></script>
+    <script src="Scripts/rx.binding.js"></script>
+
+    <script src="Scripts/relmah.js"></script>
+
     <script>
 
         $(function() {
-            var hub = $.connection.hub,
-                relmah = $.connection.relmah;
+            var $errors = $('#errors'),
+                $groups = $('#groups'),
+                $totals = $('#totals');
 
-            hub.url = "http://localhost:50360/signalr";
+            var r       = relmah("http://localhost:50360/signalr"),
+                errors  = r.errors;
 
-            relmah.client.dispatch = function (p) {
-                console.log(p);
-            };
+            var bs = errors.filter(function (e) {
+                return e.Detail.Message.substring(0, 1) === 'B';
+            });
+            var totals = bs.scan(0, function (a, e) {
+                return a + 1;
+            });
+            var groups = bs.groupBy(function (e) {
+                return e.Detail.Message;
+            });
 
-            hub.start();
+            bs.subscribe(function (e) {
+                $errors.prepend($('<li/>').text(e.Detail.Message + ' @ ' + e.Detail.Time));
+            });
+            totals.subscribe(function (e) {
+                $totals.text(e);
+            });
+
+            groups.subscribe(function (g) {
+                var x = $('<li/>');
+                $groups.append(x);
+                var tg = g.scan(0, function (a, e) {
+                    return a + 1;
+                });
+                tg.subscribe(function (e) {
+                    x.text(g.key + ': ' + e);
+                });
+            });
+
+            r.start();
         });
 
     </script>
 </head>
-<body>
-
-</body>
+    <body>
+        <p id="totals"></p>
+        <ul id="groups"></ul>
+        <ul id="errors"></ul>
+    </body>
 </html>
