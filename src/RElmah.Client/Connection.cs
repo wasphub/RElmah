@@ -22,7 +22,7 @@ namespace RElmah.Client
             _connection.Start();
         }
 
-        public IObservable<dynamic> Errors { get { return _subject; } } 
+        public IObservable<ErrorPayload> Errors { get { return _subject; } } 
 
         public void Dispose()
         {

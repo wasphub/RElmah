@@ -31,7 +31,7 @@ namespace RElmah.Server.Middleware.Handlers
             return new ErrorPayload
             {
                 ApplicationName = sourceId,
-                Error = e
+                Detail = e
             };
         }
     }

@@ -26,7 +26,7 @@ namespace RElmah.Server.Middleware.Handlers
             return await Task.FromResult(new ErrorPayload
             {
                 ApplicationName = exception.GetType().Name,
-                Error = new ErrorDetail
+                Detail = new ErrorDetail
                 {
                     Message = exception.Message
                 }

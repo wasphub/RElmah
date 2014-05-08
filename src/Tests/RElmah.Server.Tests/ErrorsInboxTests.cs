@@ -20,12 +20,12 @@ namespace RElmah.Server.Tests
 
             var es1 =
                 from e in inbox.GetErrors()
-                where e.Error != null
-                select e.Error.Message;
+                where e.Detail != null
+                select e.Detail.Message;
 
             es1.Subscribe(s => Debug.WriteLine(s));
 
-            newThreadScheduler.Schedule(TimeSpan.FromSeconds(1), () => inbox.Post(new ErrorPayload { Error = new ErrorDetail { Message = "Foo" } }));
+            newThreadScheduler.Schedule(TimeSpan.FromSeconds(1), () => inbox.Post(new ErrorPayload { Detail = new ErrorDetail { Message = "Foo" } }));
 
             Assert.AreEqual(1, await es1.Take(1).Count());
         }
