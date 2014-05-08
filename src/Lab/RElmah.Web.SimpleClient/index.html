@@ -21,18 +21,22 @@
             var r       = relmah("http://localhost:50360/signalr"),
                 errors  = r.errors;
 
+            errors = errors.map(function (e) {
+                return { m: e.Detail.Message, t: e.Detail.Time };
+            });
+
             var bs = errors.filter(function (e) {
-                return e.Detail.Message.substring(0, 1) === 'B';
+                return e.m.substring(0, 1) === 'B';
             });
             var totals = bs.scan(0, function (a, e) {
                 return a + 1;
             });
             var groups = bs.groupBy(function (e) {
-                return e.Detail.Message;
+                return e.m;
             });
 
             bs.subscribe(function (e) {
-                $errors.prepend($('<li/>').text(e.Detail.Message + ' @ ' + e.Detail.Time));
+                $errors.prepend($('<li/>').text(e.m + ' @ ' + e.t));
             });
             totals.subscribe(function (e) {
                 $totals.text(e);
