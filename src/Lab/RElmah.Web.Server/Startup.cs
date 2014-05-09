@@ -16,7 +16,6 @@ namespace RElmah.Web.Server
                 builder.UseCors(CorsOptions.AllowAll);
                 builder.RunSignalR();
             });
-
             app.RunRElmah();
         }
     }
