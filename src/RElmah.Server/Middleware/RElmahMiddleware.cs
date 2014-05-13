@@ -29,8 +29,8 @@ namespace RElmah.Server.Middleware
 
             _dispatchers = new Dictionary<string, Func<IErrorsInbox, IDictionary<string, object>, Task>>
             {
-                { _relmahPostEndpoint.ToString(),   (i, e) => new ElmahDispatcher(i).ProcessRequest(e) },
-                { _relmahRandomEndpoint.ToString(), (i, e) => new RandomDispatcher(i).ProcessRequest(e) },
+                { _relmahPostEndpoint.ToString(),   (i, e) => Dispatchers.ProcessRequest(i, Dispatchers.Elmah,  e) },
+                { _relmahRandomEndpoint.ToString(), (i, e) => Dispatchers.ProcessRequest(i, Dispatchers.Random, e) },
             };
         }
 
