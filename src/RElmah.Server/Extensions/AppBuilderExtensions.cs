@@ -24,11 +24,6 @@ namespace RElmah.Server.Extensions
             return builder.UseRElmahMiddleware<RElmahMiddleware>(configuration, GlobalHost.DependencyResolver);
         }
 
-        static IAppBuilder UseRElmahMiddleware<T>(this IAppBuilder builder, params object[] args)
-        {
-            return builder.Use(typeof(T), args);
-        }
-
         public static IAppBuilder RunSignalR(this IAppBuilder builder)
         {
             GlobalHost.DependencyResolver = new TinyIocDependencyResolver();
@@ -36,6 +31,11 @@ namespace RElmah.Server.Extensions
             OwinExtensions.RunSignalR(builder);
 
             return builder;
+        }
+
+        static IAppBuilder UseRElmahMiddleware<T>(this IAppBuilder builder, params object[] args)
+        {
+            return builder.Use(typeof(T), args);
         }
     }
 }

@@ -8,7 +8,7 @@ using RElmah.Domain;
 
 namespace RElmah.Server.Middleware.Handlers
 {
-    public class ElmahDispatcher : PostDispatcher
+    public class ElmahDispatcher : InboxDispatcher
     {
         public ElmahDispatcher(IErrorsInbox inbox) : base(inbox) { }
 
@@ -26,12 +26,10 @@ namespace RElmah.Server.Middleware.Handlers
             var errorId   = @params["errorId"];
             var infoUrl   = @params["infoUrl"];
 
-            var e = JsonConvert.DeserializeObject<ErrorDetail>(errorText);
-
             return new ErrorPayload
             {
                 ApplicationName = sourceId,
-                Detail = e
+                Detail = JsonConvert.DeserializeObject<ErrorDetail>(errorText)
             };
         }
     }

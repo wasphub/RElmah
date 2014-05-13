@@ -38,10 +38,10 @@ namespace RElmah.Server.Middleware
         {
             var request = new OwinRequest(context.Environment);
             return _relmahPostEndpoint == new PathString(request.Path.Value)
-                ? _dispatchers.Get(_relmahPostEndpoint.ToString(), (c, i) => Next.Invoke(context))(_inbox, context.Environment)
-                : _relmahRandomEndpoint == new PathString(request.Path.Value)
-                    ? _dispatchers.Get(_relmahRandomEndpoint.ToString(), (c, i) => Next.Invoke(context))(_inbox, context.Environment)
-                    : Next.Invoke(context);
+                 ? _dispatchers.Get(_relmahPostEndpoint.ToString(), (c, i) => Next.Invoke(context))(_inbox, context.Environment)
+                 : _relmahRandomEndpoint == new PathString(request.Path.Value)
+                   ? _dispatchers.Get(_relmahRandomEndpoint.ToString(), (c, i) => Next.Invoke(context))(_inbox, context.Environment)
+                   : Next.Invoke(context);
         }
     }
 }

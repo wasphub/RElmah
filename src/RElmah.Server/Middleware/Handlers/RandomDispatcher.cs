@@ -5,7 +5,7 @@ using RElmah.Domain;
 
 namespace RElmah.Server.Middleware.Handlers
 {
-    public class RandomDispatcher : PostDispatcher
+    public class RandomDispatcher : InboxDispatcher
     {
         private readonly Exception[] _randoms =
         {

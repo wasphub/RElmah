@@ -79,9 +79,8 @@
     <Compile Include="Hubs\Frontend.cs" />
     <Compile Include="Infrastructure\TinyIocDependencyResolver.cs" />
     <Compile Include="Middleware\Configuration.cs" />
-    <Compile Include="Middleware\Handlers\DispatcherBase.cs" />
     <Compile Include="Middleware\Handlers\ElmahDispatcher.cs" />
-    <Compile Include="Middleware\Handlers\PostDispatcher.cs" />
+    <Compile Include="Middleware\Handlers\InboxDispatcher.cs" />
     <Compile Include="Middleware\Handlers\RandomDispatcher.cs" />
     <Compile Include="Middleware\RElmahMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

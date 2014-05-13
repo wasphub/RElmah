@@ -24,7 +24,7 @@ namespace RElmah.Server
     public interface IConfigurationProvider
     {
         IEnumerable<Cluster> Clusters { get; }
-        IList<string> GetGroups(ErrorPayload payload);
+        IEnumerable<string> ExtractGroups(ErrorPayload payload);
     }
 
     public interface IDependencyRegistry
