@@ -20,7 +20,7 @@ namespace RElmah.Server.Middleware.Handlers
         };
         private static readonly Random Randomizer = new Random();
 
-        public async static Task ProcessRequest(
+        public async static Task PostError(
             IErrorsInbox inbox, 
             Func<IDictionary<string, object>, Task<ErrorPayload>> executor, 
             IDictionary<string, object> environment)
