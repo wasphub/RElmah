@@ -1,14 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RElmah.Domain;
+using RElmah.Server.Infrastructure;
 
 namespace RElmah.Server.Services
 {
     public class ConfigurationProvider : IConfigurationProvider
     {
-        public IEnumerable<Cluster> Clusters { get; private set; }
+        readonly ReactiveDictionary<string, Cluster> _clusters = new ReactiveDictionary<string, Cluster>();
+
+        public ConfigurationProvider(IConfigurationDispatcher dispatcher)
+        {
+            _clusters.Subscribe(p => dispatcher.Dispatch(p.Entry));
+        }
+
         public IEnumerable<string> ExtractGroups(ErrorPayload payload)
         {
             return new [] { "foo" };
+        }
+
+        public IEnumerable<Cluster> Clusters { get { return _clusters.Values; } }
+
+        public void AddCluster(Cluster cluster)
+        {
+            _clusters[cluster.Name] = cluster;
+        }
+
+        public Cluster GetCluster(string name)
+        {
+            return _clusters[name];
         }
     }
 }

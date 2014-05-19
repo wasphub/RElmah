@@ -2,7 +2,8 @@
     "use strict";
 
     return function (endpoint) {
-        var errors = new Rx.Subject();
+        var errors = new Rx.Subject(),
+            clusters = new Rx.Subject();
 
         return {
             start: function() {
@@ -12,10 +13,14 @@
                 relmah.on('dispatch', function (p) {
                     errors.onNext(p);
                 });
+                relmah.on('cluster', function (c) {
+                    clusters.onNext(c);
+                });
 
                 return conn.start();
             },
-            errors: errors
-        };
+            errors: errors,
+            clusters: clusters
+    };
     };
 })();

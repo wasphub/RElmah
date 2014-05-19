@@ -7,8 +7,8 @@ namespace RElmah.Server.Services
 {
     public class ErrorsInbox : IErrorsInbox
     {
-        private readonly IErrorsBacklog _backlog;
         private readonly Subject<ErrorPayload> _errors;
+        private readonly IErrorsBacklog _backlog;
 
         public ErrorsInbox() 
             : this(new NullErrorsBacklog(), new NullErrorsDispatcher())

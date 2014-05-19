@@ -23,13 +23,20 @@ namespace RElmah.Server
 
     public interface IConfigurationProvider
     {
-        IEnumerable<Cluster> Clusters { get; }
         IEnumerable<string> ExtractGroups(ErrorPayload payload);
+        IEnumerable<Cluster> Clusters { get; }
+        void AddCluster(Cluster cluster);
+        Cluster GetCluster(string name);
+    }
+
+    public interface IConfigurationDispatcher
+    {
+        Task Dispatch(Cluster cluster);
     }
 
     public interface IDependencyRegistry
     {
-        void Register(Type serviceType, Type implementationType);
-        void RegisterAsSingleton(Type serviceType, Type implementationType);
+        IDependencyRegistry Register(Type serviceType, Type implementationType);
+        IDependencyRegistry RegisterAsSingleton(Type serviceType, Type implementationType);
     }
 }

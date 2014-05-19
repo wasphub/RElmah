@@ -21,14 +21,16 @@ namespace RElmah.Server.Infrastructure
             return b.Any() ? b : base.GetServices(serviceType);
         }
 
-        public void Register(Type serviceType, Type implementationType)
+        public IDependencyRegistry Register(Type serviceType, Type implementationType)
         {
             TinyIoCContainer.Current.Register(serviceType, implementationType);
+            return this;
         }
 
-        public void RegisterAsSingleton(Type serviceType, Type implementationType)
+        public IDependencyRegistry RegisterAsSingleton(Type serviceType, Type implementationType)
         {
             TinyIoCContainer.Current.Register(serviceType, implementationType).AsSingleton();
+            return this;
         }
     }
 }

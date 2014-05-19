@@ -25,7 +25,7 @@ namespace RElmah.Domain
 
     public class ErrorPayload
     {
-        public string ApplicationName { get; set; }
+        public string SourceId { get; set; }
         public ErrorDetail Detail { get; set; }
     }
 }

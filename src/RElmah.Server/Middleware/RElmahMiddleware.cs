@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
@@ -10,38 +11,40 @@ namespace RElmah.Server.Middleware
 {
     public class RElmahMiddleware : OwinMiddleware
     {
-        private readonly PathString _relmahPostEndpoint;
-        private readonly PathString _relmahRandomEndpoint;
-
         private readonly IErrorsInbox _inbox;
+        private readonly IConfigurationProvider _config;
 
-        private readonly IDictionary<string, Func<IErrorsInbox, IDictionary<string, object>, Task>> _dispatchers;
+        private readonly IDictionary<string, Func<IDictionary<string, object>, Task>> _dispatchers;
 
         public RElmahMiddleware(OwinMiddleware next, Configuration configuration, IDependencyResolver resolver)
             : base(next)
         {
             const string relmah = "relmah";
 
-            _inbox = resolver.Resolve<IErrorsInbox>();
+            _inbox  = resolver.Resolve<IErrorsInbox>();
+            _config = resolver.Resolve<IConfigurationProvider>();
 
-            _relmahPostEndpoint   = new PathString(string.Format("/{0}/post-error",   configuration.Root ?? relmah));
-            _relmahRandomEndpoint = new PathString(string.Format("/{0}/random-error", configuration.Root ?? relmah));
+            var keyer = new Func<string, string>(s => string.Format("/{0}/{1}", configuration.Root ?? relmah, s));
 
-            _dispatchers = new Dictionary<string, Func<IErrorsInbox, IDictionary<string, object>, Task>>
+            _dispatchers = new Dictionary<string, Func<IDictionary<string, object>, Task>>
             {
-                { _relmahPostEndpoint.ToString(),   (i, e) => Dispatchers.PostError(i, Dispatchers.Elmah,  e) },
-                { _relmahRandomEndpoint.ToString(), (i, e) => Dispatchers.PostError(i, Dispatchers.Random, e) },
+                { keyer("post-error"),   e => Dispatchers.PostError(_inbox,      Dispatchers.Elmah,        e) },
+                { keyer("random-error"), e => Dispatchers.PostError(_inbox,      Dispatchers.Random,       e) },
+
+                { keyer("clusters"),     e => Dispatchers.Configuration(_config, e) },
             };
         }
 
         public override Task Invoke(IOwinContext context)
         {
-            var request = new OwinRequest(context.Environment);
-            return _relmahPostEndpoint == new PathString(request.Path.Value)
-                 ? _dispatchers.Get(_relmahPostEndpoint.ToString(), (c, i) => Next.Invoke(context))(_inbox, context.Environment)
-                 : _relmahRandomEndpoint == new PathString(request.Path.Value)
-                   ? _dispatchers.Get(_relmahRandomEndpoint.ToString(), (c, i) => Next.Invoke(context))(_inbox, context.Environment)
-                   : Next.Invoke(context);
+            var request  = new OwinRequest(context.Environment);
+            var segments = request.Uri.Segments;
+            var path     = string.Join(null, segments.Take(2).Concat(segments.Skip(2).Take(1).Select(s => s.Replace("/", ""))));
+            var key      = new PathString(path).ToString();
+
+            return _dispatchers.ContainsKey(key)
+                 ? _dispatchers.Get(key, e => Next.Invoke(context))(context.Environment)
+                 : Next.Invoke(context);
         }
     }
 }

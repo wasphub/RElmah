@@ -8,11 +8,11 @@
 </Query>
 
 var c = new Connection("http://localhost:50360/");
-var errors = c.Errors;
+var errors = c.Clusters;
 
 var q = 
 	from error in errors
-	where error.Detail.Message.StartsWith("B")
-	select error.Detail;
+	//where error.Detail.Message.StartsWith("B")
+	select error.Name;
 	
 q.DumpLive();

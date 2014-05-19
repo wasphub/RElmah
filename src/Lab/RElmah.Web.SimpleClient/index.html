@@ -14,12 +14,14 @@
     <script>
 
         $(function() {
-            var $errors = $('#errors'),
-                $groups = $('#groups'),
-                $totals = $('#totals');
+            var $errors   = $('#errors'),
+                $groups   = $('#groups'),
+                $totals   = $('#totals'),
+                $clusters = $('#clusters');
 
-            var r       = relmah("http://localhost:50360/signalr"),
-                errors  = r.errors;
+            var r         = relmah("http://localhost:50360/signalr"),
+                errors    = r.errors,
+                clusters  = r.clusters;
 
             errors = errors.map(function (e) {
                 return { m: e.Detail.Message, t: e.Detail.Time };
@@ -42,6 +44,10 @@
                 $totals.text(e);
             });
 
+            clusters.subscribe(function (e) {
+                $clusters.prepend($('<li/>').text(e.Name));
+            });
+
             groups.subscribe(function (g) {
                 var x = $('<li/>');
                 $groups.append(x);
@@ -62,5 +68,6 @@
         <p id="totals"></p>
         <ul id="groups"></ul>
         <ul id="errors"></ul>
+        <ul id="clusters"></ul>
     </body>
 </html>

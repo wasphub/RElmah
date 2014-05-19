@@ -8,18 +8,22 @@ namespace RElmah.Server.Extensions
 {
     public static class AppBuilderExtensions
     {
-        public static IAppBuilder RunRElmah(this IAppBuilder builder)
+        public static IAppBuilder UseRElmah(this IAppBuilder builder)
         {
-            return builder.RunRElmah(new Configuration());
+            return builder.UseRElmah(new Configuration());
         }
 
-        public static IAppBuilder RunRElmah(this IAppBuilder builder, Configuration configuration)
+        public static IAppBuilder UseRElmah(this IAppBuilder builder, Configuration configuration)
         {
             var registry = GlobalHost.DependencyResolver as IDependencyRegistry;
 
             registry.RegisterAsSingleton(typeof(IConfigurationProvider), typeof(ConfigurationProvider));
-            registry.RegisterAsSingleton(typeof(IErrorsInbox),           typeof(ErrorsInbox));
+            registry.RegisterAsSingleton(typeof(IConfigurationDispatcher), typeof(ConfigurationDispatcher));
+            registry.RegisterAsSingleton(typeof(IErrorsInbox), typeof(ErrorsInbox));
             registry.RegisterAsSingleton(typeof(IErrorsDispatcher),      typeof(ErrorsDispatcher));
+
+            if (configuration.Register != null)
+                configuration.Register(registry);
 
             return builder.UseRElmahMiddleware<RElmahMiddleware>(configuration, GlobalHost.DependencyResolver);
         }

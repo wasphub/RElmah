@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Owin;
@@ -39,8 +40,8 @@ namespace RElmah.Server.Middleware.Handlers
 
             return new ErrorPayload
             {
-                ApplicationName = sourceId,
-                Detail = JsonConvert.DeserializeObject<ErrorDetail>(errorText)
+                SourceId = sourceId,
+                Detail   = JsonConvert.DeserializeObject<ErrorDetail>(errorText)
             };
         }
 
@@ -50,11 +51,38 @@ namespace RElmah.Server.Middleware.Handlers
 
             return await Task.FromResult(new ErrorPayload
             {
-                ApplicationName = exception.GetType().Name,
-                Detail = new ErrorDetail
+                SourceId = Guid.NewGuid().ToString(),
+                Detail   = new ErrorDetail
                 {
                     Message = exception.Message
                 }
+            });
+        }
+
+        public async static Task Configuration(
+            IConfigurationProvider configuration,
+            IDictionary<string, object> environment)
+        {
+            var request = new OwinRequest(environment);
+            if (request.Method == "POST")
+            {
+                configuration.AddCluster(await BuildCluster(request));
+                return;
+            }
+
+            var response = new OwinResponse(environment);
+            await response.WriteAsync(JsonConvert.SerializeObject(
+                request.Uri.Segments.Count() > 3
+                ? (dynamic)configuration.GetCluster(request.Uri.Segments.Skip(3).First())
+                : configuration.Clusters));
+        }
+
+        public static async Task<Cluster> BuildCluster(OwinRequest request)
+        {
+            var @params = await request.ReadFormAsync();
+            return await Task.FromResult(new Cluster
+            {
+                Name = @params["name"]
             });
         }
 
