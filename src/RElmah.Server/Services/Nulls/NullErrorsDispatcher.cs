@@ -1,11 +1,17 @@
 ﻿using System.Threading.Tasks;
 using RElmah.Domain;
+using RElmah.Server.Infrastructure;
 
 namespace RElmah.Server.Services.Nulls
 {
-    public class NullErrorsDispatcher : IErrorsDispatcher
+    public class NullDispatcher : IDispatcher
     {
-        public Task Dispatch(ErrorPayload payload)
+        public Task DispatchError(ErrorPayload payload)
+        {
+            return Task.FromResult<object>(null);
+        }
+
+        public Task DispatchClusterAction(UpdateEntry<Cluster> cluster)
         {
             return Task.FromResult<object>(null);
         }

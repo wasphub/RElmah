@@ -18,9 +18,9 @@ namespace RElmah.Server.Extensions
             var registry = GlobalHost.DependencyResolver as IDependencyRegistry;
 
             registry.RegisterAsSingleton(typeof(IConfigurationProvider), typeof(ConfigurationProvider));
-            registry.RegisterAsSingleton(typeof(IConfigurationDispatcher), typeof(ConfigurationDispatcher));
+
             registry.RegisterAsSingleton(typeof(IErrorsInbox), typeof(ErrorsInbox));
-            registry.RegisterAsSingleton(typeof(IErrorsDispatcher),      typeof(ErrorsDispatcher));
+            registry.RegisterAsSingleton(typeof(IDispatcher),  typeof(Dispatcher));
 
             if (configuration.Register != null)
                 configuration.Register(registry);

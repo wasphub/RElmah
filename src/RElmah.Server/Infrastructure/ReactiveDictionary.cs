@@ -3,27 +3,11 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
+using RElmah.Domain;
+using RElmah.Server.Extensions;
 
 namespace RElmah.Server.Infrastructure
 {
-    public enum UpdateEntryType
-    {
-        Create,
-        Update,
-        Remove
-    }
-    public class UpdateEntry<T>
-    {
-        public UpdateEntry(T entry, UpdateEntryType type)
-        {
-            Entry = entry;
-            Type = type;
-        }
-
-        public T Entry { get; private set; }
-        public UpdateEntryType Type { get; private set; }
-    }
-
     public class ReactiveDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISubject<UpdateEntry<TValue>>
     {
         readonly IDictionary<TKey, TValue> _dictionary = new ConcurrentDictionary<TKey, TValue>();
@@ -42,13 +26,12 @@ namespace RElmah.Server.Infrastructure
         public void Add(KeyValuePair<TKey, TValue> item)
         {
             _dictionary.Add(item);
-            OnNext(new UpdateEntry<TValue>(item.Value, UpdateEntryType.Create));
+            OnNext(new UpdateEntry<TValue>(item.Value.ToSingleton(), UpdateEntryType.Create));
         }
 
         public void Clear()
         {
-            foreach (var i in _dictionary.Values)
-                OnNext(new UpdateEntry<TValue>(i, UpdateEntryType.Remove));
+            OnNext(new UpdateEntry<TValue>(_dictionary.Values, UpdateEntryType.Remove));
             _dictionary.Clear();
         }
 
@@ -64,7 +47,7 @@ namespace RElmah.Server.Infrastructure
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            OnNext(new UpdateEntry<TValue>(item.Value, UpdateEntryType.Remove));
+            OnNext(new UpdateEntry<TValue>(item.Value.ToSingleton(), UpdateEntryType.Remove));
             return _dictionary.Remove(item);
         }
 
@@ -78,12 +61,12 @@ namespace RElmah.Server.Infrastructure
         public void Add(TKey key, TValue value)
         {
             _dictionary.Add(key, value);
-            OnNext(new UpdateEntry<TValue>(value, UpdateEntryType.Create));
+            OnNext(new UpdateEntry<TValue>(value.ToSingleton(), UpdateEntryType.Create));
         }
 
         public bool Remove(TKey key)
         {
-            OnNext(new UpdateEntry<TValue>(_dictionary[key], UpdateEntryType.Remove));
+            OnNext(new UpdateEntry<TValue>(_dictionary[key].ToSingleton(), UpdateEntryType.Remove));
             return _dictionary.Remove(key);
         }
 
@@ -101,7 +84,7 @@ namespace RElmah.Server.Infrastructure
                     ? UpdateEntryType.Update 
                     : UpdateEntryType.Create;
                 _dictionary[key] = value;
-                OnNext(new UpdateEntry<TValue>(value, updateEntryType));
+                OnNext(new UpdateEntry<TValue>(value.ToSingleton(), updateEntryType));
             }
         }
 

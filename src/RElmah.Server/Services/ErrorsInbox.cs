@@ -11,20 +11,20 @@ namespace RElmah.Server.Services
         private readonly IErrorsBacklog _backlog;
 
         public ErrorsInbox() 
-            : this(new NullErrorsBacklog(), new NullErrorsDispatcher())
+            : this(new NullErrorsBacklog(), new NullDispatcher())
         {
         }
 
-        public ErrorsInbox(IErrorsDispatcher dispatcher)
+        public ErrorsInbox(IDispatcher dispatcher)
             : this(new NullErrorsBacklog(), dispatcher)
         {
         }
 
-        public ErrorsInbox(IErrorsBacklog backlog, IErrorsDispatcher dispatcher)
+        public ErrorsInbox(IErrorsBacklog backlog, IDispatcher dispatcher)
         {
             _backlog = backlog;
             _errors = new Subject<ErrorPayload>();
-            _errors.Subscribe(p => dispatcher.Dispatch(p));
+            _errors.Subscribe(p => dispatcher.DispatchError(p));
 
         }
 

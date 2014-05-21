@@ -7,13 +7,13 @@
 
         return {
             start: function() {
-                var conn = $.hubConnection(endpoint),
+                var conn   = $.hubConnection(endpoint),
                     relmah = conn.createHubProxy('relmah');
 
-                relmah.on('dispatch', function (p) {
+                relmah.on('error', function (p) {
                     errors.onNext(p);
                 });
-                relmah.on('cluster', function (c) {
+                relmah.on('clusterUpdate', function (c) {
                     clusters.onNext(c);
                 });
 
@@ -21,6 +21,6 @@
             },
             errors: errors,
             clusters: clusters
-    };
+        };
     };
 })();

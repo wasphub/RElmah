@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using RElmah.Domain;
+using RElmah.Server.Infrastructure;
 
 namespace RElmah.Server
 {
@@ -16,9 +17,10 @@ namespace RElmah.Server
         Task Store(ErrorPayload payload);
     }
 
-    public interface IErrorsDispatcher
+    public interface IDispatcher
     {
-        Task Dispatch(ErrorPayload payload);
+        Task DispatchError(ErrorPayload payload);
+        Task DispatchClusterAction(UpdateEntry<Cluster> cluster);
     }
 
     public interface IConfigurationProvider

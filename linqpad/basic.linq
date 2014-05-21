@@ -12,7 +12,7 @@ var errors = c.Clusters;
 
 var q = 
 	from error in errors
-	//where error.Detail.Message.StartsWith("B")
-	select error.Name;
+	//where error.Entry.Name.StartsWith("B")
+	select error.Entries.First().Name;
 	
 q.DumpLive();

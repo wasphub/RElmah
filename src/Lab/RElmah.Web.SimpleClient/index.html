@@ -44,8 +44,11 @@
                 $totals.text(e);
             });
 
-            clusters.subscribe(function (e) {
-                $clusters.prepend($('<li/>').text(e.Name));
+            clusters.subscribe(function(e) {
+                $.each(e.Entries, function(i, c)
+                {
+                    $clusters.prepend($('<li/>').text(c.Name));
+                });
             });
 
             groups.subscribe(function (g) {

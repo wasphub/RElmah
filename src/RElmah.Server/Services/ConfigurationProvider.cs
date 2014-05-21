@@ -9,9 +9,9 @@ namespace RElmah.Server.Services
     {
         readonly ReactiveDictionary<string, Cluster> _clusters = new ReactiveDictionary<string, Cluster>();
 
-        public ConfigurationProvider(IConfigurationDispatcher dispatcher)
+        public ConfigurationProvider(IDispatcher dispatcher)
         {
-            _clusters.Subscribe(p => dispatcher.Dispatch(p.Entry));
+            _clusters.Subscribe(p => dispatcher.DispatchClusterAction(p));
         }
 
         public IEnumerable<string> ExtractGroups(ErrorPayload payload)

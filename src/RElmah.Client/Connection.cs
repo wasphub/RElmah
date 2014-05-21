@@ -9,24 +9,30 @@ namespace RElmah.Client
     {
         private readonly HubConnection _connection;
         private readonly Subject<ErrorPayload> _errors;
-        private readonly Subject<Cluster> _clusters;
+        private readonly Subject<UpdateEntry<Cluster>> _clusters;
 
         public Connection(string endpoint)
         {
             _errors = new Subject<ErrorPayload>();
-            _clusters = new Subject<Cluster>();
+            _clusters = new Subject<UpdateEntry<Cluster>>();
 
             _connection = new HubConnection(endpoint);
 
             var proxy = _connection.CreateHubProxy("relmah");
-            proxy.On<ErrorPayload>("dispatch", p => _errors.OnNext(p));
-            proxy.On<Cluster>("cluster", p => _clusters.OnNext(p));
+
+            proxy.On<ErrorPayload>(
+                "error", 
+                p => _errors.OnNext(p));
+
+            proxy.On<UpdateEntry<Cluster>>(
+                "clusterUpdate", 
+                p => _clusters.OnNext(p));
 
             _connection.Start();
         }
 
         public IObservable<ErrorPayload> Errors { get { return _errors; } }
-        public IObservable<Cluster> Clusters { get { return _clusters; } } 
+        public IObservable<UpdateEntry<Cluster>> Clusters { get { return _clusters; } } 
 
         public void Dispose()
         {

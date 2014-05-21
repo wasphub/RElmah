@@ -76,6 +76,7 @@
     <Compile Include="Contracts.cs" />
     <Compile Include="Extensions\AppBuilderExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Hubs\Frontend.cs" />
     <Compile Include="Infrastructure\ReactiveDictionary.cs" />
     <Compile Include="Infrastructure\TinyIocDependencyResolver.cs" />
@@ -83,9 +84,8 @@
     <Compile Include="Middleware\Handlers\Dispatchers.cs" />
     <Compile Include="Middleware\RElmahMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ConfigurationDispatcher.cs" />
     <Compile Include="Services\ConfigurationProvider.cs" />
-    <Compile Include="Services\ErrorsDispatcher.cs" />
+    <Compile Include="Services\Dispatcher.cs" />
     <Compile Include="Services\ErrorsInbox.cs" />
     <Compile Include="Services\Nulls\NullErrorsBacklog.cs" />
     <Compile Include="Services\Nulls\NullErrorsDispatcher.cs" />
