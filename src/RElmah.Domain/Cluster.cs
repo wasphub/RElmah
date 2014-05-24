@@ -15,13 +15,8 @@ namespace RElmah.Domain
             Name = name;
         }
 
-        public Cluster()
-        {
-            
-        }
+        public string Name { get; private set; }
 
-        public string Name { get; set; }
-
-        public IEnumerable<Application> Applications { get; set; }
+        public IEnumerable<Application> Applications { get; private set; }
     }
 }
