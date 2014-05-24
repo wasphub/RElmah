@@ -2,9 +2,16 @@
 {
     public class Application
     {
-        public string Name { get; set; }
-        public string SourceId { get; set; }
+        public Application(string name, string sourceId, Cluster cluster)
+        {
+            Name = name;
+            SourceId = sourceId;
+            Cluster = cluster;
+        }
 
-        public Cluster Cluster { get; set; }
+        public string Name { get; private set; }
+        public string SourceId { get; private set; }
+
+        public Cluster Cluster { get; private set; }
     }
 }
