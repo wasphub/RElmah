@@ -1,4 +1,4 @@
-﻿using RElmah.Domain;
+﻿using RElmah.Common;
 
 namespace RElmah.Client.Models
 {

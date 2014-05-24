@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RElmah.Domain
+namespace RElmah.Common
 {
     public class ErrorDetail
     {

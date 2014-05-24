@@ -67,6 +67,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\RElmah.Common\RElmah.Common.csproj">
+      <Project>{198D8EEF-CB52-4CC8-9F06-3259939C8820}</Project>
+      <Name>RElmah.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\RElmah.Domain\RElmah.Domain.csproj">
       <Project>{a0872048-ce38-4f86-8388-7b887fa2f5a9}</Project>
       <Name>RElmah.Domain</Name>

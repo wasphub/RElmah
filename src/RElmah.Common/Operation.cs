@@ -1,14 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace RElmah.Domain
+namespace RElmah.Common
 {
-    public enum OperationType
-    {
-        Create,
-        Update,
-        Remove
-    }
-
     public class Operation<T>
     {
         public Operation(IEnumerable<T> targets, OperationType type)

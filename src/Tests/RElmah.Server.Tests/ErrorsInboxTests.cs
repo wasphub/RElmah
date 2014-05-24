@@ -4,6 +4,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RElmah.Common;
 using RElmah.Domain;
 
 namespace RElmah.Server.Tests

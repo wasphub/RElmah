@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using RElmah.Common;
 using RElmah.Domain;
 
 namespace RElmah.Server.Services.Nulls

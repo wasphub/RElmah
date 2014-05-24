@@ -65,6 +65,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RElmah.Web.Source", "http:/
 		DefaultWebSiteLanguage = "Visual Basic"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Common", "RElmah.Common\RElmah.Common.csproj", "{198D8EEF-CB52-4CC8-9F06-3259939C8820}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{595B7855-BF97-4427-B060-0B6837178F91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{595B7855-BF97-4427-B060-0B6837178F91}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{595B7855-BF97-4427-B060-0B6837178F91}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{198D8EEF-CB52-4CC8-9F06-3259939C8820}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{198D8EEF-CB52-4CC8-9F06-3259939C8820}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{198D8EEF-CB52-4CC8-9F06-3259939C8820}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{198D8EEF-CB52-4CC8-9F06-3259939C8820}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

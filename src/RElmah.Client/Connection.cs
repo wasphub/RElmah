@@ -2,7 +2,7 @@
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
-using RElmah.Domain;
+using RElmah.Common;
 using Application = RElmah.Client.Models.Application;
 using Cluster = RElmah.Client.Models.Cluster;
 using ErrorPayload = RElmah.Client.Models.ErrorPayload;

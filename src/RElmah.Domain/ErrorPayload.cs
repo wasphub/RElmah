@@ -1,4 +1,6 @@
-﻿namespace RElmah.Domain
+﻿using RElmah.Common;
+
+namespace RElmah.Domain
 {
     public class ErrorPayload
     {

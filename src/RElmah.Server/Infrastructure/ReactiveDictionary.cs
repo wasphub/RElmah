@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
-using RElmah.Domain;
+using RElmah.Common;
 using RElmah.Server.Extensions;
 
 namespace RElmah.Server.Infrastructure
