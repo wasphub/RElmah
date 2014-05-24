@@ -2,36 +2,47 @@
     "use strict";
 
     return function (endpoint) {
-        var errors       = new Rx.Subject(),
-            clusters     = new Rx.Subject(),
-            applications = new Rx.Subject();
+        var errors        = new Rx.Subject(),
+            clusters      = new Rx.Subject(),
+            applications  = new Rx.Subject();
+
+        var errs;
+
+        var getErrors     = function(ext) {
+            errs = errs || (typeof (ext) === 'function' && ext(errors) || errors);
+            return errs;
+        };
 
         return {
             start: function() {
-                var conn   = $.hubConnection(endpoint),
-                    relmah = conn.createHubProxy('relmah');
+                var conn  = $.hubConnection(endpoint),
+                    proxy = conn.createHubProxy('relmah');
 
-                relmah.on('error', function (p) {
+                proxy.on('error', function (p) {
                     errors.onNext(p);
                 });
-                relmah.on('clusterOperation', function (c) {
+                proxy.on('clusterOperation', function (c) {
                     clusters.onNext(c);
                 });
-                relmah.on('applicationOperation', function (c) {
+                proxy.on('applicationOperation', function (c) {
                     applications.onNext(c);
                 });
 
                 return conn.start().done(function() {
-                    relmah.invoke('getErrors').done(function (es) {
+                    proxy.invoke('getErrors').done(function (es) {
                         for (var i = 0; i < es.length; i++) {
                             errors.onNext(es[i]);
                         }
                     });
                 });
             },
-            errors: errors,
-            clusters: clusters,
-            applications: applications
+            getErrors: getErrors,
+            getClusters: function (ext) {
+                return typeof (ext) === 'function' && ext(clusters) || clusters;
+            },
+            getApplications: function (ext) {
+                return typeof (ext) === 'function' && ext(applications) || applications;
+            }
         };
     };
 })();

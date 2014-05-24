@@ -10,6 +10,7 @@
     <script src="Scripts/rx.binding.js"></script>
 
     <script src="Scripts/relmah.js"></script>
+    <script src="Scripts/relmah.basic.js"></script>
 
     <script>
 
@@ -20,26 +21,21 @@
                 $clusters = $('#clusters');
 
             var r         = relmah("http://localhost:50360/signalr"),
-                errors    = r.errors,
-                clusters  = r.clusters,
-                apps      = r.applications;
+                errors    = r.getErrors(function(errs) {
+                    return errs.filter(function(e) {
+                        return e.Detail.Message.substring(0, 1) === 'B';
+                    });
+                }),
+                clusters  = r.getClusters(),
+                apps      = r.getApplications();
 
-            errors = errors.map(function (e) {
-                return { m: e.Detail.Message, t: e.Detail.Time };
-            });
-
-            var bs = errors.filter(function (e) {
-                return e.m.substring(0, 1) === 'B';
-            });
-            var totals = bs.scan(0, function (a, e) {
-                return a + 1;
-            });
-            var groups = bs.groupBy(function (e) {
-                return e.m;
+            var totals = relmah.basic(r).getTotals();
+            var groups = errors.groupBy(function (e) {
+                return e.Detail.Message;
             });
 
-            bs.subscribe(function (e) {
-                $errors.prepend($('<li/>').text(e.m + ' @ ' + e.t));
+            errors.subscribe(function (e) {
+                $errors.prepend($('<li/>').text(e.Detail.Message + ' @ ' + e.Detail.Time));
             });
             totals.subscribe(function (e) {
                 $totals.text(e);
