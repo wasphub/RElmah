@@ -38,25 +38,20 @@ namespace RElmah.Server.Middleware.Handlers
             var errorId   = @params["errorId"];
             var infoUrl   = @params["infoUrl"];
 
-            return new ErrorPayload
-            {
-                SourceId = sourceId,
-                Detail   = JsonConvert.DeserializeObject<ErrorDetail>(errorText)
-            };
+            return new ErrorPayload(sourceId, JsonConvert.DeserializeObject<ErrorDetail>(errorText));
         }
 
         public static async Task<ErrorPayload> Random(IDictionary<string, object> environment)
         {
             var exception = Randoms[Randomizer.Next(Randoms.Length)];
 
-            return await Task.FromResult(new ErrorPayload
-            {
-                SourceId = Guid.NewGuid().ToString(),
-                Detail   = new ErrorDetail
-                {
-                    Message = exception.Message
-                }
-            });
+            return await Task.FromResult(
+                new ErrorPayload(
+                    Guid.NewGuid().ToString(), 
+                    new ErrorDetail
+                    {
+                        Message = exception.Message
+                    }));
         }
 
         public async static Task Configuration(
@@ -77,13 +72,10 @@ namespace RElmah.Server.Middleware.Handlers
                 : configuration.Clusters));
         }
 
-        public static async Task<Cluster> BuildCluster(OwinRequest request)
+        public static async Task<string> BuildCluster(OwinRequest request)
         {
             var @params = await request.ReadFormAsync();
-            return await Task.FromResult(new Cluster
-            {
-                Name = @params["name"]
-            });
+            return await Task.FromResult(@params["name"]);
         }
 
         static string Decode(string str)

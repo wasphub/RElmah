@@ -4,8 +4,19 @@ namespace RElmah.Domain
 {
     public class Cluster
     {
-        public string Name { get; set; }
+        public Cluster(string name, IEnumerable<Application> applications)
+        {
+            Name = name;
+            Applications = applications;
+        }
 
-        public IEnumerable<Application> Applications { get; set; }
+        public Cluster(string name)
+        {
+            Name = name;
+        }
+
+        public string Name { get; private set; }
+
+        public IEnumerable<Application> Applications { get; private set; }
     }
 }
