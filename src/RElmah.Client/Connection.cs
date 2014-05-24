@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using RElmah.Domain;
+using Application = RElmah.Client.Models.Application;
+using Cluster = RElmah.Client.Models.Cluster;
+using ErrorPayload = RElmah.Client.Models.ErrorPayload;
 
 namespace RElmah.Client
 {
@@ -30,12 +34,17 @@ namespace RElmah.Client
             proxy.On<Operation<Application>>(
                 "applicationOperation", 
                 p => _applications.OnNext(p));
+        }
 
-            _connection.Start();
+        public Task Start()
+        {
+            return _connection.Start();      
         }
 
         public IObservable<ErrorPayload> Errors { get { return _errors; } }
-        public IObservable<Operation<Cluster>> Clusters { get { return _clusters; } } 
+        public IObservable<Operation<Cluster>> Clusters { get { return _clusters; } }
+
+        public IObservable<Operation<Application>> Applications { get { return _applications; } } 
 
         public void Dispose()
         {

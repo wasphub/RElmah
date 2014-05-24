@@ -61,7 +61,10 @@
     <Compile Include="..\Common\CommonVersionInfo.cs">
       <Link>CommonVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Models\Application.cs" />
+    <Compile Include="Models\Cluster.cs" />
     <Compile Include="Connection.cs" />
+    <Compile Include="Models\ErrorPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
