@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.SignalR;
 using Owin;
+using RElmah.Server.Hubs;
 using RElmah.Server.Middleware;
 using RElmah.Server.Services;
 
@@ -23,6 +24,8 @@ namespace RElmah.Server.Extensions
             registry.Register(typeof(IDispatcher), () => d);
             registry.Register(typeof(IConfigurationProvider), () => cp);
             registry.Register(typeof(IErrorsInbox), () => ei);
+
+            registry.Register(typeof(Frontend), () => new Frontend(cp));
 
             if (configuration.Register != null)
                 configuration.Register(registry);

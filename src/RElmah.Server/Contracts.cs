@@ -34,9 +34,4 @@ namespace RElmah.Server
         void AddApplication(string name, string sourceId, string cluster);
         Application GetApplication(string name);
     }
-
-    public interface IConfigurationDispatcher
-    {
-        Task Dispatch(Cluster cluster);
-    }
 }

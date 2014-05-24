@@ -46,6 +46,5 @@ namespace RElmah.Server.Services
         {
             return new[] { payload.SourceId };
         }
-
     }
 }
