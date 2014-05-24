@@ -2,7 +2,6 @@
 using Microsoft.AspNet.SignalR;
 using RElmah.Domain;
 using RElmah.Server.Hubs;
-using RElmah.Server.Infrastructure;
 
 namespace RElmah.Server.Services
 {
@@ -15,9 +14,14 @@ namespace RElmah.Server.Services
             return _context.Clients.All.error(payload);
         }
 
-        public Task DispatchClusterAction(Operation<Cluster> cluster)
+        public Task DispatchClusterOperation(Operation<Cluster> op)
         {
-            return _context.Clients.All.clusterUpdate(cluster);
+            return _context.Clients.All.clusterUpdate(op);
+        }
+
+        public Task DispatchApplicationOperation(Operation<Application> op)
+        {
+            return _context.Clients.All.applicationOperation(op);
         }
     }
 }

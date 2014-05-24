@@ -20,7 +20,8 @@ namespace RElmah.Server
     public interface IDispatcher
     {
         Task DispatchError(ErrorPayload payload);
-        Task DispatchClusterAction(Operation<Cluster> cluster);
+        Task DispatchClusterOperation(Operation<Cluster> op);
+        Task DispatchApplicationOperation(Operation<Application> op);
     }
 
     public interface IConfigurationProvider
@@ -29,6 +30,8 @@ namespace RElmah.Server
         IEnumerable<Cluster> Clusters { get; }
         void AddCluster(Cluster cluster);
         Cluster GetCluster(string name);
+        void AddApplication(Application application);
+        Application GetApplication(string name);
     }
 
     public interface IConfigurationDispatcher

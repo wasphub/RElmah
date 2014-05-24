@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using RElmah.Domain;
-using RElmah.Server.Infrastructure;
 
 namespace RElmah.Server.Services.Nulls
 {
@@ -11,7 +10,12 @@ namespace RElmah.Server.Services.Nulls
             return Task.FromResult<object>(null);
         }
 
-        public Task DispatchClusterAction(Operation<Cluster> cluster)
+        public Task DispatchClusterOperation(Operation<Cluster> op)
+        {
+            return Task.FromResult<object>(null);
+        }
+
+        public Task DispatchApplicationOperation(Operation<Application> op)
         {
             return Task.FromResult<object>(null);
         }
