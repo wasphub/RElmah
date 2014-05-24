@@ -8,10 +8,10 @@ using RElmah.Server.Extensions;
 
 namespace RElmah.Server.Infrastructure
 {
-    public class ReactiveDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISubject<UpdateEntry<TValue>>
+    public class ReactiveDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISubject<Operation<TValue>>
     {
         readonly IDictionary<TKey, TValue> _dictionary = new ConcurrentDictionary<TKey, TValue>();
-        private readonly Subject<UpdateEntry<TValue>> _source = new Subject<UpdateEntry<TValue>>();
+        private readonly Subject<Operation<TValue>> _source = new Subject<Operation<TValue>>();
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
@@ -26,12 +26,12 @@ namespace RElmah.Server.Infrastructure
         public void Add(KeyValuePair<TKey, TValue> item)
         {
             _dictionary.Add(item);
-            OnNext(new UpdateEntry<TValue>(item.Value.ToSingleton(), UpdateEntryType.Create));
+            OnNext(new Operation<TValue>(item.Value.ToSingleton(), OperationType.Create));
         }
 
         public void Clear()
         {
-            OnNext(new UpdateEntry<TValue>(_dictionary.Values, UpdateEntryType.Remove));
+            OnNext(new Operation<TValue>(_dictionary.Values, OperationType.Remove));
             _dictionary.Clear();
         }
 
@@ -47,7 +47,7 @@ namespace RElmah.Server.Infrastructure
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            OnNext(new UpdateEntry<TValue>(item.Value.ToSingleton(), UpdateEntryType.Remove));
+            OnNext(new Operation<TValue>(item.Value.ToSingleton(), OperationType.Remove));
             return _dictionary.Remove(item);
         }
 
@@ -61,12 +61,12 @@ namespace RElmah.Server.Infrastructure
         public void Add(TKey key, TValue value)
         {
             _dictionary.Add(key, value);
-            OnNext(new UpdateEntry<TValue>(value.ToSingleton(), UpdateEntryType.Create));
+            OnNext(new Operation<TValue>(value.ToSingleton(), OperationType.Create));
         }
 
         public bool Remove(TKey key)
         {
-            OnNext(new UpdateEntry<TValue>(_dictionary[key].ToSingleton(), UpdateEntryType.Remove));
+            OnNext(new Operation<TValue>(_dictionary[key].ToSingleton(), OperationType.Remove));
             return _dictionary.Remove(key);
         }
 
@@ -81,10 +81,10 @@ namespace RElmah.Server.Infrastructure
             set
             {
                 var updateEntryType = _dictionary.ContainsKey(key) 
-                    ? UpdateEntryType.Update 
-                    : UpdateEntryType.Create;
+                    ? OperationType.Update 
+                    : OperationType.Create;
                 _dictionary[key] = value;
-                OnNext(new UpdateEntry<TValue>(value.ToSingleton(), updateEntryType));
+                OnNext(new Operation<TValue>(value.ToSingleton(), updateEntryType));
             }
         }
 
@@ -92,7 +92,7 @@ namespace RElmah.Server.Infrastructure
         public ICollection<TValue> Values { get { return _dictionary.Values; } }
 
 
-        public void OnNext(UpdateEntry<TValue> value)
+        public void OnNext(Operation<TValue> value)
         {
             _source.OnNext(value);
         }
@@ -107,7 +107,7 @@ namespace RElmah.Server.Infrastructure
             _source.OnCompleted();
         }
 
-        public IDisposable Subscribe(IObserver<UpdateEntry<TValue>> observer)
+        public IDisposable Subscribe(IObserver<Operation<TValue>> observer)
         {
             return _source.Subscribe(observer);
         }

@@ -11,7 +11,7 @@ namespace RElmah.Server.Services.Nulls
             return Task.FromResult<object>(null);
         }
 
-        public Task DispatchClusterAction(UpdateEntry<Cluster> cluster)
+        public Task DispatchClusterAction(Operation<Cluster> cluster)
         {
             return Task.FromResult<object>(null);
         }

@@ -20,7 +20,7 @@ namespace RElmah.Server
     public interface IDispatcher
     {
         Task DispatchError(ErrorPayload payload);
-        Task DispatchClusterAction(UpdateEntry<Cluster> cluster);
+        Task DispatchClusterAction(Operation<Cluster> cluster);
     }
 
     public interface IConfigurationProvider

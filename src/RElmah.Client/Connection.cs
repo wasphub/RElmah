@@ -9,12 +9,12 @@ namespace RElmah.Client
     {
         private readonly HubConnection _connection;
         private readonly Subject<ErrorPayload> _errors;
-        private readonly Subject<UpdateEntry<Cluster>> _clusters;
+        private readonly Subject<Operation<Cluster>> _clusters;
 
         public Connection(string endpoint)
         {
             _errors = new Subject<ErrorPayload>();
-            _clusters = new Subject<UpdateEntry<Cluster>>();
+            _clusters = new Subject<Operation<Cluster>>();
 
             _connection = new HubConnection(endpoint);
 
@@ -24,7 +24,7 @@ namespace RElmah.Client
                 "error", 
                 p => _errors.OnNext(p));
 
-            proxy.On<UpdateEntry<Cluster>>(
+            proxy.On<Operation<Cluster>>(
                 "clusterUpdate", 
                 p => _clusters.OnNext(p));
 
@@ -32,7 +32,7 @@ namespace RElmah.Client
         }
 
         public IObservable<ErrorPayload> Errors { get { return _errors; } }
-        public IObservable<UpdateEntry<Cluster>> Clusters { get { return _clusters; } } 
+        public IObservable<Operation<Cluster>> Clusters { get { return _clusters; } } 
 
         public void Dispose()
         {

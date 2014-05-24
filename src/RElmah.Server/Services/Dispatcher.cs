@@ -15,7 +15,7 @@ namespace RElmah.Server.Services
             return _context.Clients.All.error(payload);
         }
 
-        public Task DispatchClusterAction(UpdateEntry<Cluster> cluster)
+        public Task DispatchClusterAction(Operation<Cluster> cluster)
         {
             return _context.Clients.All.clusterUpdate(cluster);
         }
