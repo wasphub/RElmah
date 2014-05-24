@@ -90,7 +90,7 @@
     <Compile Include="Services\Dispatcher.cs" />
     <Compile Include="Services\ErrorsInbox.cs" />
     <Compile Include="Services\Nulls\NullErrorsBacklog.cs" />
-    <Compile Include="Services\Nulls\NullErrorsDispatcher.cs" />
+    <Compile Include="Services\Nulls\NullDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
