@@ -3,7 +3,8 @@
 
     return function (endpoint) {
         var errors = new Rx.Subject(),
-            clusters = new Rx.Subject();
+            clusters = new Rx.Subject(),
+            applications = new Rx.Subject();
 
         return {
             start: function() {
@@ -13,10 +14,12 @@
                 relmah.on('error', function (p) {
                     errors.onNext(p);
                 });
-                relmah.on('clusterUpdate', function (c) {
+                relmah.on('clusterOperation', function (c) {
                     clusters.onNext(c);
                 });
-
+                relmah.on('applicationOperation', function (c) {
+                    applications.onNext(c);
+                });
                 return conn.start();
             },
             errors: errors,

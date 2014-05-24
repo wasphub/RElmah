@@ -8,14 +8,13 @@ namespace RElmah.Client
     public class Connection : IDisposable
     {
         private readonly HubConnection _connection;
-        private readonly Subject<ErrorPayload> _errors;
-        private readonly Subject<Operation<Cluster>> _clusters;
+
+        private readonly Subject<ErrorPayload> _errors = new Subject<ErrorPayload>();
+        private readonly Subject<Operation<Cluster>> _clusters = new Subject<Operation<Cluster>>();
+        private readonly Subject<Operation<Application>> _applications = new Subject<Operation<Application>>();
 
         public Connection(string endpoint)
         {
-            _errors = new Subject<ErrorPayload>();
-            _clusters = new Subject<Operation<Cluster>>();
-
             _connection = new HubConnection(endpoint);
 
             var proxy = _connection.CreateHubProxy("relmah");
@@ -25,8 +24,12 @@ namespace RElmah.Client
                 p => _errors.OnNext(p));
 
             proxy.On<Operation<Cluster>>(
-                "clusterUpdate", 
+                "clusterOperation",
                 p => _clusters.OnNext(p));
+
+            proxy.On<Operation<Application>>(
+                "applicationOperation", 
+                p => _applications.OnNext(p));
 
             _connection.Start();
         }

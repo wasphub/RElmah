@@ -9,6 +9,7 @@
         }
 
         public string SourceId { get; private set; }
+
         public ErrorDetail Detail { get; private set; }
     }
 }

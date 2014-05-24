@@ -16,7 +16,7 @@ namespace RElmah.Server.Services
 
         public Task DispatchClusterOperation(Operation<Cluster> op)
         {
-            return _context.Clients.All.clusterUpdate(op);
+            return _context.Clients.All.clusterOperation(op);
         }
 
         public Task DispatchApplicationOperation(Operation<Application> op)

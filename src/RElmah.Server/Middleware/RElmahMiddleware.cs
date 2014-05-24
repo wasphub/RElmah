@@ -11,8 +11,8 @@ namespace RElmah.Server.Middleware
 {
     public class RElmahMiddleware : OwinMiddleware
     {
-        private readonly IErrorsInbox _inbox;
-        private readonly IConfigurationProvider _config;
+        private readonly Lazy<IErrorsInbox> _inbox;
+        private readonly Lazy<IConfigurationProvider> _config;
 
         private readonly IDictionary<string, Func<IDictionary<string, object>, Task>> _dispatchers;
 
@@ -21,18 +21,18 @@ namespace RElmah.Server.Middleware
         {
             const string relmah = "relmah";
 
-            var errorsInbox = resolver.Resolve<IErrorsInbox>();
-            _inbox  = errorsInbox;
-            _config = resolver.Resolve<IConfigurationProvider>();
+            _inbox  = new Lazy<IErrorsInbox>(resolver.Resolve<IErrorsInbox>);
+            _config = new Lazy<IConfigurationProvider>(resolver.Resolve<IConfigurationProvider>);
 
             var keyer = new Func<string, string>(s => string.Format("/{0}/{1}", configuration.Root ?? relmah, s));
 
             _dispatchers = new Dictionary<string, Func<IDictionary<string, object>, Task>>
             {
-                { keyer("post-error"),   e => Dispatchers.PostError(_inbox,      Dispatchers.Elmah,        e) },
-                { keyer("random-error"), e => Dispatchers.PostError(_inbox,      Dispatchers.Random,       e) },
+                { keyer("post-error"),   e => Dispatchers.PostError(_inbox.Value,      Dispatchers.Elmah,        e) },
+                { keyer("random-error"), e => Dispatchers.PostError(_inbox.Value,      Dispatchers.Random,       e) },
 
-                { keyer("clusters"),     e => Dispatchers.Configuration(_config, e) },
+                { keyer("clusters"),     e => Dispatchers.Clusters(    _config.Value, e) },
+                { keyer("applications"), e => Dispatchers.Applications(_config.Value, e) },
             };
         }
 

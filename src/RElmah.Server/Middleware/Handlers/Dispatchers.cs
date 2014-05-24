@@ -54,7 +54,7 @@ namespace RElmah.Server.Middleware.Handlers
                     }));
         }
 
-        public async static Task Configuration(
+        public async static Task Clusters(
             IConfigurationProvider configuration,
             IDictionary<string, object> environment)
         {
@@ -72,10 +72,35 @@ namespace RElmah.Server.Middleware.Handlers
                 : configuration.Clusters));
         }
 
-        public static async Task<string> BuildCluster(OwinRequest request)
+        public async static Task Applications(
+            IConfigurationProvider configuration,
+            IDictionary<string, object> environment)
+        {
+            var request = new OwinRequest(environment);
+            if (request.Method == "POST")
+            {
+                var app = await BuildApplication(request, (n, s, c) => new { n, s, c } );
+                configuration.AddApplication(app.n, app.s, app.c);
+                return;
+            }
+
+            var response = new OwinResponse(environment);
+            await response.WriteAsync(JsonConvert.SerializeObject(
+                request.Uri.Segments.Count() > 3
+                ? (dynamic)configuration.GetApplication(request.Uri.Segments.Skip(3).First())
+                : configuration.Applications));
+        }
+
+        static async Task<string> BuildCluster(OwinRequest request)
         {
             var @params = await request.ReadFormAsync();
             return await Task.FromResult(@params["name"]);
+        }
+
+        static async Task<T> BuildApplication<T>(OwinRequest request, Func<string, string, string, T> resultor)
+        {
+            var @params = await request.ReadFormAsync();
+            return await Task.FromResult(resultor(@params["name"], @params["sourceId"], @params["cluster"]));
         }
 
         static string Decode(string str)

@@ -28,6 +28,7 @@ namespace RElmah.Server
     {
         IEnumerable<string> ExtractGroups(ErrorPayload payload);
         IEnumerable<Cluster> Clusters { get; }
+        IEnumerable<Application> Applications { get; }
         void AddCluster(string cluster);
         Cluster GetCluster(string name);
         void AddApplication(string name, string sourceId, string cluster);

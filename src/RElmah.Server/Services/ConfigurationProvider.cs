@@ -44,7 +44,7 @@ namespace RElmah.Server.Services
 
         public IEnumerable<string> ExtractGroups(ErrorPayload payload)
         {
-            return new[] { "foo" };
+            return new[] { payload.SourceId };
         }
 
     }
