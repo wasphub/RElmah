@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using RElmah.Common;
@@ -28,9 +27,9 @@ namespace RElmah.Server.Hubs
             return base.OnConnected();
         }
 
-        public Task<IEnumerable<ErrorPayload>> GetErrors()
+        public async Task<Operation<ErrorPayload>> GetErrors()
         {
-            return _errorsBacklog.GetErrors();
+            return new Operation<ErrorPayload>(await _errorsBacklog.GetErrors(), OperationType.Create);
         }
     }
 }

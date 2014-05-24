@@ -1,11 +1,11 @@
-﻿(function() {
+﻿(function(root) {
     "use strict";
 
-    if (!relmah) {
+    if (!root) {
         throw new Error("You must reference relmah.js first");
     }
 
-    relmah.basic = function(r) {
+    root.basic = function (r) {
         return {
             getTotals: function() {
                 return r.getErrors().scan(0, function(a, e) {
@@ -15,4 +15,4 @@
         };
     };
 
-})();
+})(relmah);

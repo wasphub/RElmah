@@ -20,25 +20,28 @@
                 $totals   = $('#totals'),
                 $clusters = $('#clusters');
 
-            var r         = relmah("http://localhost:50360/signalr"),
-                errors    = r.getErrors(function(errs) {
-                    return errs.filter(function(e) {
-                        return e.Detail.Message.substring(0, 1) === 'B';
-                    });
+            var r         = relmah("http://localhost:50360/signalr", {
+                    errors: function(errs) {
+                        return errs.filter(function(e) {
+                            return e.Detail.Message.substring(0, 1) === 'B';
+                        });
+                    }
                 }),
+                errors    = r.getErrors(),
                 clusters  = r.getClusters(),
                 apps      = r.getApplications();
 
             var totals = relmah.basic(r).getTotals();
+            totals.subscribe(function (e) {
+                $totals.text(e);
+            });
+
             var groups = errors.groupBy(function (e) {
                 return e.Detail.Message;
             });
 
             errors.subscribe(function (e) {
                 $errors.prepend($('<li/>').text(e.Detail.Message + ' @ ' + e.Detail.Time));
-            });
-            totals.subscribe(function (e) {
-                $totals.text(e);
             });
 
             clusters.subscribe(function(e) {
