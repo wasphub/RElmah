@@ -3,9 +3,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using RElmah.Common;
-using Application = RElmah.Client.Models.Application;
-using Cluster = RElmah.Client.Models.Cluster;
-using ErrorPayload = RElmah.Client.Models.ErrorPayload;
+using RElmah.Client.Models;
 
 namespace RElmah.Client
 {
