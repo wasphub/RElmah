@@ -35,10 +35,4 @@ namespace RElmah.Server
     {
         Task Dispatch(Cluster cluster);
     }
-
-    public interface IDependencyRegistry
-    {
-        IDependencyRegistry Register(Type serviceType, Type implementationType);
-        IDependencyRegistry RegisterAsSingleton(Type serviceType, Type implementationType);
-    }
 }

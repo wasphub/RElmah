@@ -21,7 +21,8 @@ namespace RElmah.Server.Middleware
         {
             const string relmah = "relmah";
 
-            _inbox  = resolver.Resolve<IErrorsInbox>();
+            var errorsInbox = resolver.Resolve<IErrorsInbox>();
+            _inbox  = errorsInbox;
             _config = resolver.Resolve<IConfigurationProvider>();
 
             var keyer = new Func<string, string>(s => string.Format("/{0}/{1}", configuration.Root ?? relmah, s));

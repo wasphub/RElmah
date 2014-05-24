@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.SignalR;
 using Owin;
-using RElmah.Server.Infrastructure;
 using RElmah.Server.Middleware;
 using RElmah.Server.Services;
 
@@ -15,12 +14,15 @@ namespace RElmah.Server.Extensions
 
         public static IAppBuilder UseRElmah(this IAppBuilder builder, Configuration configuration)
         {
-            var registry = GlobalHost.DependencyResolver as IDependencyRegistry;
+            var registry = GlobalHost.DependencyResolver;
 
-            registry.RegisterAsSingleton(typeof(IConfigurationProvider), typeof(ConfigurationProvider));
+            var d  = new Dispatcher();
+            var cp = new ConfigurationProvider(d);
+            var ei = new ErrorsInbox(d);
 
-            registry.RegisterAsSingleton(typeof(IErrorsInbox), typeof(ErrorsInbox));
-            registry.RegisterAsSingleton(typeof(IDispatcher),  typeof(Dispatcher));
+            registry.Register(typeof(IDispatcher), () => d);
+            registry.Register(typeof(IConfigurationProvider), () => cp);
+            registry.Register(typeof(IErrorsInbox), () => ei);
 
             if (configuration.Register != null)
                 configuration.Register(registry);
@@ -30,8 +32,6 @@ namespace RElmah.Server.Extensions
 
         public static IAppBuilder RunSignalR(this IAppBuilder builder)
         {
-            GlobalHost.DependencyResolver = new TinyIocDependencyResolver();
-
             OwinExtensions.RunSignalR(builder);
 
             return builder;

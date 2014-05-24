@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Common\CommonVersionInfo.cs">
-      <Link>CommonVersionInfo.cs</Link>
+      <Link>Properties\CommonVersionInfo.cs</Link>
     </Compile>
     <Compile Include="Application.cs" />
     <Compile Include="Cluster.cs" />

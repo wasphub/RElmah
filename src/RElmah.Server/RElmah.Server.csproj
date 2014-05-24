@@ -79,7 +79,6 @@
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Hubs\Frontend.cs" />
     <Compile Include="Infrastructure\ReactiveDictionary.cs" />
-    <Compile Include="Infrastructure\TinyIocDependencyResolver.cs" />
     <Compile Include="Middleware\Configuration.cs" />
     <Compile Include="Middleware\Handlers\Dispatchers.cs" />
     <Compile Include="Middleware\RElmahMiddleware.cs" />
@@ -89,7 +88,6 @@
     <Compile Include="Services\ErrorsInbox.cs" />
     <Compile Include="Services\Nulls\NullErrorsBacklog.cs" />
     <Compile Include="Services\Nulls\NullErrorsDispatcher.cs" />
-    <Compile Include="TinyIoC.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
