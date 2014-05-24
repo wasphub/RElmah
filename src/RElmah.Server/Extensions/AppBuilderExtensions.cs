@@ -19,8 +19,8 @@ namespace RElmah.Server.Extensions
 
             var d  = new Dispatcher();
             var cp = new ConfigurationProvider(d);
-            var ei = new ErrorsInbox(d);
             var eb = new ErrorsBacklog();
+            var ei = new ErrorsInbox(eb, d);
 
             registry.Register(typeof(IDispatcher), () => d);
             registry.Register(typeof(IConfigurationProvider), () => cp);
