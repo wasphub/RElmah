@@ -25,7 +25,6 @@ namespace RElmah.Server.Services
             _backlog = backlog;
             _errors = new Subject<ErrorPayload>();
             _errors.Subscribe(p => dispatcher.DispatchError(p));
-
         }
 
         public void Post(ErrorPayload payload)

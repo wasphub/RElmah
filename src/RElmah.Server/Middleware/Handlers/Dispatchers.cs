@@ -12,16 +12,6 @@ namespace RElmah.Server.Middleware.Handlers
 {
     public static class Dispatchers
     {
-        private static readonly Exception[] Randoms =
-        {
-            new OutOfMemoryException("No more memory..."), 
-            new ArgumentNullException("foo"), 
-            new InvalidCastException("What more are you trying to achieve??"), 
-            new StackOverflowException("Tail recursion rulez!"), 
-            new AccessViolationException("Scary...!")
-        };
-        private static readonly Random Randomizer = new Random();
-
         public async static Task PostError(
             IErrorsInbox inbox, 
             Func<IDictionary<string, object>, Task<ErrorPayload>> executor, 
@@ -39,20 +29,7 @@ namespace RElmah.Server.Middleware.Handlers
             var errorId   = @params["errorId"];
             var infoUrl   = @params["infoUrl"];
 
-            return new ErrorPayload(sourceId, JsonConvert.DeserializeObject<ErrorDetail>(errorText));
-        }
-
-        public static async Task<ErrorPayload> Random(IDictionary<string, object> environment)
-        {
-            var exception = Randoms[Randomizer.Next(Randoms.Length)];
-
-            return await Task.FromResult(
-                new ErrorPayload(
-                    Guid.NewGuid().ToString(), 
-                    new ErrorDetail
-                    {
-                        Message = exception.Message
-                    }));
+            return new ErrorPayload(sourceId, JsonConvert.DeserializeObject<ErrorDetail>(errorText), errorId, infoUrl);
         }
 
         public async static Task Clusters(
