@@ -20,12 +20,14 @@ namespace RElmah.Server.Extensions
             var d  = new Dispatcher();
             var cp = new ConfigurationProvider(d);
             var ei = new ErrorsInbox(d);
+            var eb = new ErrorsBacklog();
 
             registry.Register(typeof(IDispatcher), () => d);
             registry.Register(typeof(IConfigurationProvider), () => cp);
             registry.Register(typeof(IErrorsInbox), () => ei);
+            registry.Register(typeof(IErrorsBacklog), () => eb);
 
-            registry.Register(typeof(Frontend), () => new Frontend(cp));
+            registry.Register(typeof(Frontend), () => new Frontend(cp, eb));
 
             if (configuration.Register != null)
                 configuration.Register(registry);

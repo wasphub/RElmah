@@ -15,6 +15,7 @@ namespace RElmah.Server
     public interface IErrorsBacklog
     {
         Task Store(ErrorPayload payload);
+        Task<IEnumerable<ErrorPayload>> GetErrors();
     }
 
     public interface IDispatcher
