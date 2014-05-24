@@ -21,7 +21,8 @@
 
             var r         = relmah("http://localhost:50360/signalr"),
                 errors    = r.errors,
-                clusters  = r.clusters;
+                clusters  = r.clusters,
+                apps      = r.applications;
 
             errors = errors.map(function (e) {
                 return { m: e.Detail.Message, t: e.Detail.Time };
@@ -45,9 +46,15 @@
             });
 
             clusters.subscribe(function(e) {
-                $.each(e.Entries, function(i, c)
+                $.each(e.Targets, function(i, c)
                 {
                     $clusters.prepend($('<li/>').text(c.Name));
+                });
+            });
+
+            apps.subscribe(function (e) {
+                $.each(e.Targets, function (i, a) {
+                    console.log(a.Name);
                 });
             });
 

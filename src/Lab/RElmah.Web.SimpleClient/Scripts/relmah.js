@@ -23,7 +23,8 @@
                 return conn.start();
             },
             errors: errors,
-            clusters: clusters
+            clusters: clusters,
+            applications: applications
         };
     };
 })();
