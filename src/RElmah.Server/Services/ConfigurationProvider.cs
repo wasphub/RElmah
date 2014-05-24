@@ -32,7 +32,7 @@ namespace RElmah.Server.Services
         public void AddApplication(string name, string sourceId, string cluster)
         {
             if (!_clusters.ContainsKey(cluster))
-                throw new ApplicationException("application must specify a valid and registered cluster");
+                throw new ApplicationException("Must specify a valid and registered cluster");
 
             _applications[name] = new Application(name, sourceId, _clusters[cluster]);
         }
