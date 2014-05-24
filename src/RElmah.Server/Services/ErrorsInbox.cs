@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reactive.Subjects;
-using RElmah.Domain;
+using RElmah.Server.Domain;
 using RElmah.Server.Services.Nulls;
 
 namespace RElmah.Server.Services

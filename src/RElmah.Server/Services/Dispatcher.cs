@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using RElmah.Common;
-using RElmah.Domain;
+using RElmah.Server.Domain;
 using RElmah.Server.Hubs;
 
 namespace RElmah.Server.Services

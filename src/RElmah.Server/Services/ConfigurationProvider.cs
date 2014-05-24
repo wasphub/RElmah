@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using RElmah.Domain;
+using RElmah.Server.Domain;
 using RElmah.Server.Infrastructure;
 
 namespace RElmah.Server.Services

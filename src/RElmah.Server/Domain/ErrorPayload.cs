@@ -1,6 +1,6 @@
 ﻿using RElmah.Common;
 
-namespace RElmah.Domain
+namespace RElmah.Server.Domain
 {
     public class ErrorPayload
     {

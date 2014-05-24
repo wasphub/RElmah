@@ -1,9 +1,9 @@
 <Query Kind="Statements">
   <Reference Relative="..\src\RElmah.Client\bin\Debug\RElmah.Client.dll">&lt;MyDocuments&gt;\RElmah\repo\src\RElmah.Client\bin\Debug\RElmah.Client.dll</Reference>
-  <Reference Relative="..\src\RElmah.Domain\bin\Debug\RElmah.Domain.dll">&lt;MyDocuments&gt;\RElmah\repo\src\RElmah.Domain\bin\Debug\RElmah.Domain.dll</Reference>
+  <Reference Relative="..\src\RElmah.Common\bin\Debug\RElmah.Common.dll">&lt;MyDocuments&gt;\RElmah\repo\src\RElmah.Common\bin\Debug\RElmah.Common.dll</Reference>
   <Reference Relative="..\src\RElmah.Client\bin\Debug\System.Reactive.Linq.dll">&lt;MyDocuments&gt;\RElmah\repo\src\RElmah.Client\bin\Debug\System.Reactive.Linq.dll</Reference>
   <Namespace>RElmah.Client</Namespace>
-  <Namespace>RElmah.Domain</Namespace>
+  <Namespace>RElmah.Common</Namespace>
   <Namespace>System.Reactive.Linq</Namespace>
 </Query>
 

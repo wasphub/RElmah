@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using RElmah.Common;
-using RElmah.Domain;
+using RElmah.Server.Domain;
 
 namespace RElmah.Server.Middleware.Handlers
 {

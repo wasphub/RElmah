@@ -74,6 +74,9 @@
       <Link>CommonVersionInfo.cs</Link>
     </Compile>
     <Compile Include="Contracts.cs" />
+    <Compile Include="Domain\Application.cs" />
+    <Compile Include="Domain\Cluster.cs" />
+    <Compile Include="Domain\ErrorPayload.cs" />
     <Compile Include="Extensions\AppBuilderExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
@@ -97,10 +100,6 @@
     <ProjectReference Include="..\RElmah.Common\RElmah.Common.csproj">
       <Project>{198d8eef-cb52-4cc8-9f06-3259939c8820}</Project>
       <Name>RElmah.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RElmah.Domain\RElmah.Domain.csproj">
-      <Project>{a0872048-ce38-4f86-8388-7b887fa2f5a9}</Project>
-      <Name>RElmah.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

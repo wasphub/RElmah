@@ -1,4 +1,4 @@
-﻿namespace RElmah.Domain
+﻿namespace RElmah.Server.Domain
 {
     public class Application
     {

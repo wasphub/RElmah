@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using RElmah.Common;
-using RElmah.Domain;
+using RElmah.Server.Domain;
 
 namespace RElmah.Server
 {

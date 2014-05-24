@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RElmah.Domain
+namespace RElmah.Server.Domain
 {
     public class Cluster
     {
