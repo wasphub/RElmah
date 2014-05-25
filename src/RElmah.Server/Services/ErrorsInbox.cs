@@ -7,24 +7,26 @@ namespace RElmah.Server.Services
 {
     public class ErrorsInbox : IErrorsInbox
     {
+        private readonly IConfigurationProvider _configurationProvider;
         private readonly Subject<ErrorPayload> _errors;
         private readonly IErrorsBacklog _backlog;
 
-        public ErrorsInbox() 
-            : this(new NullErrorsBacklog(), new NullDispatcher())
+        public ErrorsInbox(IConfigurationProvider configurationProvider)
+            : this(new NullErrorsBacklog(), new NullDispatcher(), configurationProvider)
+        {
+            _configurationProvider = configurationProvider;
+        }
+
+        public ErrorsInbox(IDispatcher dispatcher, IConfigurationProvider configurationProvider)
+            : this(new NullErrorsBacklog(), dispatcher, configurationProvider)
         {
         }
 
-        public ErrorsInbox(IDispatcher dispatcher)
-            : this(new NullErrorsBacklog(), dispatcher)
-        {
-        }
-
-        public ErrorsInbox(IErrorsBacklog backlog, IDispatcher dispatcher)
+        public ErrorsInbox(IErrorsBacklog backlog, IDispatcher dispatcher, IConfigurationProvider configurationProvider)
         {
             _backlog = backlog;
             _errors = new Subject<ErrorPayload>();
-            _errors.Subscribe(p => dispatcher.DispatchError(p));
+            _errors.Subscribe(p => dispatcher.DispatchError(configurationProvider, p));
         }
 
         public void Post(ErrorPayload payload)

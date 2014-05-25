@@ -1,19 +1,30 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Principal;
 using RElmah.Server.Domain;
+using RElmah.Server.Extensions;
 using RElmah.Server.Infrastructure;
 
 namespace RElmah.Server.Services
 {
     public class ConfigurationProvider : IConfigurationProvider
     {
-        readonly ReactiveDictionary<string, Cluster>     _clusters     = new ReactiveDictionary<string, Cluster>();
-        readonly ReactiveDictionary<string, Application> _applications = new ReactiveDictionary<string, Application>();
+        readonly ReactiveDictionary<string, Cluster>        _clusters     = new ReactiveDictionary<string, Cluster>();
+        readonly ReactiveDictionary<string, Application>    _applications = new ReactiveDictionary<string, Application>();
+        readonly ConcurrentDictionary<string, ISet<string>> _visibility   = new ConcurrentDictionary<string, ISet<string>>();
 
         public ConfigurationProvider(IDispatcher dispatcher)
         {
-            _clusters.Subscribe(p => dispatcher.DispatchClusterOperation(p));
-            _applications.Subscribe(p => dispatcher.DispatchApplicationOperation(p));
+            _clusters.Subscribe(p => dispatcher.DispatchClusterOperation(this, p));
+            _applications.Subscribe(p => dispatcher.DispatchApplicationOperation(this, p));
+        }
+
+        public T ExtractInfo<T>(ErrorPayload payload, Func<string, string, T> resultor)
+        {
+            var application = _applications.Values.FirstOrDefault(a => a.SourceId == payload.SourceId);
+            return resultor(application.Name, application.Cluster.Name);
         }
 
         public IEnumerable<Cluster> Clusters { get { return _clusters.Values; } }
@@ -42,9 +53,18 @@ namespace RElmah.Server.Services
             return _applications[name];
         }
 
-        public IEnumerable<string> ExtractGroups(ErrorPayload payload)
+        public IEnumerable<Application> GetVisibleApplications(IPrincipal user)
         {
-            return new[] { payload.SourceId };
+            var set = _visibility.GetOrAdd(user.Identity.Name, s => new HashSet<string>());
+            return
+                from h in set
+                join a in _applications.Values on h equals a.Cluster.Name
+                select a;
+        }
+
+        public void AddUserToCluster(string user, string cluster)
+        {
+            _visibility.GetOrAdd(user, s => new HashSet<string>()).Add(cluster);
         }
     }
 }

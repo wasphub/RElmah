@@ -6,17 +6,17 @@ namespace RElmah.Server.Services.Nulls
 {
     public class NullDispatcher : IDispatcher
     {
-        public Task DispatchError(ErrorPayload payload)
+        public Task DispatchError(IConfigurationProvider configurationProvider, ErrorPayload payload)
         {
             return Task.FromResult<object>(null);
         }
 
-        public Task DispatchClusterOperation(Operation<Cluster> op)
+        public Task DispatchClusterOperation(IConfigurationProvider configurationProvider, Operation<Cluster> op)
         {
             return Task.FromResult<object>(null);
         }
 
-        public Task DispatchApplicationOperation(Operation<Application> op)
+        public Task DispatchApplicationOperation(IConfigurationProvider configurationProvider, Operation<Application> op)
         {
             return Task.FromResult<object>(null);
         }

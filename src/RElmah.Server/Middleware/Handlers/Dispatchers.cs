@@ -13,14 +13,15 @@ namespace RElmah.Server.Middleware.Handlers
     public static class Dispatchers
     {
         public async static Task PostError(
-            IErrorsInbox inbox, 
-            Func<IDictionary<string, object>, Task<ErrorPayload>> executor, 
+            IErrorsInbox inbox,
+            Func<IConfigurationProvider, IDictionary<string, object>, Task<ErrorPayload>> executor,
+            IConfigurationProvider configurationProvider,
             IDictionary<string, object> environment)
         {
-            inbox.Post(await executor(environment));
+            inbox.Post(await executor(configurationProvider, environment));
         }
 
-        public async static Task<ErrorPayload> Elmah(IDictionary<string, object> environment)
+        public async static Task<ErrorPayload> Elmah(IConfigurationProvider configuration, IDictionary<string, object> environment)
         {
             var @params = await new OwinContext(environment).Request.ReadFormAsync();
 
@@ -69,6 +70,25 @@ namespace RElmah.Server.Middleware.Handlers
                 : configuration.Applications));
         }
 
+        public async static Task Users(
+            IConfigurationProvider configuration,
+            IDictionary<string, object> environment)
+        {
+            var request = new OwinRequest(environment);
+            if (request.Method == "POST")
+            {
+                var app = await BuildUser(request, (u, c) => new { u, c });
+                configuration.AddUserToCluster(app.u, app.c);
+                return;
+            }
+
+            var response = new OwinResponse(environment);
+            await response.WriteAsync(JsonConvert.SerializeObject(
+                request.Uri.Segments.Count() > 3
+                ? (dynamic)configuration.GetApplication(request.Uri.Segments.Skip(3).First())
+                : configuration.Applications));
+        }
+
         static async Task<string> BuildCluster(OwinRequest request)
         {
             var @params = await request.ReadFormAsync();
@@ -79,6 +99,12 @@ namespace RElmah.Server.Middleware.Handlers
         {
             var @params = await request.ReadFormAsync();
             return await Task.FromResult(resultor(@params["name"], @params["sourceId"], @params["cluster"]));
+        }
+
+        static async Task<T> BuildUser<T>(OwinRequest request, Func<string, string, T> resultor)
+        {
+            var @params = await request.ReadFormAsync();
+            return await Task.FromResult(resultor(@params["name"], @params["cluster"]));
         }
 
         static string Decode(string str)

@@ -28,10 +28,11 @@ namespace RElmah.Server.Middleware
 
             _dispatchers = new Dictionary<string, Func<IDictionary<string, object>, Task>>
             {
-                { keyer("post-error"),   e => Dispatchers.PostError(_inbox.Value,      Dispatchers.Elmah,        e) },
+                { keyer("post-error"),   e => Dispatchers.PostError(_inbox.Value, Dispatchers.Elmah, _config.Value, e) },
 
                 { keyer("clusters"),     e => Dispatchers.Clusters(    _config.Value, e) },
                 { keyer("applications"), e => Dispatchers.Applications(_config.Value, e) },
+                { keyer("users"),        e => Dispatchers.Users(       _config.Value, e) },
             };
         }
 

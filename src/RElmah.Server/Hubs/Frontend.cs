@@ -20,9 +20,18 @@ namespace RElmah.Server.Hubs
 
         public override Task OnConnected()
         {
-            Clients.Caller.clusterOperation(    new Operation<Cluster>(    _configurationProvider.Clusters,     OperationType.Create));
+            foreach (var app in _configurationProvider.GetVisibleApplications(Context.User))
+                Groups.Add(Context.ConnectionId, app.SourceId);
 
-            Clients.Caller.applicationOperation(new Operation<Application>(_configurationProvider.Applications, OperationType.Create));
+            Clients.Caller.clusterOperation(    
+                new Operation<Cluster>(    
+                    _configurationProvider.Clusters,     
+                    OperationType.Create));
+
+            Clients.Caller.applicationOperation(
+                new Operation<Application>(
+                    _configurationProvider.Applications,
+                    OperationType.Create));
 
             return base.OnConnected();
         }

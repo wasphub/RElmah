@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RElmah.Common;
 using RElmah.Server.Domain;
+using RElmah.Server.Services;
 
 namespace RElmah.Server.Tests
 {
@@ -15,7 +16,7 @@ namespace RElmah.Server.Tests
         [TestMethod]
         public async Task PostSingleError()
         {
-            var inbox = new Services.ErrorsInbox();
+            var inbox = new ErrorsInbox(new ConfigurationProvider(new Dispatcher()));
 
             var newThreadScheduler = NewThreadScheduler.Default;
 
