@@ -45,6 +45,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RElmah.Web.Source", "http:/
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "true"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		ProjectReferences = "{3e35f8ef-0482-4ded-aeb1-1087c6bb545f}|RElmah.Elmah.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_17155"
 		Debug.AspNetCompiler.PhysicalPath = "Lab\RElmah.Web.Source\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_17155\"
@@ -64,6 +65,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RElmah.Web.Source", "http:/
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Common", "RElmah.Common\RElmah.Common.csproj", "{198D8EEF-CB52-4CC8-9F06-3259939C8820}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Elmah", "Lab\RElmah.Elmah\RElmah.Elmah.csproj", "{3E35F8EF-0482-4DED-AEB1-1087C6BB545F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +102,10 @@ Global
 		{198D8EEF-CB52-4CC8-9F06-3259939C8820}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{198D8EEF-CB52-4CC8-9F06-3259939C8820}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{198D8EEF-CB52-4CC8-9F06-3259939C8820}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E35F8EF-0482-4DED-AEB1-1087C6BB545F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E35F8EF-0482-4DED-AEB1-1087C6BB545F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E35F8EF-0482-4DED-AEB1-1087C6BB545F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E35F8EF-0482-4DED-AEB1-1087C6BB545F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,5 +115,6 @@ Global
 		{75AD3E3C-C938-4BCB-BD50-D9B84E348D56} = {6E56F07B-9679-4B42-B3B5-B603BD1053F7}
 		{81D8F5DD-ADE6-4740-BC1C-CB65020B4CEC} = {6E56F07B-9679-4B42-B3B5-B603BD1053F7}
 		{595B7855-BF97-4427-B060-0B6837178F91} = {6E56F07B-9679-4B42-B3B5-B603BD1053F7}
+		{3E35F8EF-0482-4DED-AEB1-1087C6BB545F} = {6E56F07B-9679-4B42-B3B5-B603BD1053F7}
 	EndGlobalSection
 EndGlobal
