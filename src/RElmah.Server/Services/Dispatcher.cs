@@ -12,7 +12,7 @@ namespace RElmah.Server.Services
 
         public Task DispatchError(IConfigurationProvider configurationProvider, ErrorPayload payload)
         {
-            return _context.Clients.All.error(payload);
+            return _context.Clients.Group(payload.SourceId).error(payload);
         }
 
         public Task DispatchClusterOperation(IConfigurationProvider configurationProvider, Operation<Cluster> op)
