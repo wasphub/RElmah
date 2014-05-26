@@ -10,7 +10,7 @@ using RElmah.Server.Domain;
 
 namespace RElmah.Server.Middleware.Handlers
 {
-    public static class Dispatchers
+    public static class Routes
     {
         public async static Task PostError(
             IErrorsInbox inbox,

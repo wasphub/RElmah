@@ -83,7 +83,7 @@
     <Compile Include="Hubs\Frontend.cs" />
     <Compile Include="Infrastructure\ReactiveDictionary.cs" />
     <Compile Include="Middleware\Configuration.cs" />
-    <Compile Include="Middleware\Handlers\Dispatchers.cs" />
+    <Compile Include="Middleware\Handlers\Routes.cs" />
     <Compile Include="Middleware\RElmahMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConfigurationProvider.cs" />
