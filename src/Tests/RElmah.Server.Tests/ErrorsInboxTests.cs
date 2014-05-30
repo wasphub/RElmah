@@ -16,7 +16,7 @@ namespace RElmah.Server.Tests
         [TestMethod]
         public async Task PostSingleError()
         {
-            var inbox = new ErrorsInbox(new ConfigurationProvider(new Dispatcher()));
+            var inbox = new ErrorsInbox();
 
             var newThreadScheduler = NewThreadScheduler.Default;
 

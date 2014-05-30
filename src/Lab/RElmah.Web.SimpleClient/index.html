@@ -20,7 +20,7 @@
                 $totals   = $('#totals'),
                 $clusters = $('#clusters');
 
-            var r         = relmah("http://localhost:50360/signalr", {
+            var r = relmah("http://localhost:50360/signalr", {
                     errors: function(errs) {
                         return errs.filter(function(e) {
                             return e.Detail.Message.substring(0, 1) === 'B';

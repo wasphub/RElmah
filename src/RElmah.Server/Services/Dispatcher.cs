@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using RElmah.Common;
 using RElmah.Server.Domain;
@@ -9,6 +10,14 @@ namespace RElmah.Server.Services
     public class Dispatcher : IDispatcher
     {
         private readonly IHubContext _context = GlobalHost.ConnectionManager.GetHubContext<Frontend>();
+
+        public Dispatcher(IErrorsInbox errorsInbox, IConfigurationProvider configurationProvider)
+        {
+            errorsInbox.GetErrors().Subscribe( p => DispatchError(configurationProvider, p));
+
+            configurationProvider.GetClusters().Subscribe(p => DispatchClusterOperation(configurationProvider, p));
+            configurationProvider.GetApplications().Subscribe(p => DispatchApplicationOperation(configurationProvider, p));
+        }
 
         public Task DispatchError(IConfigurationProvider configurationProvider, ErrorPayload payload)
         {

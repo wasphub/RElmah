@@ -17,10 +17,10 @@ namespace RElmah.Server.Extensions
         {
             var registry = GlobalHost.DependencyResolver;
 
-            var d  = new Dispatcher();
-            var cp = new ConfigurationProvider(d);
+            var cp = new ConfigurationProvider();
             var eb = new ErrorsBacklog();
-            var ei = new ErrorsInbox(eb, d, cp);
+            var ei = new ErrorsInbox(eb);
+            var d = new Dispatcher(ei, cp);
 
             registry.Register(typeof(IDispatcher), () => d);
             registry.Register(typeof(IConfigurationProvider), () => cp);

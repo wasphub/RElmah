@@ -33,8 +33,10 @@ namespace RElmah.Server
         IEnumerable<Application> Applications { get; }
         void AddCluster(string cluster);
         Cluster GetCluster(string name);
+        IObservable<Operation<Cluster>> GetClusters();
         void AddApplication(string name, string sourceId, string cluster);
         Application GetApplication(string name);
+        IObservable<Operation<Application>> GetApplications();
         IEnumerable<Application> GetVisibleApplications(IPrincipal user);
         void AddUserToCluster(string user, string cluster);
     }
