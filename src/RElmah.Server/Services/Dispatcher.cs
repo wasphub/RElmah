@@ -13,7 +13,7 @@ namespace RElmah.Server.Services
 
         public Dispatcher(IErrorsInbox errorsInbox, IConfigurationProvider configurationProvider)
         {
-            errorsInbox.GetErrors().Subscribe( p => DispatchError(configurationProvider, p));
+            errorsInbox.GetErrors().Subscribe(p => DispatchError(configurationProvider, p));
 
             configurationProvider.GetClusters().Subscribe(p => DispatchClusterOperation(configurationProvider, p));
             configurationProvider.GetApplications().Subscribe(p => DispatchApplicationOperation(configurationProvider, p));

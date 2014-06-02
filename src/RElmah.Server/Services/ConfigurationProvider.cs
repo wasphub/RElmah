@@ -50,6 +50,7 @@ namespace RElmah.Server.Services
         public IEnumerable<Application> GetVisibleApplications(IPrincipal user)
         {
             var set = _visibility.GetOrAdd(user.Identity.Name, s => new HashSet<string>());
+
             return
                 from h in set
                 join a in _applications.Values on h equals a.Cluster.Name
