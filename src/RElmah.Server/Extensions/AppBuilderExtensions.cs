@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using System;
+using Microsoft.AspNet.SignalR;
 using Owin;
 using RElmah.Server.Hubs;
 using RElmah.Server.Middleware;
@@ -8,12 +9,12 @@ namespace RElmah.Server.Extensions
 {
     public static class AppBuilderExtensions
     {
-        public static IAppBuilder UseRElmah(this IAppBuilder builder)
+        public static IAppBuilder UseRElmah(this IAppBuilder builder, Action<IConfigurationProvider> configurator = null)
         {
-            return builder.UseRElmah(new Configuration());
+            return builder.UseRElmah(new Configuration(), configurator);
         }
 
-        public static IAppBuilder UseRElmah(this IAppBuilder builder, Configuration configuration)
+        public static IAppBuilder UseRElmah(this IAppBuilder builder, Configuration configuration, Action<IConfigurationProvider> configurator = null)
         {
             var registry = GlobalHost.DependencyResolver;
 
@@ -31,6 +32,9 @@ namespace RElmah.Server.Extensions
 
             if (configuration.Register != null)
                 configuration.Register(registry);
+
+            if (configurator != null)
+                configurator(cp);
 
             return builder.UseRElmahMiddleware<RElmahMiddleware>(configuration, GlobalHost.DependencyResolver);
         }

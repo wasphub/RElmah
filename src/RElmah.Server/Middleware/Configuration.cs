@@ -8,4 +8,4 @@ namespace RElmah.Server.Middleware
         public string Root { get; set; }
         public Action<IDependencyResolver> Register { get; set; }
     }
-}
+}       

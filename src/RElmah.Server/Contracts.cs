@@ -31,13 +31,13 @@ namespace RElmah.Server
         T ExtractInfo<T>(ErrorPayload payload, Func<string, string, T> resultor);
         IEnumerable<Cluster> Clusters { get; }
         IEnumerable<Application> Applications { get; }
-        void AddCluster(string cluster);
+        IConfigurationProvider AddCluster(string cluster);
         Cluster GetCluster(string name);
         IObservable<Operation<Cluster>> GetObservableClusters();
-        void AddApplication(string name, string sourceId, string cluster);
+        IConfigurationProvider AddApplication(string sourceId, string name, string cluster);
         Application GetApplication(string name);
         IObservable<Operation<Application>> GetObservableApplications();
         IEnumerable<Application> GetVisibleApplications(IPrincipal user);
-        void AddUserToCluster(string user, string cluster);
+        IConfigurationProvider AddUserToCluster(string user, string cluster);
     }
 }

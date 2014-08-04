@@ -59,7 +59,7 @@ namespace RElmah.Server.Middleware.Handlers
             if (request.Method == "POST")
             {
                 var app = await BuildApplication(request, (n, s, c) => new { n, s, c } );
-                configuration.AddApplication(app.n, app.s, app.c);
+                configuration.AddApplication(app.s, app.n, app.c);
                 return;
             }
 

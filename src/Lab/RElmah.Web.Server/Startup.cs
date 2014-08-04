@@ -17,7 +17,10 @@ namespace RElmah.Web.Server
                 builder.RunSignalR();
             });
 
-            app.UseRElmah();
+            app.UseRElmah(cp => cp
+                .AddCluster("c1")
+                //.AddUserToCluster("wasp", "c1")
+                .AddApplication("foo", "foo", "c1"));
         }
     }
 }
