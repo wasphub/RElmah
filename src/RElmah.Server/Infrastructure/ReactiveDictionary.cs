@@ -10,7 +10,7 @@ namespace RElmah.Server.Infrastructure
 {
     public class ReactiveDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISubject<Operation<TValue>>
     {
-        readonly IDictionary<TKey, TValue> _dictionary = new ConcurrentDictionary<TKey, TValue>();
+        private readonly IDictionary<TKey, TValue> _dictionary                  = new ConcurrentDictionary<TKey, TValue>();
         private readonly ISubject<Operation<TValue>, Operation<TValue>> _source = Subject.Synchronize(new Subject<Operation<TValue>>());
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
