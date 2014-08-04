@@ -15,8 +15,8 @@ namespace RElmah.Server.Services
         {
             errorsInbox.GetErrors().Subscribe(p => DispatchError(configurationProvider, p));
 
-            configurationProvider.GetClusters().Subscribe(p => DispatchClusterOperation(configurationProvider, p));
-            configurationProvider.GetApplications().Subscribe(p => DispatchApplicationOperation(configurationProvider, p));
+            configurationProvider.GetObservableClusters().Subscribe(p => DispatchClusterOperation(configurationProvider, p));
+            configurationProvider.GetObservableApplications().Subscribe(p => DispatchApplicationOperation(configurationProvider, p));
         }
 
         public Task DispatchError(IConfigurationProvider configurationProvider, ErrorPayload payload)

@@ -49,10 +49,8 @@ namespace RElmah.Server.Services
 
         public IEnumerable<Application> GetVisibleApplications(IPrincipal user)
         {
-            var set = _visibility.GetOrAdd(user.Identity.Name, s => new HashSet<string>());
-
             return
-                from h in set
+                from h in _visibility.GetOrAdd(user.Identity.Name, s => new HashSet<string>())
                 join a in _applications.Values on h equals a.Cluster.Name
                 select a;
         }
@@ -62,12 +60,12 @@ namespace RElmah.Server.Services
             _visibility.GetOrAdd(user, s => new HashSet<string>()).Add(cluster);
         }
 
-        public IObservable<Operation<Cluster>> GetClusters()
+        public IObservable<Operation<Cluster>> GetObservableClusters()
         {
             return _clusters;
         }
 
-        public IObservable<Operation<Application>> GetApplications()
+        public IObservable<Operation<Application>> GetObservableApplications()
         {
             return _applications;
         }
