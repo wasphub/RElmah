@@ -71,12 +71,12 @@ namespace RElmah.Server.Services
             return this;
         }
 
-        public IObservable<Operation<Cluster>> GetObservableClusters()
+        public IObservable<Operation<Cluster>> GetClustersStream()
         {
             return _clusters;
         }
 
-        public IObservable<Operation<Application>> GetObservableApplications()
+        public IObservable<Operation<Application>> GetApplicationsStream()
         {
             return _applications;
         }
