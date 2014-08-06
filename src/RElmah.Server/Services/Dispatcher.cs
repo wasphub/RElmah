@@ -13,10 +13,9 @@ namespace RElmah.Server.Services
 
         public Dispatcher(IErrorsInbox errorsInbox, IConfigurationProvider configurationProvider)
         {
-            errorsInbox.GetErrors().Subscribe(p => DispatchError(configurationProvider, p));
+            errorsInbox          .GetErrors()           .Subscribe(p => DispatchError(configurationProvider, p));
 
-            configurationProvider.GetClustersStream().Subscribe(p => DispatchClusterOperation(configurationProvider, p));
-            configurationProvider.GetApplicationsStream().Subscribe(p => DispatchApplicationOperation(configurationProvider, p));
+            configurationProvider.GetClusterUserDeltas().Subscribe(p => DispatchClusterUserOperation(configurationProvider, p));
         }
 
         public Task DispatchError(IConfigurationProvider configurationProvider, ErrorPayload payload)
@@ -24,14 +23,9 @@ namespace RElmah.Server.Services
             return _context.Clients.Group(payload.SourceId).error(payload);
         }
 
-        public Task DispatchClusterOperation(IConfigurationProvider configurationProvider, Operation<Cluster> op)
+        public Task DispatchClusterUserOperation(IConfigurationProvider configurationProvider, Delta<ClusterUser> op)
         {
-            return _context.Clients.All.clusterOperation(op);
-        }
-
-        public Task DispatchApplicationOperation(IConfigurationProvider configurationProvider, Operation<Application> op)
-        {
-            return _context.Clients.All.applicationOperation(op);
+            return _context.Clients.All.clusterUserOperation(op);
         }
     }
 }

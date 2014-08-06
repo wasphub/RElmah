@@ -24,21 +24,21 @@ namespace RElmah.Server.Hubs
                 Groups.Add(Context.ConnectionId, app.SourceId);
 
             Clients.Caller.clusterOperation(    
-                new Operation<Cluster>(    
+                new Delta<Cluster>(    
                     _configurationProvider.Clusters,     
-                    OperationType.Create));
+                    DeltaType.Create));
 
             Clients.Caller.applicationOperation(
-                new Operation<Application>(
+                new Delta<Application>(
                     _configurationProvider.Applications,
-                    OperationType.Create));
+                    DeltaType.Create));
 
             return base.OnConnected();
         }
 
-        public async Task<Operation<ErrorPayload>> GetErrors()
+        public async Task<Delta<ErrorPayload>> GetErrors()
         {
-            return new Operation<ErrorPayload>(await _errorsBacklog.GetErrors(), OperationType.Create);
+            return new Delta<ErrorPayload>(await _errorsBacklog.GetErrors(), DeltaType.Create);
         }
     }
 }

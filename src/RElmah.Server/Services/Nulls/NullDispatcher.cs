@@ -11,12 +11,8 @@ namespace RElmah.Server.Services.Nulls
             return Task.FromResult<object>(null);
         }
 
-        public Task DispatchClusterOperation(IConfigurationProvider configurationProvider, Operation<Cluster> op)
-        {
-            return Task.FromResult<object>(null);
-        }
 
-        public Task DispatchApplicationOperation(IConfigurationProvider configurationProvider, Operation<Application> op)
+        public Task DispatchClusterUserOperation(IConfigurationProvider configurationProvider, Delta<ClusterUser> op)
         {
             return Task.FromResult<object>(null);
         }

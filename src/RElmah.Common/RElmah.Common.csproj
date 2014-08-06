@@ -43,8 +43,8 @@
       <Link>Properties\CommonVersionInfo.cs</Link>
     </Compile>
     <Compile Include="ErrorDetail.cs" />
-    <Compile Include="Operation.cs" />
-    <Compile Include="OperationType.cs" />
+    <Compile Include="Delta.cs" />
+    <Compile Include="DeltaType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

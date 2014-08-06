@@ -1,6 +1,6 @@
 ﻿namespace RElmah.Common
 {
-    public enum OperationType
+    public enum DeltaType
     {
         Create,
         Update,

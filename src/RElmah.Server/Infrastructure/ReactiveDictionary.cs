@@ -2,16 +2,22 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Subjects;
 using RElmah.Common;
 using RElmah.Server.Extensions;
 
 namespace RElmah.Server.Infrastructure
 {
-    public class ReactiveDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISubject<Operation<TValue>>
+    public class ReactiveDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
-        private readonly IDictionary<TKey, TValue> _dictionary                  = new ConcurrentDictionary<TKey, TValue>();
-        private readonly ISubject<Operation<TValue>, Operation<TValue>> _source = Subject.Synchronize(new Subject<Operation<TValue>>());
+        private readonly IDictionary<TKey, TValue>                      _dictionary = new ConcurrentDictionary<TKey, TValue>();
+        private readonly ISubject<Delta<TValue>, Delta<TValue>> _source     = Subject.Synchronize(new Subject<Delta<TValue>>());
+
+        public IObservable<Delta<TValue>> Deltas
+        {
+            get { return _source; }
+        }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
@@ -26,12 +32,12 @@ namespace RElmah.Server.Infrastructure
         public void Add(KeyValuePair<TKey, TValue> item)
         {
             _dictionary.Add(item);
-            OnNext(new Operation<TValue>(item.Value.ToSingleton(), OperationType.Create));
+            _source.OnNext(new Delta<TValue>(item.Value.ToSingleton(), DeltaType.Create));
         }
 
         public void Clear()
         {
-            OnNext(new Operation<TValue>(_dictionary.Values, OperationType.Remove));
+            _source.OnNext(new Delta<TValue>(_dictionary.Values, DeltaType.Remove));
             _dictionary.Clear();
         }
 
@@ -47,12 +53,12 @@ namespace RElmah.Server.Infrastructure
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            OnNext(new Operation<TValue>(item.Value.ToSingleton(), OperationType.Remove));
+            _source.OnNext(new Delta<TValue>(item.Value.ToSingleton(), DeltaType.Remove));
             return _dictionary.Remove(item);
         }
 
         public int Count { get { return _dictionary.Count; } }
-        public bool IsReadOnly { get { return _dictionary.IsReadOnly; } }
+        public bool IsReadOnly { get { return false; } }
         public bool ContainsKey(TKey key)
         {
             return _dictionary.ContainsKey(key);
@@ -61,12 +67,12 @@ namespace RElmah.Server.Infrastructure
         public void Add(TKey key, TValue value)
         {
             _dictionary.Add(key, value);
-            OnNext(new Operation<TValue>(value.ToSingleton(), OperationType.Create));
+            _source.OnNext(new Delta<TValue>(value.ToSingleton(), DeltaType.Create));
         }
 
         public bool Remove(TKey key)
         {
-            OnNext(new Operation<TValue>(_dictionary[key].ToSingleton(), OperationType.Remove));
+            _source.OnNext(new Delta<TValue>(_dictionary[key].ToSingleton(), DeltaType.Remove));
             return _dictionary.Remove(key);
         }
 
@@ -81,35 +87,14 @@ namespace RElmah.Server.Infrastructure
             set
             {
                 var updateEntryType = _dictionary.ContainsKey(key) 
-                    ? OperationType.Update 
-                    : OperationType.Create;
+                    ? DeltaType.Update 
+                    : DeltaType.Create;
                 _dictionary[key] = value;
-                OnNext(new Operation<TValue>(value.ToSingleton(), updateEntryType));
+                _source.OnNext(new Delta<TValue>(value.ToSingleton(), updateEntryType));
             }
         }
 
         public ICollection<TKey> Keys { get { return _dictionary.Keys; } }
-        public ICollection<TValue> Values { get { return _dictionary.Values; } }
-
-
-        public void OnNext(Operation<TValue> value)
-        {
-            _source.OnNext(value);
-        }
-
-        public void OnError(Exception error)
-        {
-            _source.OnError(error);
-        }
-
-        public void OnCompleted()
-        {
-            _source.OnCompleted();
-        }
-
-        public IDisposable Subscribe(IObserver<Operation<TValue>> observer)
-        {
-            return _source.Subscribe(observer);
-        }
+        public ICollection<TValue> Values { get { return _dictionary.Values; } }        
     }
 }

@@ -12,8 +12,8 @@ namespace RElmah.Client
         private readonly HubConnection _connection;
 
         private readonly Subject<ErrorPayload> _errors = new Subject<ErrorPayload>();
-        private readonly Subject<Operation<Cluster>> _clusters = new Subject<Operation<Cluster>>();
-        private readonly Subject<Operation<Application>> _applications = new Subject<Operation<Application>>();
+        private readonly Subject<Delta<Cluster>> _clusters = new Subject<Delta<Cluster>>();
+        private readonly Subject<Delta<Application>> _applications = new Subject<Delta<Application>>();
 
         public Connection(string endpoint)
         {
@@ -25,11 +25,11 @@ namespace RElmah.Client
                 "error", 
                 p => _errors.OnNext(p));
 
-            proxy.On<Operation<Cluster>>(
+            proxy.On<Delta<Cluster>>(
                 "clusterOperation",
                 p => _clusters.OnNext(p));
 
-            proxy.On<Operation<Application>>(
+            proxy.On<Delta<Application>>(
                 "applicationOperation", 
                 p => _applications.OnNext(p));
         }
@@ -40,9 +40,9 @@ namespace RElmah.Client
         }
 
         public IObservable<ErrorPayload> Errors { get { return _errors; } }
-        public IObservable<Operation<Cluster>> Clusters { get { return _clusters; } }
+        public IObservable<Delta<Cluster>> Clusters { get { return _clusters; } }
 
-        public IObservable<Operation<Application>> Applications { get { return _applications; } } 
+        public IObservable<Delta<Application>> Applications { get { return _applications; } } 
 
         public void Dispose()
         {

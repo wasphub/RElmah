@@ -76,12 +76,14 @@
     <Compile Include="Contracts.cs" />
     <Compile Include="Domain\Application.cs" />
     <Compile Include="Domain\Cluster.cs" />
+    <Compile Include="Domain\ClusterUser.cs" />
     <Compile Include="Domain\ErrorPayload.cs" />
     <Compile Include="Extensions\AppBuilderExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Hubs\Frontend.cs" />
     <Compile Include="Infrastructure\ReactiveDictionary.cs" />
+    <Compile Include="Infrastructure\ReactiveSet.cs" />
     <Compile Include="Middleware\Configuration.cs" />
     <Compile Include="Middleware\Handlers\Routes.cs" />
     <Compile Include="Middleware\RElmahMiddleware.cs" />

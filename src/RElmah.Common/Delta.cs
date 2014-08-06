@@ -2,15 +2,15 @@
 
 namespace RElmah.Common
 {
-    public class Operation<T>
+    public class Delta<T>
     {
-        public Operation(IEnumerable<T> targets, OperationType type)
+        public Delta(IEnumerable<T> targets, DeltaType type)
         {
             Targets = targets;
             Type = type;
         }
 
         public IEnumerable<T> Targets { get; private set; }
-        public OperationType Type { get; private set; }
+        public DeltaType Type { get; private set; }
     }
 }

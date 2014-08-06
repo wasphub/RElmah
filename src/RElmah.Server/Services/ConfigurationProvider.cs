@@ -2,20 +2,24 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Security.Principal;
 using RElmah.Common;
 using RElmah.Server.Domain;
+using RElmah.Server.Extensions;
 using RElmah.Server.Infrastructure;
 
 namespace RElmah.Server.Services
 {
     public class ConfigurationProvider : IConfigurationProvider
     {
-        readonly ReactiveDictionary<string, Cluster>        _clusters            = new ReactiveDictionary<string, Cluster>();
-        readonly ReactiveDictionary<string, Application>    _applications        = new ReactiveDictionary<string, Application>();
-        
-        readonly ConcurrentDictionary<string, ISet<string>> _visibilityByCluster = new ConcurrentDictionary<string, ISet<string>>();
-        readonly ConcurrentDictionary<string, ISet<string>> _visibilityByUser    = new ConcurrentDictionary<string, ISet<string>>();
+        readonly ReactiveDictionary<string, Cluster>                      _clusters            = new ReactiveDictionary<string, Cluster>();
+        readonly ReactiveDictionary<string, Application>                  _applications        = new ReactiveDictionary<string, Application>();
+                                                                          
+        readonly ConcurrentDictionary<string, ISet<string>>               _visibilityByCluster = new ConcurrentDictionary<string, ISet<string>>();
+        readonly ConcurrentDictionary<string, ISet<string>>               _visibilityByUser    = new ConcurrentDictionary<string, ISet<string>>();
+
+        private readonly ISubject<Delta<ClusterUser>, Delta<ClusterUser>> _visibilityDeltas    = Subject.Synchronize(new Subject<Delta<ClusterUser>>());
 
         public T ExtractInfo<T>(ErrorPayload payload, Func<string, string, T> resultor)
         {
@@ -68,18 +72,36 @@ namespace RElmah.Server.Services
             _visibilityByCluster.GetOrAdd(cluster, s => new HashSet<string>()).Add(user);
             _visibilityByUser.GetOrAdd(user, s => new HashSet<string>()).Add(cluster);
 
+            _visibilityDeltas.OnNext(new Delta<ClusterUser>(new ClusterUser(_clusters[cluster], user).ToSingleton(), DeltaType.Create));
+
             return this;
         }
 
-        public IObservable<Operation<Cluster>> GetClustersStream()
+        public IConfigurationProvider RemoveUserFromCluster(string user, string cluster)
         {
-            return _clusters;
+            var removed = _clusters[cluster];
+
+            _visibilityByCluster.GetOrAdd(cluster, s => new HashSet<string>()).Remove(user);
+            _visibilityByUser.GetOrAdd(user, s => new HashSet<string>()).Remove(cluster);
+
+            _visibilityDeltas.OnNext(new Delta<ClusterUser>(new ClusterUser(removed, user).ToSingleton(), DeltaType.Remove));
+
+            return this;
         }
 
-        public IObservable<Operation<Application>> GetApplicationsStream()
+        public IObservable<Delta<Cluster>> GetClustersDeltas()
         {
-            return _applications;
+            return _clusters.Deltas;
         }
 
+        public IObservable<Delta<Application>> GetApplicationsDeltas()
+        {
+            return _applications.Deltas;
+        }
+
+        public IObservable<Delta<ClusterUser>> GetClusterUserDeltas()
+        {
+            return _visibilityDeltas;
+        }
     }
 }
