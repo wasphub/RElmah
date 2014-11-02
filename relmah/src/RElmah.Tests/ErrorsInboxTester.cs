@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using RElmah.Models.Errors;
+using RElmah.Services;
 using Xunit;
 
 namespace RElmah.Tests
 {
-    public class ErrorsInbox
+    public class ErrorsInboxTester
     {
         [Fact]
         public void IsTestingEnvisonmentOk()
@@ -18,7 +19,7 @@ namespace RElmah.Tests
         {
             //Arrange
             ErrorPayload pushed = null;
-            var inbox = new Services.ErrorsInbox();
+            var inbox = new ErrorsInbox();
 
             inbox.GetErrorsStream().Subscribe(p =>
             {
