@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Owin;
@@ -27,6 +28,31 @@ namespace RElmah.Middleware
             });
 
             await inbox.Post(await executor(environment));
+        }
+
+        public async static Task Clusters(
+            IConfigurationUpdater updater,
+            IConfigurationProvider provider,
+            IDictionary<string, object> environment)
+        {
+            var build = new Func<OwinRequest, Task<string>>(async r =>
+            {
+                var @params = await r.ReadFormAsync();
+                return await Task.FromResult(@params["name"]);
+            });
+
+            var request = new OwinRequest(environment);
+            if (request.Method == "POST")
+            {
+                await updater.AddCluster(await build(request));
+                return;
+            }
+
+            var response = new OwinResponse(environment);
+            await response.WriteAsync(JsonConvert.SerializeObject(
+                request.Uri.Segments.Count() > 3
+                ? (dynamic)updater.GetCluster(request.Uri.Segments.Skip(3).First())
+                : updater.GetClusters()));
         }
     }
 }
