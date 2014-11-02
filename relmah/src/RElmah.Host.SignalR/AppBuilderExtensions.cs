@@ -31,13 +31,14 @@ namespace RElmah.Host.SignalR
 
     public class RElmahMiddleware : OwinMiddleware
     {
-        public RElmahMiddleware(OwinMiddleware next) : base(next)
+        public RElmahMiddleware(OwinMiddleware next, IDependencyResolver resolver)
+            : base(next)
         {
         }
 
         public override Task Invoke(IOwinContext context)
         {
-            throw new System.NotImplementedException();
+            return Next.Invoke(context);
         }
     }
 }
