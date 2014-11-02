@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/jquery-1.6.4.js"></script>
+    <script src="Scripts/jquery.signalR-2.1.2.js"></script>
+    <script src="http://localhost:9474/signalr/hubs"></script>
+    <script>
+        $(function() {
+            var conn   = $.connection.hub,
+                errors = $.connection.errors;
+
+            conn.url = "http://localhost:9474/signalr";
+
+            conn
+                .start()
+                .done(function() {
+                    errors
+                        .echo("hello")
+                        .done(function(m) {
+                            $('#hello').text(m);
+                        });
+                });
+        });
+    </script>
+</head>
+<body>
+    <p id="hello"></p>
+</body>
+</html>
