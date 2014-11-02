@@ -18,20 +18,15 @@ namespace RElmah.Middleware
             {
                 var @params = await new OwinContext(e).Request.ReadFormAsync();
 
-                var errorText = Decode(@params["error"]);
-                var sourceId = @params["sourceId"];
-                var errorId = @params["errorId"];
-                var infoUrl = @params["infoUrl"];
+                var errorText = Encoding.UTF8.GetString(Convert.FromBase64String(@params["error"]));
+                var sourceId  = @params["sourceId"];
+                var errorId   = @params["errorId"];
+                var infoUrl   = @params["infoUrl"];
 
                 return new ErrorPayload(sourceId, JsonConvert.DeserializeObject<Error>(errorText), errorId, infoUrl);
             });
 
             await inbox.Post(await executor(environment));
-        }
-
-        static string Decode(string str)
-        {
-            return Encoding.UTF8.GetString(Convert.FromBase64String(str));
         }
     }
 }
