@@ -16,6 +16,8 @@ namespace RElmah.Host.SignalR
             registry.Register(typeof(IErrorsInbox), () => ei);
             registry.Register(typeof(IDispatcher),  () => d);
 
+            registry.Register(typeof(IUserIdProvider), () => new ClientTokenUserIdProvider());
+
             return builder.UseRElmahMiddleware<RElmahMiddleware>(GlobalHost.DependencyResolver);
         }
 
