@@ -46,6 +46,7 @@ namespace RElmah
         Task<ValueOrError<Cluster>> AddCluster(string name);
         Task<ValueOrError<bool>> RemoveCluster(string name);
         Task<IEnumerable<Cluster>> GetClusters();
+        Task<ValueOrError<Cluster>> GetCluster(string name);
     }
 
     public interface IConfigurationProvider

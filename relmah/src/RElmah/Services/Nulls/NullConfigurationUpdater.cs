@@ -9,15 +9,20 @@ namespace RElmah.Services.Nulls
     {
         public Task<ValueOrError<Cluster>> AddCluster(string name)
         {
-            return Task.FromResult((ValueOrError<Cluster>)null);
+            throw new System.NotImplementedException();
         }
 
         public Task<ValueOrError<bool>> RemoveCluster(string name)
         {
-            return Task.FromResult((ValueOrError<bool>)null);
+            throw new System.NotImplementedException();
         }
 
         public Task<IEnumerable<Cluster>> GetClusters()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ValueOrError<Cluster>> GetCluster(string name)
         {
             throw new System.NotImplementedException();
         }

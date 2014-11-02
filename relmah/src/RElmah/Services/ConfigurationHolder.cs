@@ -48,5 +48,10 @@ namespace RElmah.Services
         {
             return _configurationStore.GetClusters();
         }
+
+        public Task<ValueOrError<Cluster>> GetCluster(string name)
+        {
+            return _configurationStore.GetCluster(name);
+        }
     }
 }
