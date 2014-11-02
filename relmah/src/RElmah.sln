@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{45DE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Server", "Samples\RElmah.Server\RElmah.Server.csproj", "{5A31FC67-9707-41D7-BB12-A307C9A7B9FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Client", "Samples\RElmah.Client\RElmah.Client.csproj", "{7A43F767-7FDD-40BE-94AD-906F491BAE47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,11 +42,16 @@ Global
 		{5A31FC67-9707-41D7-BB12-A307C9A7B9FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A31FC67-9707-41D7-BB12-A307C9A7B9FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A31FC67-9707-41D7-BB12-A307C9A7B9FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A43F767-7FDD-40BE-94AD-906F491BAE47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A43F767-7FDD-40BE-94AD-906F491BAE47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A43F767-7FDD-40BE-94AD-906F491BAE47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A43F767-7FDD-40BE-94AD-906F491BAE47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5A31FC67-9707-41D7-BB12-A307C9A7B9FB} = {45DE8F9D-E3D9-425F-BEFC-E904E75D3765}
+		{7A43F767-7FDD-40BE-94AD-906F491BAE47} = {45DE8F9D-E3D9-425F-BEFC-E904E75D3765}
 	EndGlobalSection
 EndGlobal
