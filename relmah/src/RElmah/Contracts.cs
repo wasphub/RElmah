@@ -45,4 +45,9 @@ namespace RElmah
         Task<ValueOrError<Cluster>> AddCluster(string name);
         Task<ValueOrError<bool>> RemoveCluster(string name);
     }
+
+    public interface IConfigurationProvider
+    {
+        IObservable<Delta<Cluster>> ObserveClusters();
+    }
 }
