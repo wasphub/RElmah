@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{EE820F
 		Common\VersionInfo.cs = Common\VersionInfo.cs
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Tests", "RElmah.Tests\RElmah.Tests.csproj", "{8EB9853F-41B2-4650-931F-9BC3DC26B8A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{A416ED91-F73F-4F01-94D0-E1D3E2B37BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A416ED91-F73F-4F01-94D0-E1D3E2B37BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A416ED91-F73F-4F01-94D0-E1D3E2B37BA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EB9853F-41B2-4650-931F-9BC3DC26B8A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EB9853F-41B2-4650-931F-9BC3DC26B8A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EB9853F-41B2-4650-931F-9BC3DC26B8A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EB9853F-41B2-4650-931F-9BC3DC26B8A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
