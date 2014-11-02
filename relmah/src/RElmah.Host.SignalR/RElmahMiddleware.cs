@@ -28,7 +28,7 @@ namespace RElmah.Host.SignalR
             };
 
         }
-
+         
         public override Task Invoke(IOwinContext context)
         {
             var request  = new OwinRequest(context.Environment);

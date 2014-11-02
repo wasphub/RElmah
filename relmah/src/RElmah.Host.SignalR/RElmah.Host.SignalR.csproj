@@ -74,6 +74,7 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="AppBuilderExtensions.cs" />
+    <Compile Include="ClientTokenUserIdProvider.cs" />
     <Compile Include="Dispatcher.cs" />
     <Compile Include="Hubs\ErrorsHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
