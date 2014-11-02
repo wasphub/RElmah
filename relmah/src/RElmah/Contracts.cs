@@ -37,4 +37,6 @@ namespace RElmah
     {
         Task DispatchError(ErrorPayload payload);
     }
+
+    
 }
