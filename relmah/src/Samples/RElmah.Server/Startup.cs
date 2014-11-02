@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 using Owin;
 using RElmah.Host.SignalR;
 
@@ -10,12 +11,13 @@ namespace RElmah.Server
     {
         public void Configuration(IAppBuilder app)
         {
-            app.Map("/signalr", builder =>
-            {
-                builder.RunSignalR();
-            });
-
-            app.UseRElmah();
+            app
+                .Map("/signalr", builder =>
+                {
+                    builder.UseCors(CorsOptions.AllowAll);
+                    builder.RunSignalR();
+                })
+                .UseRElmah();
         }
     }
 }
