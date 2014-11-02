@@ -43,6 +43,8 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Contracts.cs" />
+    <Compile Include="Models\Errors\Error.cs" />
+    <Compile Include="Models\Errors\ErrorPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
