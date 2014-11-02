@@ -21,6 +21,12 @@ namespace RElmah.Host.SignalR
         {
             return builder.Use(typeof(T), args);
         }
+        public static IAppBuilder RunSignalR(this IAppBuilder builder)
+        {
+            OwinExtensions.RunSignalR(builder);
+
+            return builder;
+        }
     }
 
     public class RElmahMiddleware : OwinMiddleware

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
+using RElmah.Host.SignalR;
 
 [assembly: OwinStartup(typeof(RElmah.Server.Startup))]
 
@@ -15,14 +12,10 @@ namespace RElmah.Server
         {
             app.Map("/signalr", builder =>
             {
-                builder.UseCors(CorsOptions.AllowAll);
                 builder.RunSignalR();
             });
 
-            app.UseRElmah(cp => cp
-                .AddCluster("c1")
-                //.AddUserToCluster("wasp", "c1")
-                .AddApplication("foo", "foo", "c1"));
+            app.UseRElmah();
         }
     }
 }
