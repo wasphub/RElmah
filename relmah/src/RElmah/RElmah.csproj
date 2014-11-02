@@ -65,6 +65,7 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Contracts.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Middleware\Routes.cs" />
     <Compile Include="Models\Errors\Error.cs" />
     <Compile Include="Models\Errors\ErrorPayload.cs" />

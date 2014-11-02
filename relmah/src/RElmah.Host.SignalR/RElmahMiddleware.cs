@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
+using RElmah.Extensions;
 using RElmah.Middleware;
 
 namespace RElmah.Host.SignalR
@@ -31,7 +33,14 @@ namespace RElmah.Host.SignalR
 
         public override Task Invoke(IOwinContext context)
         {
-            return Next.Invoke(context);
+            var request = new OwinRequest(context.Environment);
+            var segments = request.Uri.Segments;
+            var path = string.Join(null, segments.Take(2).Concat(segments.Skip(2).Take(1).Select(s => s.Replace("/", ""))));
+            var key = new PathString(path).ToString();
+
+            return _dispatchers.ContainsKey(key)
+                 ? _dispatchers.Get(key, e => Next.Invoke(context))(context.Environment)
+                 : Next.Invoke(context);
         }
     }
 }
