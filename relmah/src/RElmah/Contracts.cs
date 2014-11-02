@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using RElmah.Models;
 using RElmah.Models.Configuration;
@@ -44,6 +45,7 @@ namespace RElmah
     {
         Task<ValueOrError<Cluster>> AddCluster(string name);
         Task<ValueOrError<bool>> RemoveCluster(string name);
+        Task<IEnumerable<Cluster>> GetClusters();
     }
 
     public interface IConfigurationProvider

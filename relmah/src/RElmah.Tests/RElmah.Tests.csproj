@@ -64,6 +64,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ConfigurationHolderTester.cs" />
     <Compile Include="ErrorsInboxTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

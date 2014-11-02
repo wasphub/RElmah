@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using RElmah.Models;
@@ -41,6 +42,11 @@ namespace RElmah.Services
             if (s.HasValue) _clusterDeltas.OnNext(Delta.Create(Cluster.Create(name), DeltaType.Removed));
 
             return s;
+        }
+
+        public Task<IEnumerable<Cluster>> GetClusters()
+        {
+            return _configurationStore.GetClusters();
         }
     }
 }

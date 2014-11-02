@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using RElmah.Models;
 using RElmah.Models.Configuration;
 
@@ -14,6 +15,11 @@ namespace RElmah.Services.Nulls
         public Task<ValueOrError<bool>> RemoveCluster(string name)
         {
             return Task.FromResult((ValueOrError<bool>)null);
+        }
+
+        public Task<IEnumerable<Cluster>> GetClusters()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
