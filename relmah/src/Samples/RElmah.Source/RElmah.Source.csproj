@@ -72,6 +72,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="index.cshtml" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
