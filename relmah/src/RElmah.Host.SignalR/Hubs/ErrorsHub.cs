@@ -3,7 +3,7 @@ using Microsoft.AspNet.SignalR.Hubs;
 
 namespace RElmah.Host.SignalR.Hubs
 {
-    [HubName("errors")]
+    [HubName("trelmah-errors")]
     public class ErrorsHub : Hub
     {
         public string Echo(string message)
