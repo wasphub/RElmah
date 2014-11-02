@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using RElmah.Models;
+using RElmah.Models.Configuration;
 using RElmah.Models.Errors;
 
 namespace RElmah
@@ -38,5 +40,9 @@ namespace RElmah
         Task DispatchError(ErrorPayload payload);
     }
 
-    
+    public interface IConfigurationUpdater
+    {
+        Task<ValueOrError<Cluster>> AddCluster(string name);
+        Task<ValueOrError<bool>> RemoveCluster(string name);
+    }
 }
