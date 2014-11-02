@@ -9,6 +9,10 @@
             var conn   = $.hubConnection("http://localhost:9474/signalr"),
                 errors = conn.createHubProxy('relmah-errors');
 
+            errors.on('error', function(e) {
+                $('#hello').text(e.ErrorId);                       
+            });
+
             conn
                 .start()
                 .done(function() {
