@@ -31,14 +31,12 @@ namespace RElmah.Host.SignalR
 
         public override Task Invoke(IOwinContext context)
         {
-            var request = new OwinRequest(context.Environment);
+            var request  = new OwinRequest(context.Environment);
             var segments = request.Uri.Segments;
-            var path = string.Join(null, segments.Take(2).Concat(segments.Skip(2).Take(1).Select(s => s.Replace("/", ""))));
-            var key = new PathString(path).ToString();
+            var path     = string.Join(null, segments.Take(2).Concat(segments.Skip(2).Take(1).Select(s => s.Replace("/", ""))));
+            var key      = new PathString(path).ToString();
 
-            return _dispatchers.ContainsKey(key)
-                 ? _dispatchers.Get(key, e => Next.Invoke(context))(context.Environment)
-                 : Next.Invoke(context);
+            return _dispatchers.Get(key, e => Next.Invoke(context))(context.Environment);
         }
     }
 }
