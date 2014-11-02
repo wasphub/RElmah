@@ -23,21 +23,21 @@ namespace RElmah.Tests
                 cs.Add(n, Cluster.Create(n));
                 return cs[n];
             });
-            var cp = new ConfigurationHolder(new Fakes.StubIConfigurationUpdater
+            var sut = new ConfigurationHolder(new Fakes.StubIConfigurationUpdater
             {
                 AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(fc(n))),
                 GetClusters = () => Task.FromResult((IEnumerable<Cluster>)cs.Values)
             });
 
             Delta<Cluster> observed = null;
-            cp.ObserveClusters().Subscribe(p =>
+            sut.ObserveClusters().Subscribe(p =>
             {
                 observed = p;
             });
 
             //Act
-            var cluster = await cp.AddCluster(ClusterName);
-            var check = (await cp.GetClusters()).Single();
+            var cluster = await sut.AddCluster(ClusterName);
+            var check = (await sut.GetClusters()).Single();
 
             //Assert
             Assert.NotNull(cluster);
