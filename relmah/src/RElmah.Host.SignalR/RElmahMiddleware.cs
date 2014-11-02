@@ -11,8 +11,6 @@ namespace RElmah.Host.SignalR
 {
     public class RElmahMiddleware : OwinMiddleware
     {
-        private readonly Lazy<IErrorsInbox> _inbox;
-
         private readonly IDictionary<string, Func<IDictionary<string, object>, Task>> _dispatchers;
 
         public RElmahMiddleware(OwinMiddleware next, IDependencyResolver resolver)
@@ -20,13 +18,13 @@ namespace RElmah.Host.SignalR
         {
             const string relmah = "relmah";
 
-            _inbox = new Lazy<IErrorsInbox>(resolver.Resolve<IErrorsInbox>);
+            var inbox = new Lazy<IErrorsInbox>(resolver.Resolve<IErrorsInbox>);
 
             var keyer = new Func<string, string>(s => string.Format("/{0}/{1}", relmah, s));
 
             _dispatchers = new Dictionary<string, Func<IDictionary<string, object>, Task>>
             {
-                { keyer("post-error"),   e => Routes.PostError(_inbox.Value, Routes.Elmah, e) }
+                { keyer("post-error"),   e => Routes.PostError(inbox.Value, Routes.Elmah, e) }
             };
 
         }
