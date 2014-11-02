@@ -52,5 +52,60 @@ namespace RElmah.Tests
             Assert.Equal(ClusterName, observed.Target.Name);
             Assert.Equal(DeltaType.Added, observed.Type);
         }
+
+        [Fact]
+        public async Task AddClusterThenRemoveCluster()
+        {
+            //Arrange
+            var cs = new Dictionary<string, Cluster>();
+            var adder = new Func<string, Cluster>(n =>
+            {
+                cs.Add(n, Cluster.Create(n));
+                return cs[n];
+            });
+            var remover = new Func<string, bool>(cs.Remove);
+
+            var sut = new ConfigurationHolder(new Fakes.StubIConfigurationUpdater
+            {
+                AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(adder(n))),
+                GetClusters = () => Task.FromResult((IEnumerable<Cluster>)cs.Values),
+                RemoveClusterString = n => Task.FromResult(new ValueOrError<bool>(remover(n)))
+            });
+
+            Delta<Cluster> observed = null;
+            sut.ObserveClusters().Subscribe(p =>
+            {
+                observed = p;
+            });
+
+            //Act
+            var cluster = await sut.AddCluster(ClusterName);
+            var check = (await sut.GetClusters()).Single();
+
+            //Assert
+            Assert.NotNull(cluster);
+            Assert.True(cluster.HasValue);
+            Assert.NotNull(cluster.Value);
+            Assert.Equal(ClusterName, cluster.Value.Name);
+
+            Assert.Equal(cluster.Value.Name, check.Name);
+
+            Assert.NotNull(observed);
+            Assert.NotNull(observed.Target);
+            Assert.Equal(ClusterName, observed.Target.Name);
+            Assert.Equal(DeltaType.Added, observed.Type);
+
+            //Act
+            var r = await sut.RemoveCluster(ClusterName);
+
+            //Assert
+            Assert.True(r.HasValue);
+            Assert.True(r.Value);
+
+            Assert.NotNull(observed);
+            Assert.NotNull(observed.Target);
+            Assert.Equal(ClusterName, observed.Target.Name);
+            Assert.Equal(DeltaType.Removed, observed.Type);
+        }
     }
 }
