@@ -59,6 +59,7 @@
     <Compile Include="Models\Errors\ErrorPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ErrorsInbox.cs" />
+    <Compile Include="Services\Nulls\NullErrorsBacklog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

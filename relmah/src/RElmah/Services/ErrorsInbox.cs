@@ -2,6 +2,7 @@
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using RElmah.Models.Errors;
+using RElmah.Services.Nulls;
 
 namespace RElmah.Services
 {
@@ -11,17 +12,7 @@ namespace RElmah.Services
 
         private readonly Subject<ErrorPayload> _errors = new Subject<ErrorPayload>();
 
-        class NullErrorsBacklog : IErrorsBacklog
-        {
-            public Task Store(ErrorPayload payload)
-            {
-                return Task.FromResult((object)null);
-            }
-        }
-
-        public ErrorsInbox() : this(new NullErrorsBacklog())
-        {
-        }
+        public ErrorsInbox() : this(new NullErrorsBacklog()) { }
 
         public ErrorsInbox(IErrorsBacklog errorsBacklog)
         {
