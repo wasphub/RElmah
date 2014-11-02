@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using RElmah.Models;
 using RElmah.Models.Configuration;
@@ -13,9 +15,19 @@ namespace RElmah.Tests
         public async Task AddCluster()
         {
             //Arrange
-            Delta<Cluster> pushed = null;
-            var cp = new ConfigurationHolder();
+            var cs = new Dictionary<string, Cluster>();
+            var fc = new Func<string, Cluster>(n =>
+            {
+                cs.Add(n, Cluster.Create(n));
+                return cs[n];
+            });
+            var cp = new ConfigurationHolder(new Fakes.StubIConfigurationUpdater()
+            {
+                AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(fc(n))),
+                GetClusters = () => Task.FromResult((IEnumerable<Cluster>)cs.Values)
+            });
 
+            Delta<Cluster> pushed = null;
             cp.ObserveClusters().Subscribe(p =>
             {
                 pushed = p;
@@ -23,7 +35,7 @@ namespace RElmah.Tests
 
             //Act
             var foo = await cp.AddCluster("foo");
-            //var check = (await cp.GetClusters()).Single();
+            var check = (await cp.GetClusters()).Single();
 
             //Assert
             Assert.NotNull(foo);
@@ -31,7 +43,7 @@ namespace RElmah.Tests
             Assert.NotNull(foo.Value);
             Assert.Equal("foo", foo.Value.Name);
 
-            //Assert.Equal(foo.Value.Name, check.Name);
+            Assert.Equal(foo.Value.Name, check.Name);
 
             Assert.NotNull(pushed);
             Assert.NotNull(pushed.Target);
