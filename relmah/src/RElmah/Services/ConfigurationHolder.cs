@@ -7,11 +7,11 @@ namespace RElmah.Services
 {
     public class ConfigurationHolder : IConfigurationProvider, IConfigurationUpdater
     {
-        private readonly IConfigurationUpdater _configurationUpdater;
+        private readonly IConfigurationUpdater _configurationStore;
 
-        public ConfigurationHolder(IConfigurationUpdater configurationUpdater)
+        public ConfigurationHolder(IConfigurationUpdater configurationStore)
         {
-            _configurationUpdater = configurationUpdater;
+            _configurationStore = configurationStore;
         }
 
         public IObservable<Delta<Cluster>> ObserveClusters()
@@ -19,14 +19,18 @@ namespace RElmah.Services
             throw new NotImplementedException();
         }
 
-        public Task<ValueOrError<Cluster>> AddCluster(string name)
+        public async Task<ValueOrError<Cluster>> AddCluster(string name)
         {
-            throw new NotImplementedException();
+            var s = await _configurationStore.AddCluster(name);
+
+            return s;
         }
 
-        public Task<ValueOrError<bool>> RemoveCluster(string name)
+        public async Task<ValueOrError<bool>> RemoveCluster(string name)
         {
-            throw new NotImplementedException();
+            var s = await _configurationStore.RemoveCluster(name);
+
+            return s;
         }
     }
 }
