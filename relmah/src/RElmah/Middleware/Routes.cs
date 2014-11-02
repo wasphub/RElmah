@@ -12,22 +12,21 @@ namespace RElmah.Middleware
     {
         public async static Task PostError(
             IErrorsInbox inbox,
-            Func<IDictionary<string, object>, Task<ErrorPayload>> executor,
             IDictionary<string, object> environment)
         {
-            await inbox.Post(await executor( environment));
-        }
+            Func<IDictionary<string, object>, Task<ErrorPayload>> executor = async e =>
+            {
+                var @params = await new OwinContext(e).Request.ReadFormAsync();
 
-        public async static Task<ErrorPayload> Elmah(IDictionary<string, object> environment)
-        {
-            var @params = await new OwinContext(environment).Request.ReadFormAsync();
+                var errorText = Decode(@params["error"]);
+                var sourceId = @params["sourceId"];
+                var errorId = @params["errorId"];
+                var infoUrl = @params["infoUrl"];
 
-            var errorText = Decode(@params["error"]);
-            var sourceId = @params["sourceId"];
-            var errorId = @params["errorId"];
-            var infoUrl = @params["infoUrl"];
+                return new ErrorPayload(sourceId, JsonConvert.DeserializeObject<Error>(errorText), errorId, infoUrl);
+            };
 
-            return new ErrorPayload(sourceId, JsonConvert.DeserializeObject<Error>(errorText), errorId, infoUrl);
+            await inbox.Post(await executor(environment));
         }
 
         static string Decode(string str)

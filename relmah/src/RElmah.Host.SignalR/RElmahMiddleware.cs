@@ -24,7 +24,7 @@ namespace RElmah.Host.SignalR
 
             _dispatchers = new Dictionary<string, Func<IDictionary<string, object>, Task>>
             {
-                { keyer("post-error"),   e => Routes.PostError(inbox.Value, Routes.Elmah, e) }
+                { keyer("post-error"),   e => Routes.PostError(inbox.Value, e) }
             };
 
         }
