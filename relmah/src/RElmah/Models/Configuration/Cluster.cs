@@ -1,13 +1,98 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace RElmah.Models.Configuration
 {
     public class Cluster
     {
-        private readonly IDictionary<string, Application> _applications = new Dictionary<string, Application>();
-        private readonly IDictionary<string, User> _users = new Dictionary<string, User>();
+        private readonly IImmutableDictionary<string, Application> _applications = ImmutableDictionary<string, Application>.Empty;
+        private readonly IImmutableDictionary<string, User> _users = ImmutableDictionary<string, User>.Empty;
 
+        public static Cluster Create(string name)
+        {
+            return new Cluster(name);
+        }
+
+        public static Cluster Create(string name, IEnumerable<Application> applications)
+        {
+            return new Cluster(name, applications);
+        }
+
+        public static Cluster Create(string name, IEnumerable<User> users)
+        {
+            return new Cluster(name, users);
+        }
+
+        Cluster(string name)
+        {
+            Name = name;
+        }
+
+        Cluster(string name, IImmutableDictionary<string, Application> applications)
+        {
+            Name = name;
+
+            _applications = applications;
+        }
+
+        Cluster(string name, IImmutableDictionary<string, User> users)
+        {
+            Name = name;
+
+            _users = users;
+        }
+
+        Cluster(string name, IEnumerable<Application> applications)
+        {
+            Name = name;
+
+            var builder = ImmutableDictionary.CreateBuilder<string, Application>();
+            builder.AddRange(from a in applications select new KeyValuePair<string, Application>(a.Name, a));
+            _applications = builder.ToImmutable();
+        }
+
+        Cluster(string name, IEnumerable<User> users)
+        {
+            Name = name;
+
+            var builder = ImmutableDictionary.CreateBuilder<string, User>();
+            builder.AddRange(from u in users select new KeyValuePair<string, User>(u.Name, u));
+            _users = builder.ToImmutable();
+        }
 
         public string Name { get; private set; }
+        public IEnumerable<Application> Applications { get { return _applications.Values; } }
+        public IEnumerable<User> Users { get { return _users.Values; } }
+
+        public Cluster AddApplication(Application app)
+        {
+            return new Cluster(Name, _applications.Add(app.Name, app));
+        }
+
+        public Cluster RemoveApplication(Application app)
+        {
+            return RemoveApplication(app.Name);
+        }
+
+        public Cluster RemoveApplication(string name)
+        {
+            return new Cluster(Name, _applications.Remove(name));
+        }
+
+        public Cluster AddUser(User user)
+        {
+            return new Cluster(Name, _users.Add(user.Name, user));
+        }
+
+        public Cluster RemoveUser(User app)
+        {
+            return RemoveUser(app.Name);
+        }
+
+        public Cluster RemoveUser(string name)
+        {
+            return new Cluster(Name, _users.Remove(name));
+        }
     }
 }
