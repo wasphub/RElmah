@@ -13,14 +13,7 @@
                 $('#hello').text(e.ErrorId);                       
             });
 
-            conn
-                .start()
-                .done(function() {
-                    errors.invoke("echo", "hello")
-                        .done(function(m) {
-                            $('#hello').text(m);
-                        });
-                });
+            conn.start();
         });
     </script>
 </head>
