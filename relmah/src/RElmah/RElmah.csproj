@@ -55,6 +55,7 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Contracts.cs" />
+    <Compile Include="Middleware\Routes.cs" />
     <Compile Include="Models\Errors\Error.cs" />
     <Compile Include="Models\Errors\ErrorPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
