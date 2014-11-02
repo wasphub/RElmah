@@ -11,6 +11,8 @@ namespace RElmah.Tests
 {
     public class ConfigurationHolderTester
     {
+        const string ClusterName = "c1";
+
         [Fact]
         public async Task AddCluster()
         {
@@ -21,33 +23,33 @@ namespace RElmah.Tests
                 cs.Add(n, Cluster.Create(n));
                 return cs[n];
             });
-            var cp = new ConfigurationHolder(new Fakes.StubIConfigurationUpdater()
+            var cp = new ConfigurationHolder(new Fakes.StubIConfigurationUpdater
             {
                 AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(fc(n))),
                 GetClusters = () => Task.FromResult((IEnumerable<Cluster>)cs.Values)
             });
 
-            Delta<Cluster> pushed = null;
+            Delta<Cluster> observed = null;
             cp.ObserveClusters().Subscribe(p =>
             {
-                pushed = p;
+                observed = p;
             });
 
             //Act
-            var foo = await cp.AddCluster("foo");
+            var cluster = await cp.AddCluster(ClusterName);
             var check = (await cp.GetClusters()).Single();
 
             //Assert
-            Assert.NotNull(foo);
-            Assert.True(foo.HasValue);
-            Assert.NotNull(foo.Value);
-            Assert.Equal("foo", foo.Value.Name);
+            Assert.NotNull(cluster);
+            Assert.True(cluster.HasValue);
+            Assert.NotNull(cluster.Value);
+            Assert.Equal(ClusterName, cluster.Value.Name);
 
-            Assert.Equal(foo.Value.Name, check.Name);
+            Assert.Equal(cluster.Value.Name, check.Name);
 
-            Assert.NotNull(pushed);
-            Assert.NotNull(pushed.Target);
-            Assert.Equal("foo", pushed.Target.Name);
+            Assert.NotNull(observed);
+            Assert.NotNull(observed.Target);
+            Assert.Equal(ClusterName, observed.Target.Name);
         }
     }
 }
