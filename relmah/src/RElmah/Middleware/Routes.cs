@@ -14,7 +14,7 @@ namespace RElmah.Middleware
             IErrorsInbox inbox,
             IDictionary<string, object> environment)
         {
-            Func<IDictionary<string, object>, Task<ErrorPayload>> executor = async e =>
+            var executor = new Func<IDictionary<string, object>, Task<ErrorPayload>>(async e =>
             {
                 var @params = await new OwinContext(e).Request.ReadFormAsync();
 
@@ -24,7 +24,7 @@ namespace RElmah.Middleware
                 var infoUrl = @params["infoUrl"];
 
                 return new ErrorPayload(sourceId, JsonConvert.DeserializeObject<Error>(errorText), errorId, infoUrl);
-            };
+            });
 
             await inbox.Post(await executor(environment));
         }
