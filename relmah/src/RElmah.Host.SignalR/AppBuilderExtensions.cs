@@ -10,7 +10,11 @@ namespace RElmah.Host.SignalR
         {
             var registry = GlobalHost.DependencyResolver;
 
-            registry.Register(typeof(IErrorsInbox), () => new ErrorsInbox());
+            var ei = new ErrorsInbox();
+            var d  = new Dispatcher(ei);
+
+            registry.Register(typeof(IErrorsInbox), () => ei);
+            registry.Register(typeof(IDispatcher),  () => d);
 
             return builder.UseRElmahMiddleware<RElmahMiddleware>(GlobalHost.DependencyResolver);
         }
