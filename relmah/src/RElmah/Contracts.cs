@@ -26,4 +26,15 @@ namespace RElmah
     {
         Task Store(ErrorPayload payload);
     }
+
+    /// <summary>
+    /// This contract represents an errors
+    /// dispatcher, which is able to route
+    /// errors to the right destination(s)
+    /// as soon as they get in.
+    /// </summary>
+    public interface IDispatcher
+    {
+        Task DispatchError(ErrorPayload payload);
+    }
 }
