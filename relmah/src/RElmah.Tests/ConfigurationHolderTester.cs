@@ -50,6 +50,7 @@ namespace RElmah.Tests
             Assert.NotNull(observed);
             Assert.NotNull(observed.Target);
             Assert.Equal(ClusterName, observed.Target.Name);
+            Assert.Equal(DeltaType.Added, observed.Type);
         }
     }
 }
