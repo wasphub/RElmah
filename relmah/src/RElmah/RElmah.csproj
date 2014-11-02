@@ -78,6 +78,7 @@
     <Compile Include="Models\Delta.cs" />
     <Compile Include="Models\ValueOrError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ConfigurationHolder.cs" />
     <Compile Include="Services\ErrorsInbox.cs" />
     <Compile Include="Services\Nulls\NullErrorsBacklog.cs" />
   </ItemGroup>
