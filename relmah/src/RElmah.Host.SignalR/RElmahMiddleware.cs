@@ -18,13 +18,16 @@ namespace RElmah.Host.SignalR
         {
             const string relmah = "relmah";
 
-            var inbox = new Lazy<IErrorsInbox>(resolver.Resolve<IErrorsInbox>);
+            var inbox   = new Lazy<IErrorsInbox>(resolver.Resolve<IErrorsInbox>);
+            var updater = new Lazy<IConfigurationUpdater>(resolver.Resolve<IConfigurationUpdater>);
 
             var keyer = new Func<string, string>(s => string.Format("/{0}/{1}", relmah, s));
 
             _dispatchers = new Dictionary<string, Func<IDictionary<string, object>, Task>>
             {
-                { keyer("post-error"),   e => Routes.PostError(inbox.Value, e) }
+                { keyer("post-error"), e => Routes.PostError(inbox.Value, e) },
+
+                { keyer("clusters"),   e => Routes.Clusters(updater.Value, e) },
             };
 
         }

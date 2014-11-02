@@ -32,7 +32,6 @@ namespace RElmah.Middleware
 
         public async static Task Clusters(
             IConfigurationUpdater updater,
-            IConfigurationProvider provider,
             IDictionary<string, object> environment)
         {
             var build = new Func<OwinRequest, Task<string>>(async r =>
