@@ -15,4 +15,15 @@ namespace RElmah
         Task Post(ErrorPayload payload);
         IObservable<ErrorPayload> GetErrorsStream();
     }
+
+    /// <summary>
+    /// This contract represents a persistent
+    /// store where errors are saved. Storing an
+    /// error could be a lenghty operation,
+    /// therefore the action returns a Task.
+    /// </summary>
+    public interface IErrorsBacklog
+    {
+        Task Store(ErrorPayload payload);
+    }
 }
