@@ -47,11 +47,11 @@ namespace RElmah.Middleware
                 return;
             }
 
-            var response = new OwinResponse(environment);
-            await response.WriteAsync(JsonConvert.SerializeObject(
-                request.Uri.Segments.Count() > 3
-                ? (dynamic)updater.GetCluster(request.Uri.Segments.Skip(3).First())
-                : updater.GetClusters()));
+            var payload = request.Uri.Segments.Count() > 3
+                ? (dynamic)(await updater.GetCluster(request.Uri.Segments.Skip(3).First()))
+                : await updater.GetClusters();
+
+            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(payload));
         }
 
         public async static Task Applications(
@@ -71,11 +71,11 @@ namespace RElmah.Middleware
                 return;
             }
 
-            var response = new OwinResponse(environment);
-            await response.WriteAsync(JsonConvert.SerializeObject(
-                request.Uri.Segments.Count() > 3
-                ? (dynamic)updater.GetApplication(request.Uri.Segments.Skip(3).First())
-                : updater.GetApplications()));
+            var payload = request.Uri.Segments.Count() > 3
+                ? (dynamic)(await updater.GetApplication(request.Uri.Segments.Skip(3).First()))
+                : await updater.GetApplications();
+
+            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(payload));
         }
 
         public async static Task Users(
@@ -95,11 +95,11 @@ namespace RElmah.Middleware
                 return;
             }
 
-            var response = new OwinResponse(environment);
-            await response.WriteAsync(JsonConvert.SerializeObject(
-                request.Uri.Segments.Count() > 3
-                ? (dynamic)updater.GetUser(request.Uri.Segments.Skip(3).First())
-                : updater.GetUsers()));
+            var payload = request.Uri.Segments.Count() > 3
+                ? (dynamic)(await updater.GetUser(request.Uri.Segments.Skip(3).First()))
+                : await updater.GetUsers();
+
+            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(payload));
         }
     }
 }
