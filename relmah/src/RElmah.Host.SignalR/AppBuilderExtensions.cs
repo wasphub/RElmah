@@ -11,10 +11,12 @@ namespace RElmah.Host.SignalR
         {
             var registry = GlobalHost.DependencyResolver;
 
+            //TODO: improve the way this part can be customized from outside
+
             var ei = new ErrorsInbox();
-            var d  = new Dispatcher(ei);
             var cs = new InMemoryConfigurationStore();
             var ch = new ConfigurationHolder(cs);
+            var d  = new Dispatcher(ei, ch);
 
             registry.Register(typeof(IErrorsInbox), () => ei);
             registry.Register(typeof(IDispatcher),  () => d);
