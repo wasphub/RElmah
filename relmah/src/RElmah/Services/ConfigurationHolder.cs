@@ -121,5 +121,12 @@ namespace RElmah.Services
         {
             return _configurationStore.GetUser(name);
         }
+
+        public async Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user)
+        {
+            var s = await _configurationStore.AddUserToCluster(cluster, user);
+
+            return s;
+        }
     }
 }

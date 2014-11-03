@@ -55,6 +55,7 @@ namespace RElmah
         Task<ValueOrError<bool>> RemoveUser(string name);
         Task<IEnumerable<User>> GetUsers();
         Task<ValueOrError<User>> GetUser(string name);
+        Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user);
     }
 
     public interface IConfigurationStore : IConfigurationUpdater

@@ -87,5 +87,15 @@ namespace RElmah.Services
         {
             return Task.FromResult(new ValueOrError<User>(_users[name]));
         }
+
+        public Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user)
+        {
+            var c = _clusters[cluster];
+            var u = _users[user];
+
+            var value = c.AddUser(u);
+            _clusters.SetItem(cluster, value);
+            return Task.FromResult(ValueOrError.Create(Relationship.Create(value, u)));
+        }
     }
 }
