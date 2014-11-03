@@ -67,5 +67,6 @@ namespace RElmah
         IObservable<Delta<Cluster>> ObserveClusters();
         IObservable<Delta<Application>> ObserveApplications();
         IObservable<Delta<User>> ObserveUsers();
+        IObservable<Delta<Relationship<Cluster, User>>> ObserveClusterUsers();
     }
 }

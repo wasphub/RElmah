@@ -17,6 +17,8 @@ namespace RElmah.Services
         private readonly Subject<Delta<Application>> _applicationDeltas = new Subject<Delta<Application>>();
         private readonly Subject<Delta<User>>        _userDeltas        = new Subject<Delta<User>>();
 
+        private readonly Subject<Delta<Relationship<Cluster, User>>> _clusterUserOperations = new Subject<Delta<Relationship<Cluster, User>>>();
+
         public ConfigurationHolder(IConfigurationStore configurationStore)
         {
             _configurationStore = configurationStore;
@@ -127,9 +129,14 @@ namespace RElmah.Services
         {
             var s = await _configurationStore.AddUserToCluster(cluster, user);
 
-            if (s.HasValue) _clusterDeltas.OnNext(Delta.Create(s.Value.Primary, DeltaType.Updated));
+            if (s.HasValue) _clusterUserOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Added));
 
             return s;
+        }
+
+        public IObservable<Delta<Relationship<Cluster, User>>> ObserveClusterUsers()
+        {
+            return _clusterUserOperations;
         }
     }
 }
