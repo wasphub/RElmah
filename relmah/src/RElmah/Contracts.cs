@@ -47,10 +47,20 @@ namespace RElmah
         Task<ValueOrError<bool>> RemoveCluster(string name);
         Task<IEnumerable<Cluster>> GetClusters();
         Task<ValueOrError<Cluster>> GetCluster(string name);
+        Task<ValueOrError<Application>> AddApplication(string name);
+        Task<ValueOrError<bool>> RemoveApplication(string name);
+        Task<IEnumerable<Application>> GetApplications();
+        Task<ValueOrError<Application>> GetApplication(string name);
+        Task<ValueOrError<User>> AddUser(string name);
+        Task<ValueOrError<bool>> RemoveUser(string name);
+        Task<IEnumerable<User>> GetUsers();
+        Task<ValueOrError<User>> GetUser(string name);
     }
 
     public interface IConfigurationProvider
     {
         IObservable<Delta<Cluster>> ObserveClusters();
+        IObservable<Delta<Application>> ObserveApplications();
+        IObservable<Delta<User>> ObserveUsers();
     }
 }
