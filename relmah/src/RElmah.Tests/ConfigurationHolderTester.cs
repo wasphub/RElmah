@@ -23,7 +23,7 @@ namespace RElmah.Tests
                 cs.Add(n, Cluster.Create(n));
                 return cs[n];
             });
-            var sut = new ConfigurationHolder(new Fakes.StubIConfigurationUpdater
+            var sut = new ConfigurationHolder(new Fakes.StubIConfigurationStore
             {
                 AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(fc(n))),
                 GetClusters = () => Task.FromResult((IEnumerable<Cluster>)cs.Values)
@@ -65,7 +65,7 @@ namespace RElmah.Tests
             });
             var remover = new Func<string, bool>(cs.Remove);
 
-            var sut = new ConfigurationHolder(new Fakes.StubIConfigurationUpdater
+            var sut = new ConfigurationHolder(new Fakes.StubIConfigurationStore
             {
                 AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(adder(n))),
                 GetClusters = () => Task.FromResult((IEnumerable<Cluster>)cs.Values),

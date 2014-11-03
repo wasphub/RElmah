@@ -10,18 +10,18 @@ namespace RElmah.Services
 {
     public class ConfigurationHolder : IConfigurationProvider, IConfigurationUpdater
     {
-        private readonly IConfigurationUpdater _configurationStore;
+        private readonly IConfigurationStore _configurationStore;
 
         private readonly Subject<Delta<Cluster>>     _clusterDeltas     = new Subject<Delta<Cluster>>();
         private readonly Subject<Delta<Application>> _applicationDeltas = new Subject<Delta<Application>>();
         private readonly Subject<Delta<User>>        _userDeltas        = new Subject<Delta<User>>();
 
-        public ConfigurationHolder(IConfigurationUpdater configurationStore)
+        public ConfigurationHolder(IConfigurationStore configurationStore)
         {
             _configurationStore = configurationStore;
         }
 
-        public ConfigurationHolder() : this(new NullConfigurationUpdater()) { }
+        public ConfigurationHolder() : this(new NullConfigurationStore()) { }
 
         public IObservable<Delta<Cluster>> ObserveClusters()
         {

@@ -5,7 +5,7 @@ using RElmah.Models.Configuration;
 
 namespace RElmah.Services.Nulls
 {
-    class NullConfigurationUpdater : IConfigurationUpdater
+    class NullConfigurationStore : IConfigurationStore
     {
         public Task<ValueOrError<Cluster>> AddCluster(string name)
         {

@@ -83,7 +83,7 @@
     <Compile Include="Services\ConfigurationHolder.cs" />
     <Compile Include="Services\ErrorsInbox.cs" />
     <Compile Include="Services\InMemoryConfigurationStore.cs" />
-    <Compile Include="Services\Nulls\NullConfigurationUpdater.cs" />
+    <Compile Include="Services\Nulls\NullConfigurationStore.cs" />
     <Compile Include="Services\Nulls\NullErrorsBacklog.cs" />
   </ItemGroup>
   <ItemGroup>
