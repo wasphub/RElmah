@@ -101,5 +101,30 @@ namespace RElmah.Middleware
 
             await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(payload));
         }
+
+        public async static Task ClusterUsers(
+            IConfigurationUpdater updater,
+            IDictionary<string, object> environment)
+        {
+            var build = new Func<OwinRequest, Task<Tuple<string, string>>>(async r =>
+            {
+                var @params = await r.ReadFormAsync();
+                return await Task.FromResult(Tuple.Create(@params["cluster"], @params["user"]));
+            });
+
+            var request = new OwinRequest(environment);
+            if (request.Method == "POST")
+            {
+                var form = await build(request);
+                await updater.AddUserToCluster(form.Item1, form.Item2);
+                return;
+            }
+
+            var payload = request.Uri.Segments.Count() > 3
+                ? (dynamic)(await updater.GetCluster(request.Uri.Segments.Skip(3).First()))
+                : await updater.GetClusters();
+
+            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(payload));
+        }
     }
 }
