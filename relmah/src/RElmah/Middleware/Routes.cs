@@ -53,5 +53,53 @@ namespace RElmah.Middleware
                 ? (dynamic)updater.GetCluster(request.Uri.Segments.Skip(3).First())
                 : updater.GetClusters()));
         }
+
+        public async static Task Applications(
+            IConfigurationUpdater updater,
+            IDictionary<string, object> environment)
+        {
+            var build = new Func<OwinRequest, Task<string>>(async r =>
+            {
+                var @params = await r.ReadFormAsync();
+                return await Task.FromResult(@params["name"]);
+            });
+
+            var request = new OwinRequest(environment);
+            if (request.Method == "POST")
+            {
+                await updater.AddApplication(await build(request));
+                return;
+            }
+
+            var response = new OwinResponse(environment);
+            await response.WriteAsync(JsonConvert.SerializeObject(
+                request.Uri.Segments.Count() > 3
+                ? (dynamic)updater.GetApplication(request.Uri.Segments.Skip(3).First())
+                : updater.GetApplications()));
+        }
+
+        public async static Task Users(
+            IConfigurationUpdater updater,
+            IDictionary<string, object> environment)
+        {
+            var build = new Func<OwinRequest, Task<string>>(async r =>
+            {
+                var @params = await r.ReadFormAsync();
+                return await Task.FromResult(@params["name"]);
+            });
+
+            var request = new OwinRequest(environment);
+            if (request.Method == "POST")
+            {
+                await updater.AddUser(await build(request));
+                return;
+            }
+
+            var response = new OwinResponse(environment);
+            await response.WriteAsync(JsonConvert.SerializeObject(
+                request.Uri.Segments.Count() > 3
+                ? (dynamic)updater.GetUser(request.Uri.Segments.Skip(3).First())
+                : updater.GetUsers()));
+        }
     }
 }
