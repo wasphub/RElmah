@@ -69,4 +69,9 @@ namespace RElmah
         IObservable<Delta<User>> ObserveUsers();
         IObservable<Delta<Relationship<Cluster, User>>> ObserveClusterUsers();
     }
+
+    public interface IResolver
+    {
+        T Resolve<T>();
+    }
 }

@@ -1,19 +1,17 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using RElmah.Extensions;
-using RElmah.Middleware;
 
-namespace RElmah.Host.SignalR
+namespace RElmah.Middleware
 {
     public class RElmahMiddleware : OwinMiddleware
     {
         private readonly IDictionary<string, Func<IDictionary<string, object>, Task>> _dispatchers;
 
-        public RElmahMiddleware(OwinMiddleware next, IDependencyResolver resolver)
+        public RElmahMiddleware(OwinMiddleware next, IResolver resolver)
             : base(next)
         {
             const string relmah = "relmah";

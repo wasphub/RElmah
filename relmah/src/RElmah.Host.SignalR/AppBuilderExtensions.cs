@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNet.SignalR;
 using Owin;
+using RElmah.Middleware;
 using RElmah.Services;
 
 namespace RElmah.Host.SignalR
@@ -26,7 +27,7 @@ namespace RElmah.Host.SignalR
 
             registry.Register(typeof(IUserIdProvider), () => new ClientTokenUserIdProvider());
 
-            return builder.UseRElmahMiddleware<RElmahMiddleware>(GlobalHost.DependencyResolver);
+            return builder.UseRElmahMiddleware<RElmahMiddleware>(new Resolver());
         }
 
         static IAppBuilder UseRElmahMiddleware<T>(this IAppBuilder builder, params object[] args)

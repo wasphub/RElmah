@@ -69,6 +69,7 @@
     </Compile>
     <Compile Include="Contracts.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Middleware\RElmahMiddleware.cs" />
     <Compile Include="Middleware\Routes.cs" />
     <Compile Include="Models\AtomicImmutableDictionary.cs" />
     <Compile Include="Models\ConcurrentReference.cs" />

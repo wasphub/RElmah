@@ -78,7 +78,7 @@
     <Compile Include="Dispatcher.cs" />
     <Compile Include="Hubs\ErrorsHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RElmahMiddleware.cs" />
+    <Compile Include="Resolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
