@@ -27,7 +27,9 @@ namespace RElmah.Host.SignalR
             {
                 { keyer("post-error"), e => Routes.PostError(inbox.Value, e) },
 
-                { keyer("clusters"),   e => Routes.Clusters(updater.Value, e) },
+                { keyer("clusters"),     e => Routes.Clusters(updater.Value, e) },
+                { keyer("applications"), e => Routes.Applications(updater.Value, e) },
+                { keyer("users"),        e => Routes.Users(updater.Value, e) },
             };
 
         }
