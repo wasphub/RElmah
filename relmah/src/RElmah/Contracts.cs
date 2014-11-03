@@ -57,6 +57,10 @@ namespace RElmah
         Task<ValueOrError<User>> GetUser(string name);
     }
 
+    public interface IConfigurationStore : IConfigurationUpdater
+    {
+    }
+
     public interface IConfigurationProvider
     {
         IObservable<Delta<Cluster>> ObserveClusters();
