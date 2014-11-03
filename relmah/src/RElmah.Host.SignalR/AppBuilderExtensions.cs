@@ -12,9 +12,12 @@ namespace RElmah.Host.SignalR
 
             var ei = new ErrorsInbox();
             var d  = new Dispatcher(ei);
+            var ch = new ConfigurationHolder();
 
             registry.Register(typeof(IErrorsInbox), () => ei);
             registry.Register(typeof(IDispatcher),  () => d);
+            registry.Register(typeof(IConfigurationProvider), () => ch);
+            registry.Register(typeof(IConfigurationUpdater), () => ch);
 
             registry.Register(typeof(IUserIdProvider), () => new ClientTokenUserIdProvider());
 
