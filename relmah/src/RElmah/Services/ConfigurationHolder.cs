@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using RElmah.Models;
@@ -125,6 +126,8 @@ namespace RElmah.Services
         public async Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user)
         {
             var s = await _configurationStore.AddUserToCluster(cluster, user);
+
+            if (s.HasValue) _clusterDeltas.OnNext(Delta.Create(s.Value.Primary, DeltaType.Updated));
 
             return s;
         }
