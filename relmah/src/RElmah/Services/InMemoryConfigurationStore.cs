@@ -107,5 +107,10 @@ namespace RElmah.Services
             _clusters.SetItem(cluster, value);
             return Task.FromResult(ValueOrError.Create(Relationship.Create(value, a)));
         }
+
+        public IEnumerable<Application> GetUserApplications(string user)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

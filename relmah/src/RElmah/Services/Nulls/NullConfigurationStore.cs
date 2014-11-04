@@ -76,5 +76,10 @@ namespace RElmah.Services.Nulls
         {
             throw new System.NotImplementedException();
         }
+
+        public IEnumerable<Application> GetUserApplications(string user)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
