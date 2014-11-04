@@ -17,7 +17,18 @@ namespace RElmah.Server
                     builder.UseCors(CorsOptions.AllowAll);
                     builder.RunSignalR();
                 })
-                .UseRElmah();
+                .UseRElmah(new Settings
+                {
+                    InitializeConfiguration = async cu =>
+                    {
+                        var c = await cu.AddCluster("foo");
+                        var a = await cu.AddApplication("argo");
+                        var u = await cu.AddUser("wasp");
+
+                        c.Value.AddApplication(a.Value);
+                        c.Value.AddUser(u.Value);
+                    }
+                });
         }
     }
 }
