@@ -10,10 +10,13 @@ namespace RElmah.Host.SignalR
 {
     public class Dispatcher : IDispatcher
     {
+        private readonly IConfigurationProvider _configurationProvider;
         private readonly IHubContext _context = GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>();
 
         public Dispatcher(IErrorsInbox errorsInbox, IConfigurationProvider configurationProvider)
         {
+            _configurationProvider = configurationProvider;
+
             errorsInbox.GetErrorsStream().Subscribe(p => DispatchError(p));
 
             configurationProvider.ObserveClusterUsers().Subscribe(p => DispatchUserApplications(p));
@@ -29,7 +32,7 @@ namespace RElmah.Host.SignalR
 
         public Task DispatchError(ErrorPayload payload)
         {
-            return _context.Clients.All.error(payload);
+            return _context.Clients.Group(payload.SourceId).error(payload);
         }
     }
 }
