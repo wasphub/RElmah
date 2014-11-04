@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using RElmah.Extensions;
 using RElmah.Models;
 using RElmah.Models.Configuration;
 using RElmah.Services.Nulls;
@@ -28,51 +29,35 @@ namespace RElmah.Services
         {
             _configurationStore = configurationStore;
 
-            _clusterUserOperations
-                .Where(p => p.Type == DeltaType.Added)
-                .Subscribe(p =>
+            var union  = new Func<ImmutableHashSet<Application>, IEnumerable<Application>, ImmutableHashSet<Application>>((c, apps) => c.Union(apps));
+            var except = new Func<ImmutableHashSet<Application>, IEnumerable<Application>, ImmutableHashSet<Application>>((c, apps) => c.Except(apps));
+
+            var clusterUsers =
+                from p in _clusterUserOperations
+                let op = p.Type == DeltaType.Added ? union : except
+                let user = p.Target.Secondary.Name
+                select new
                 {
-                    var user = p.Target.Secondary.Name;
-                    var current = _usersApplications.ContainsKey(user) ? _usersApplications[user] : ImmutableHashSet<Application>.Empty;
-                    _usersApplications.SetItem(user, current.Union(p.Target.Primary.Applications));
-                });
+                    User = user, 
+                    Current = _usersApplications.Get(user, ImmutableHashSet<Application>.Empty),
+                    p.Target.Primary.Applications,
+                    Op = op
+                };
+            clusterUsers.Subscribe(p => _usersApplications.SetItem(p.User, p.Op(p.Current, p.Applications)));
 
-            _clusterUserOperations
-                .Where(p => p.Type == DeltaType.Removed)
-                .Subscribe(p =>
+            var clusterApps =
+                from p in _clusterApplicationOperations
+                let op = p.Type == DeltaType.Added ? union : except
+                from un in p.Target.Primary.Users
+                let user = un.Name
+                select new
                 {
-                    var user = p.Target.Secondary.Name;
-                    var current = _usersApplications.ContainsKey(user) ? _usersApplications[user] : ImmutableHashSet<Application>.Empty;
-                    _usersApplications.SetItem(user, current.Except(p.Target.Primary.Applications));
-                });
-
-
-
-            _clusterApplicationOperations
-                .Where(p => p.Type == DeltaType.Added)
-                .Subscribe(p =>
-                {
-                    foreach (var user in from un in p.Target.Primary.Users select un.Name)
-                    {
-                        var current = _usersApplications.ContainsKey(user)
-                            ? _usersApplications[user]
-                            : ImmutableHashSet<Application>.Empty;
-                        _usersApplications.SetItem(user, current.Union(p.Target.Primary.Applications));
-                    }
-                });
-
-            _clusterApplicationOperations
-                .Where(p => p.Type == DeltaType.Removed)
-                .Subscribe(p =>
-                {
-                    foreach (var user in from un in p.Target.Primary.Users select un.Name)
-                    {
-                        var current = _usersApplications.ContainsKey(user)
-                            ? _usersApplications[user]
-                            : ImmutableHashSet<Application>.Empty;
-                        _usersApplications.SetItem(user, current.Except(p.Target.Primary.Applications));
-                    }
-                });
+                    User = user,
+                    Current = _usersApplications.Get(user, ImmutableHashSet<Application>.Empty),
+                    p.Target.Primary.Applications,
+                    Op = op
+                };
+            clusterApps.Subscribe(p => _usersApplications.SetItem(p.User, p.Op(p.Current, p.Applications)));
         }
 
         public ConfigurationHolder() : this(new NullConfigurationStore()) { }
