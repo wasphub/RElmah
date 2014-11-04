@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using RElmah.Models;
@@ -13,11 +12,12 @@ namespace RElmah.Services
     {
         private readonly IConfigurationStore _configurationStore;
 
-        private readonly Subject<Delta<Cluster>>     _clusterDeltas     = new Subject<Delta<Cluster>>();
-        private readonly Subject<Delta<Application>> _applicationDeltas = new Subject<Delta<Application>>();
-        private readonly Subject<Delta<User>>        _userDeltas        = new Subject<Delta<User>>();
+        private readonly Subject<Delta<Cluster>>                            _clusterDeltas                = new Subject<Delta<Cluster>>();
+        private readonly Subject<Delta<Application>>                        _applicationDeltas            = new Subject<Delta<Application>>();
+        private readonly Subject<Delta<User>>                               _userDeltas                   = new Subject<Delta<User>>();
 
-        private readonly Subject<Delta<Relationship<Cluster, User>>> _clusterUserOperations = new Subject<Delta<Relationship<Cluster, User>>>();
+        private readonly Subject<Delta<Relationship<Cluster, User>>>        _clusterUserOperations        = new Subject<Delta<Relationship<Cluster, User>>>();
+        private readonly Subject<Delta<Relationship<Cluster, Application>>> _clusterApplicationOperations = new Subject<Delta<Relationship<Cluster, Application>>>();
 
         public ConfigurationHolder(IConfigurationStore configurationStore)
         {
@@ -130,6 +130,15 @@ namespace RElmah.Services
             var s = await _configurationStore.AddUserToCluster(cluster, user);
 
             if (s.HasValue) _clusterUserOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Added));
+
+            return s;
+        }
+
+        public async Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application)
+        {
+            var s = await _configurationStore.AddApplicationToCluster(cluster, application);
+
+            if (s.HasValue) _clusterApplicationOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Added));
 
             return s;
         }

@@ -23,13 +23,14 @@ namespace RElmah.Middleware
 
             _dispatchers = new Dictionary<string, Func<IDictionary<string, object>, Task>>
             {
-                { keyer("post-error"),    e => Routes.PostError(inbox.Value, e) },
-
-                { keyer("clusters"),      e => Routes.Clusters(updater.Value, e) },
-                { keyer("applications"),  e => Routes.Applications(updater.Value, e) },
-                { keyer("users"),         e => Routes.Users(updater.Value, e) },
-
-                { keyer("cluster-users"), e => Routes.ClusterUsers(updater.Value, e) },
+                { keyer("post-error"),           e => Routes.PostError(inbox.Value, e) },
+                                                 
+                { keyer("clusters"),             e => Routes.Clusters(updater.Value, e) },
+                { keyer("applications"),         e => Routes.Applications(updater.Value, e) },
+                { keyer("users"),                e => Routes.Users(updater.Value, e) },
+                                                 
+                { keyer("cluster-users"),        e => Routes.ClusterUsers(updater.Value, e) },
+                { keyer("cluster-applications"), e => Routes.ClusterApplications(updater.Value, e) },
             };
 
         }

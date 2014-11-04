@@ -71,5 +71,10 @@ namespace RElmah.Services.Nulls
         {
             throw new System.NotImplementedException();
         }
+
+        public Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
