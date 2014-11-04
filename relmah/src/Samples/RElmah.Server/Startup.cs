@@ -17,6 +17,7 @@ namespace RElmah.Server
                     builder.UseCors(CorsOptions.AllowAll);
                     builder.RunSignalR();
                 })
+
                 .UseRElmah(new Settings
                 {
                     InitializeConfiguration = async cu =>
@@ -25,8 +26,8 @@ namespace RElmah.Server
                         var a = await cu.AddApplication("argo");
                         var u = await cu.AddUser("wasp");
 
-                        c.Value.AddApplication(a.Value);
-                        c.Value.AddUser(u.Value);
+                        cu.AddApplicationToCluster(c.Value.Name, a.Value.Name);
+                        cu.AddUserToCluster(c.Value.Name, u.Value.Name);
                     }
                 });
         }
