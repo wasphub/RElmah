@@ -13,11 +13,22 @@
                 $('#hello').text(e.ErrorId);                       
             });
 
-            conn.start();
+            errors.on('applications', function (apps) {
+                errors.invoke('monitor', apps);
+            });
+
+            $('#login').click(function () {
+                conn.qs = { 'user': $('#user').val() };
+                $('#user').attr("disabled", "disabled");
+                $('#login').hide();
+
+                conn.start();
+            });
         });
     </script>
 </head>
-<body>
-    <p id="hello"></p>
-</body>
+    <body>
+        <input type="text" id="user"/><button id="login">Login</button>
+        <p id="hello"></p>
+    </body>
 </html>
