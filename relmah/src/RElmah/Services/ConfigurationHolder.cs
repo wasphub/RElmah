@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using RElmah.Models;
@@ -19,9 +22,57 @@ namespace RElmah.Services
         private readonly Subject<Delta<Relationship<Cluster, User>>>        _clusterUserOperations        = new Subject<Delta<Relationship<Cluster, User>>>();
         private readonly Subject<Delta<Relationship<Cluster, Application>>> _clusterApplicationOperations = new Subject<Delta<Relationship<Cluster, Application>>>();
 
+        private readonly AtomicImmutableDictionary<string, ImmutableHashSet<Application>> _usersApplications   = new AtomicImmutableDictionary<string, ImmutableHashSet<Application>>();
+ 
         public ConfigurationHolder(IConfigurationStore configurationStore)
         {
             _configurationStore = configurationStore;
+
+            _clusterUserOperations
+                .Where(p => p.Type == DeltaType.Added)
+                .Subscribe(p =>
+                {
+                    var user = p.Target.Secondary.Name;
+                    var current = _usersApplications.ContainsKey(user) ? _usersApplications[user] : ImmutableHashSet<Application>.Empty;
+                    _usersApplications.SetItem(user, current.Union(p.Target.Primary.Applications));
+                });
+
+            _clusterUserOperations
+                .Where(p => p.Type == DeltaType.Removed)
+                .Subscribe(p =>
+                {
+                    var user = p.Target.Secondary.Name;
+                    var current = _usersApplications.ContainsKey(user) ? _usersApplications[user] : ImmutableHashSet<Application>.Empty;
+                    _usersApplications.SetItem(user, current.Except(p.Target.Primary.Applications));
+                });
+
+
+
+            _clusterApplicationOperations
+                .Where(p => p.Type == DeltaType.Added)
+                .Subscribe(p =>
+                {
+                    foreach (var user in from un in p.Target.Primary.Users select un.Name)
+                    {
+                        var current = _usersApplications.ContainsKey(user)
+                            ? _usersApplications[user]
+                            : ImmutableHashSet<Application>.Empty;
+                        _usersApplications.SetItem(user, current.Union(p.Target.Primary.Applications));
+                    }
+                });
+
+            _clusterApplicationOperations
+                .Where(p => p.Type == DeltaType.Removed)
+                .Subscribe(p =>
+                {
+                    foreach (var user in from un in p.Target.Primary.Users select un.Name)
+                    {
+                        var current = _usersApplications.ContainsKey(user)
+                            ? _usersApplications[user]
+                            : ImmutableHashSet<Application>.Empty;
+                        _usersApplications.SetItem(user, current.Except(p.Target.Primary.Applications));
+                    }
+                });
         }
 
         public ConfigurationHolder() : this(new NullConfigurationStore()) { }
@@ -151,6 +202,13 @@ namespace RElmah.Services
         public IObservable<Delta<Relationship<Cluster, Application>>> ObserveClusterApplications()
         {
             return _clusterApplicationOperations;
+        }
+
+        public IEnumerable<Application> GetUserApplications(string user)
+        {
+            return _usersApplications.ContainsKey(user)
+                ? _usersApplications[user]
+                : Enumerable.Empty<Application>();
         }
     }
 }
