@@ -39,6 +39,7 @@ namespace RElmah
     public interface IDispatcher
     {
         Task DispatchError(ErrorPayload payload);
+        void Connect(string user, Action<string> connector);
     }
 
     public interface IConfigurationUpdater
@@ -57,6 +58,7 @@ namespace RElmah
         Task<ValueOrError<User>> GetUser(string name);
         Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user);
         Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application);
+        IEnumerable<Application> GetUserApplications(string user);
     }
 
     public interface IConfigurationStore : IConfigurationUpdater
