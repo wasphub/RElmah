@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.EnterpriseServices;
 using System.Linq;
 
 namespace RElmah.Models.Configuration
@@ -24,6 +25,11 @@ namespace RElmah.Models.Configuration
             return new Cluster(name, users);
         }
 
+        public static Cluster Create(string name, IEnumerable<Application> applications, IEnumerable<User> users)
+        {
+            return new Cluster(name, applications, users);
+        }
+
         Cluster(string name)
         {
             Name = name;
@@ -43,6 +49,14 @@ namespace RElmah.Models.Configuration
             _users = users;
         }
 
+        Cluster(string name, IImmutableDictionary<string, Application> applications, IImmutableDictionary<string, User> users)
+        {
+            Name = name;
+
+            _users = users;
+            _applications = applications;
+        }
+
         Cluster(string name, IEnumerable<Application> applications)
         {
             Name = name;
@@ -59,6 +73,19 @@ namespace RElmah.Models.Configuration
             var builder = ImmutableDictionary.CreateBuilder<string, User>();
             builder.AddRange(from u in users select new KeyValuePair<string, User>(u.Name, u));
             _users = builder.ToImmutable();
+        }
+
+        Cluster(string name, IEnumerable<Application> applications, IEnumerable<User> users)
+        {
+            Name = name;
+
+            var ub = ImmutableDictionary.CreateBuilder<string, User>();
+            ub.AddRange(from u in users select new KeyValuePair<string, User>(u.Name, u));
+            _users = ub.ToImmutable();
+
+            var ab = ImmutableDictionary.CreateBuilder<string, Application>();
+            ab.AddRange(from a in applications select new KeyValuePair<string, Application>(a.Name, a));
+            _applications = ab.ToImmutable();
         }
 
         public string Name { get; private set; }
@@ -82,7 +109,7 @@ namespace RElmah.Models.Configuration
 
         public Cluster AddUser(User user)
         {
-            return new Cluster(Name, _users.Add(user.Name, user));
+            return new Cluster(Name, _applications, _users.Add(user.Name, user));
         }
 
         public Cluster RemoveUser(User app)
