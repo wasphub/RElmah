@@ -94,7 +94,7 @@ namespace RElmah.Models.Configuration
 
         public Cluster AddApplication(Application app)
         {
-            return new Cluster(Name, _applications.Add(app.Name, app));
+            return new Cluster(Name, _applications.Add(app.Name, app), _users);
         }
 
         public Cluster RemoveApplication(Application app)
@@ -104,7 +104,7 @@ namespace RElmah.Models.Configuration
 
         public Cluster RemoveApplication(string name)
         {
-            return new Cluster(Name, _applications.Remove(name));
+            return new Cluster(Name, _applications.Remove(name), _users);
         }
 
         public Cluster AddUser(User user)
@@ -119,7 +119,7 @@ namespace RElmah.Models.Configuration
 
         public Cluster RemoveUser(string name)
         {
-            return new Cluster(Name, _users.Remove(name));
+            return new Cluster(Name, _applications, _users.Remove(name));
         }
     }
 }
