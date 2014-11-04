@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNet.SignalR;
 using Owin;
+using RElmah.Host.SignalR.Hubs;
 using RElmah.Middleware;
 using RElmah.Services;
 
@@ -19,18 +20,20 @@ namespace RElmah.Host.SignalR
 
             //TODO: improve the way this part can be customized from outside
 
-            var ei = new ErrorsInbox();
-            var cs = new InMemoryConfigurationStore();
-            var ch = new ConfigurationHolder(cs);
-            var d  = new Dispatcher(ei, ch);
+            var ctuip = new ClientTokenUserIdProvider();
+            var ei    = new ErrorsInbox();
+            var cs    = new InMemoryConfigurationStore();
+            var ch    = new ConfigurationHolder(cs);
+            var d     = new Dispatcher(ei, ch, ch);
 
             registry.Register(typeof(IErrorsInbox), () => ei);
             registry.Register(typeof(IDispatcher),  () => d);
             registry.Register(typeof(IConfigurationProvider), () => ch);
             registry.Register(typeof(IConfigurationUpdater), () => ch);
             registry.Register(typeof(IConfigurationStore), () => cs);
+            registry.Register(typeof(IUserIdProvider), () => ctuip);
 
-            registry.Register(typeof(IUserIdProvider), () => new ClientTokenUserIdProvider());
+            registry.Register(typeof(ErrorsHub), () => new ErrorsHub(d, ctuip));
 
             if (settings != null && settings.InitializeConfiguration != null)
                 settings.InitializeConfiguration(ch);
