@@ -147,5 +147,10 @@ namespace RElmah.Services
         {
             return _clusterUserOperations;
         }
+
+        public IObservable<Delta<Relationship<Cluster, Application>>> ObserveClusterApplications()
+        {
+            return _clusterApplicationOperations;
+        }
     }
 }
