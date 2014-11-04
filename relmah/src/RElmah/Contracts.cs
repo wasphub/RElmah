@@ -39,6 +39,10 @@ namespace RElmah
     public interface IDispatcher
     {
         Task DispatchError(ErrorPayload payload);
+    }
+
+    public interface IConnector
+    {
         void Connect(string user, Action<string> connector);
     }
 
