@@ -6,9 +6,14 @@ using RElmah.Services;
 
 namespace RElmah.Host.SignalR
 {
+    public class Settings
+    {
+        public Action<IConfigurationUpdater> InitializeConfiguration { get; set; }
+    }
+
     public static class AppBuilderExtensions
     {
-        public static IAppBuilder UseRElmah(this IAppBuilder builder)
+        public static IAppBuilder UseRElmah(this IAppBuilder builder, Settings settings = null)
         {
             var registry = GlobalHost.DependencyResolver;
 
@@ -27,6 +32,9 @@ namespace RElmah.Host.SignalR
 
             registry.Register(typeof(IUserIdProvider), () => new ClientTokenUserIdProvider());
 
+            if (settings != null && settings.InitializeConfiguration != null)
+                settings.InitializeConfiguration(ch);
+
             return builder.UseRElmahMiddleware<RElmahMiddleware>(new Resolver());
         }
 
@@ -34,6 +42,7 @@ namespace RElmah.Host.SignalR
         {
             return builder.Use(typeof(T), args);
         }
+
         public static IAppBuilder RunSignalR(this IAppBuilder builder)
         {
             OwinExtensions.RunSignalR(builder);
