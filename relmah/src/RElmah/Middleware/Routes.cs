@@ -120,6 +120,13 @@ namespace RElmah.Middleware
                 return;
             }
 
+            if (request.Method == "DELETE")
+            {
+                var form = await build(request);
+                await updater.RemoveUserFromCluster(form.Item1, form.Item2);
+                return;
+            }
+
             var payload = request.Uri.Segments.Count() > 3
                 ? (dynamic)(await updater.GetCluster(request.Uri.Segments.Skip(3).First()))
                 : await updater.GetClusters();
@@ -142,6 +149,13 @@ namespace RElmah.Middleware
             {
                 var form = await build(request);
                 await updater.AddApplicationToCluster(form.Item1, form.Item2);
+                return;
+            }
+
+            if (request.Method == "DELETE")
+            {
+                var form = await build(request);
+                await updater.RemoveApplicationFromCluster(form.Item1, form.Item2);
                 return;
             }
 

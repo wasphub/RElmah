@@ -35,7 +35,7 @@ namespace RElmah.Host.SignalR
             registry.Register(typeof(IConfigurationStore), () => cs);
             registry.Register(typeof(IUserIdProvider), () => ctuip);
 
-            registry.Register(typeof(ErrorsHub), () => new ErrorsHub(d, c, ctuip));
+            registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, ctuip));
 
             if (settings != null && settings.InitializeConfiguration != null)
                 settings.InitializeConfiguration(ch);

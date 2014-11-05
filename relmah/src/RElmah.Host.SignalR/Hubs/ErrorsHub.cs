@@ -8,13 +8,11 @@ namespace RElmah.Host.SignalR.Hubs
     [HubName("relmah-errors")]
     public class ErrorsHub : Hub
     {
-        private readonly IDispatcher     _dispatcher;
         private readonly IConnector      _connector;
         private readonly IUserIdProvider _userIdProvider;
 
-        public ErrorsHub(IDispatcher dispatcher, IConnector connector, IUserIdProvider userIdProvider)
+        public ErrorsHub(IConnector connector, IUserIdProvider userIdProvider)
         {
-            _dispatcher = dispatcher;
             _connector = connector;
             _userIdProvider = userIdProvider;
         }
@@ -26,10 +24,13 @@ namespace RElmah.Host.SignalR.Hubs
             return base.OnConnected();
         }
 
-        public void Monitor(IEnumerable<string> apps)
+        public void Monitor(IEnumerable<string> subscribe, IEnumerable<string> unsubscribe)
         {
-            foreach (var app in apps)
+            foreach (var app in subscribe)
                 Groups.Add(Context.ConnectionId, app);
+
+            foreach (var app in unsubscribe)
+                Groups.Remove(Context.ConnectionId, app);
         }
     }
 }

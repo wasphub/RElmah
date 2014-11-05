@@ -61,7 +61,9 @@ namespace RElmah
         Task<IEnumerable<User>> GetUsers();
         Task<ValueOrError<User>> GetUser(string name);
         Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user);
+        Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user);
         Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application);
+        Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application);
         IEnumerable<Application> GetUserApplications(string user);
     }
 

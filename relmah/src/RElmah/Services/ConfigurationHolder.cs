@@ -173,11 +173,29 @@ namespace RElmah.Services
             return s;
         }
 
+        public async Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user)
+        {
+            var s = await _configurationStore.RemoveUserFromCluster(cluster, user);
+
+            if (s.HasValue) _clusterUserOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Removed));
+
+            return s;
+        }
+
         public async Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application)
         {
             var s = await _configurationStore.AddApplicationToCluster(cluster, application);
 
             if (s.HasValue) _clusterApplicationOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Added));
+
+            return s;
+        }
+
+        public async Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application)
+        {
+            var s = await _configurationStore.RemoveApplicationFromCluster(cluster, application);
+
+            if (s.HasValue) _clusterApplicationOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Removed));
 
             return s;
         }

@@ -98,12 +98,32 @@ namespace RElmah.Services
             return Task.FromResult(ValueOrError.Create(Relationship.Create(value, u)));
         }
 
+        public Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user)
+        {
+            var c = _clusters[cluster];
+            var u = _users[user];
+
+            var value = c.RemoveUser(u);
+            _clusters.SetItem(cluster, value);
+            return Task.FromResult(ValueOrError.Create(Relationship.Create(value, u)));
+        }
+
         public Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application)
         {
             var c = _clusters[cluster];
             var a = _applications[application];
 
             var value = c.AddApplication(a);
+            _clusters.SetItem(cluster, value);
+            return Task.FromResult(ValueOrError.Create(Relationship.Create(value, a)));
+        }
+
+        public Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application)
+        {
+            var c = _clusters[cluster];
+            var a = _applications[application];
+
+            var value = c.RemoveApplication(a);
             _clusters.SetItem(cluster, value);
             return Task.FromResult(ValueOrError.Create(Relationship.Create(value, a)));
         }

@@ -13,8 +13,8 @@
                 $('#hello').text(e.ErrorId);                       
             });
 
-            errors.on('applications', function (apps) {
-                errors.invoke('monitor', apps);
+            errors.on('applications', function (subs, unsubs) {
+                errors.invoke('monitor', subs, unsubs);
             });
 
             $('#login').click(function () {
