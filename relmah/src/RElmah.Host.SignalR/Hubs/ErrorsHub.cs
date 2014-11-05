@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
@@ -19,7 +20,11 @@ namespace RElmah.Host.SignalR.Hubs
 
         public override Task OnConnected()
         {
-            _connector.Connect(_userIdProvider.GetUserId(Context.Request), a => Groups.Add(Context.ConnectionId, a));
+            var apps = Enumerable.Empty<string>();
+            _connector.Connect(_userIdProvider.GetUserId(Context.Request), a => apps = apps.Concat(new [] { a }));
+
+            Clients.Caller
+                .applications(apps);
 
             return base.OnConnected();
         }
