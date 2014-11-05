@@ -4,16 +4,50 @@
     <title></title>
     <script src="Scripts/jquery-1.6.4.js"></script>
     <script src="Scripts/jquery.signalR-2.1.2.js"></script>
+    <script src="Scripts/underscore.js"></script>
     <script>
         $(function() {
             var conn   = $.hubConnection("http://localhost:9474/signalr"),
                 errors = conn.createHubProxy('relmah-errors');
 
-            errors.on('error', function(e) {
-                $('#hello').text(e.ErrorId);                       
+            errors.on('error', function (e) {
+                var cont = $('<li/>');
+
+                $('<span/>')
+                    .text(e.Error.Message)
+                    .appendTo(cont);
+
+                cont.prependTo($('#errors-' + e.SourceId));
             });
 
             errors.on('applications', function (subs, unsubs) {
+                _.chain(subs)
+                    .each(function(app) {
+                        if (!$('#app-' + app).length) {
+                            var cont = $('<li/>')
+                                .attr('id', 'app-' + app);
+
+                            $('<p/>')
+                                .text(app)
+                                .appendTo(cont);
+
+                            $('<ul/>')
+                                .attr('id', 'errors-' + app)
+                                .appendTo(cont);
+
+                            cont.appendTo($('#apps'));
+                        }
+
+                        $('#app-' + app).css({ 'background-color': 'yellow' });
+                    });
+
+                _.chain(unsubs)
+                    .each(function (app) {
+                        if ($('#app-' + app).length) {
+                            $('#app-' + app).css({ 'background-color': 'grey' });
+                        }
+                    });
+
                 errors.invoke('monitor', subs, unsubs);
             });
 
@@ -29,6 +63,6 @@
 </head>
     <body>
         <input type="text" id="user"/><button id="login">Login</button>
-        <p id="hello"></p>
+        <ul id="apps"></ul>
     </body>
 </html>
