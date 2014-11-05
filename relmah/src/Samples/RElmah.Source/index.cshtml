@@ -1,4 +1,14 @@
 ﻿@using System
 @{
-    throw new ApplicationException("Doh!");
+    var r = new Random();
+    var messages = new[] { "Crash", "Boom", "Bang" };
+    var throwers = new[]
+    {
+        new Action(() => { throw new Exception(messages[r.Next(3)] + "!"); }),
+        () => { throw new OutOfMemoryException(messages[r.Next(3)] + "!"); },
+        () => { throw new NullReferenceException(messages[r.Next(3)] + "!"); },
+        () => { throw new ArgumentNullException(messages[r.Next(3)] + "!"); },
+    };
+
+    throwers[r.Next(throwers.Length)]();
 }
