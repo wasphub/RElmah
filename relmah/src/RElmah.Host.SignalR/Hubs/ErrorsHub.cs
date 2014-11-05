@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using RElmah.Extensions;
 
 namespace RElmah.Host.SignalR.Hubs
 {
@@ -31,11 +32,8 @@ namespace RElmah.Host.SignalR.Hubs
 
         public void Monitor(IEnumerable<string> subscribe, IEnumerable<string> unsubscribe)
         {
-            foreach (var app in subscribe)
-                Groups.Add(Context.ConnectionId, app);
-
-            foreach (var app in unsubscribe)
-                Groups.Remove(Context.ConnectionId, app);
+            subscribe.Each(app => Groups.Add(Context.ConnectionId, app));
+            unsubscribe.Each(app => Groups.Remove(Context.ConnectionId, app));
         }
     }
 }
