@@ -14,6 +14,8 @@ namespace RElmah.Services
 {
     public class ConfigurationHolder : IConfigurationProvider, IConfigurationUpdater
     {
+        delegate ImmutableHashSet<T> HashsetJunction<T>(ImmutableHashSet<T> set, IEnumerable<T> apps);
+
         private readonly IConfigurationStore _configurationStore;
 
         private readonly Subject<Delta<Cluster>>                            _clusterDeltas                = new Subject<Delta<Cluster>>();
@@ -29,8 +31,9 @@ namespace RElmah.Services
         {
             _configurationStore = configurationStore;
 
-            var union  = new Func<ImmutableHashSet<Application>, IEnumerable<Application>, ImmutableHashSet<Application>>((c, apps) => c.Union(apps));
-            var except = new Func<ImmutableHashSet<Application>, IEnumerable<Application>, ImmutableHashSet<Application>>((c, apps) => c.Except(apps));
+
+            HashsetJunction<Application> union  = (c, apps) => c.Union(apps);
+            HashsetJunction<Application> except = (c, apps) => c.Except(apps);
 
             var clusterUsers =
                 from p in _clusterUserOperations
