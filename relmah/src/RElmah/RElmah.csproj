@@ -70,6 +70,7 @@
     </Compile>
     <Compile Include="Contracts.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Middleware\RElmahMiddleware.cs" />
     <Compile Include="Middleware\Routes.cs" />
     <Compile Include="Models\AtomicImmutableDictionary.cs" />
