@@ -34,7 +34,8 @@ namespace RElmah.Host.SignalR
             if (payload.Type == DeltaType.Added)
             {
                 foreach (var app in apps)
-                    _context.Groups.Add(payload.Target.Secondary.Token, app);
+                    foreach (var token in payload.Target.Secondary.Tokens)
+                        _context.Groups.Add(token, app);
                 
                 _context
                     .Clients
@@ -44,7 +45,8 @@ namespace RElmah.Host.SignalR
             else
             {
                 foreach (var app in apps)
-                    _context.Groups.Remove(payload.Target.Secondary.Token, app);
+                    foreach (var token in payload.Target.Secondary.Tokens)
+                        _context.Groups.Remove(token, app);
 
                 _context
                     .Clients
@@ -66,7 +68,8 @@ namespace RElmah.Host.SignalR
 
             foreach (var user in payload.Target.Primary.Users)
             {
-                action(user.Token, payload.Target.Secondary.Name);
+                foreach (var token in user.Tokens)
+                    action(token, payload.Target.Secondary.Name);
 
                 _context
                     .Clients

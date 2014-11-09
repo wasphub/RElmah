@@ -1,4 +1,8 @@
-﻿namespace RElmah.Models.Configuration
+﻿using System.Collections.Generic;
+using System.Linq;
+using RElmah.Extensions;
+
+namespace RElmah.Models.Configuration
 {
     public class User
     {
@@ -12,13 +16,18 @@
             Name = name;
         }
 
+        User(string name, IEnumerable<string> tokens)
+        {
+            Name = name;
+            Tokens = tokens;
+        }
+
         public string Name { get; private set; }
-        public string Token { get; private set; }
+        public IEnumerable<string> Tokens { get; private set; }
 
         public User AddToken(string token)
         {
-            var u = new User(Name) { Token = token };
-            return u;
+            return new User(Name, Tokens.Concat(token.ToSingleton()));
         }
     }
 }
