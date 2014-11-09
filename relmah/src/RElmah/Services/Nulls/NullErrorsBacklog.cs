@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using RElmah.Models.Errors;
+using RElmah.Common;
 
 namespace RElmah.Services.Nulls
 {

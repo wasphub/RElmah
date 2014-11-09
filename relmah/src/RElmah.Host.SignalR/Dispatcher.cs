@@ -6,7 +6,6 @@ using RElmah.Common;
 using RElmah.Host.SignalR.Hubs;
 using RElmah.Models;
 using RElmah.Models.Configuration;
-using RElmah.Models.Errors;
 
 namespace RElmah.Host.SignalR
 {

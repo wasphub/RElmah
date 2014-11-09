@@ -2,7 +2,7 @@
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
-using RElmah.Models.Errors;
+using RElmah.Common;
 
 namespace RElmah.Client
 {

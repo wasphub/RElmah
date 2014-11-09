@@ -78,7 +78,6 @@
     <Compile Include="Models\Configuration\Application.cs" />
     <Compile Include="Models\Configuration\Cluster.cs" />
     <Compile Include="Models\Configuration\User.cs" />
-    <Compile Include="Models\Errors\ErrorPayload.cs" />
     <Compile Include="Models\Relationship.cs" />
     <Compile Include="Models\ValueOrError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

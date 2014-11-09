@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using RElmah.Models.Errors;
+using RElmah.Common;
 using RElmah.Services.Nulls;
 
 namespace RElmah.Services
