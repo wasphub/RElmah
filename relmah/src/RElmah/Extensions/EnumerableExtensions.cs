@@ -18,5 +18,10 @@ namespace RElmah.Extensions
 
             return source;
         }
+
+        public static IEnumerable<T> ToSingleton<T>(this T source)
+        {
+            return new[] {source};
+        }
     }
 }
