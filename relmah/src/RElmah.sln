@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Dashboard.Basic", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Client", "RElmah.Client\RElmah.Client.csproj", "{E060A8C6-F69C-4908-AD4F-ADFD07A129FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Elmah", "RElmah.Elmah\RElmah.Elmah.csproj", "{F791BCE5-7B0C-4002-B7B7-AEA4FA04DF88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{E060A8C6-F69C-4908-AD4F-ADFD07A129FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E060A8C6-F69C-4908-AD4F-ADFD07A129FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E060A8C6-F69C-4908-AD4F-ADFD07A129FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F791BCE5-7B0C-4002-B7B7-AEA4FA04DF88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F791BCE5-7B0C-4002-B7B7-AEA4FA04DF88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F791BCE5-7B0C-4002-B7B7-AEA4FA04DF88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F791BCE5-7B0C-4002-B7B7-AEA4FA04DF88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
