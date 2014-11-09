@@ -7,13 +7,16 @@ namespace RElmah.Extensions
     {
         public static IEnumerable<T> Each<T>(this IEnumerable<T> source, Action<T> action)
         {
-            if (source == null) yield break;
-
-            foreach (var item in source)
+            if (source != null)
             {
-                action(item);
-                yield return item;
+                var e = source.GetEnumerator();
+                while (e.MoveNext())
+                {
+                    action(e.Current);
+                }
             }
+
+            return source;
         }
     }
 }
