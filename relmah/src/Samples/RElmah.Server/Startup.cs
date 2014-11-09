@@ -23,7 +23,7 @@ namespace RElmah.Server
                     InitializeConfiguration = async cu =>
                     {
                         var c = await cu.AddCluster("foo");
-                        var a = await cu.AddApplication("argo");
+                        var a = await cu.AddApplication("sample");
                         var u = await cu.AddUser("wasp");
 
                         cu.AddApplicationToCluster(c.Value.Name, a.Value.Name);

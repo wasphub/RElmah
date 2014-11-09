@@ -4,13 +4,27 @@
     <title></title>
     <script src="Scripts/jquery-1.6.4.js"></script>
     <script src="Scripts/jquery.signalR-2.1.2.js"></script>
-    <script src="Scripts/underscore.js"></script>
-    <script>
-        $(function() {
-            var conn   = $.hubConnection("http://localhost:9474/signalr"),
-                errors = conn.createHubProxy('relmah-errors');
 
-            errors.on('error', function (e) {
+    <script src="Scripts/underscore.js"></script>
+    
+    <script src="Scripts/rx.js"></script>
+    <script src="Scripts/rx.async.js"></script>
+    <script src="Scripts/rx.binding.js"></script>
+
+    <script src="Scripts/relmah/relmah.js"></script>
+
+    <script>
+        $(function () {
+
+            var r = relmah("http://localhost:9474/signalr", {
+                    errors: function (errs) {
+                        return errs;
+                    }
+                }),
+                errors = r.getErrors(),
+                apps   = r.getApplications();
+
+            errors.subscribe(function (e) {
                 var cont = $('<li/>');
 
                 $('<span/>')
@@ -20,43 +34,38 @@
                 cont.prependTo($('#errors-' + e.SourceId));
             });
 
-            errors.on('applications', function (subs, unsubs) {
-                _.chain(subs)
-                    .each(function(app) {
-                        if (!$('#app-' + app).length) {
-                            var cont = $('<li/>')
-                                .attr('id', 'app-' + app);
+            apps.filter(function (a) { return !a.removed; }).subscribe(function (app) {
+                var name = app.name;
+                if (!$('#app-' + name).length) {
+                    var cont = $('<li/>')
+                        .attr('id', 'app-' + name);
 
-                            $('<p/>')
-                                .text(app)
-                                .appendTo(cont);
+                    $('<p/>')
+                        .text(name)
+                        .appendTo(cont);
 
-                            $('<ul/>')
-                                .attr('id', 'errors-' + app)
-                                .appendTo(cont);
+                    $('<ul/>')
+                        .attr('id', 'errors-' + name)
+                        .appendTo(cont);
 
-                            cont.appendTo($('#apps'));
-                        }
+                    cont.appendTo($('#apps'));
+                }
 
-                        $('#app-' + app).css({ 'background-color': 'yellow' });
-                    });
+                $('#app-' + name).css({ 'background-color': 'yellow' });
+            });
 
-                _.chain(unsubs)
-                    .each(function (app) {
-                        if ($('#app-' + app).length) {
-                            $('#app-' + app).css({ 'background-color': 'grey' });
-                        }
-                    });
-
-                errors.invoke('monitor', subs, unsubs);
+            apps.filter(function (a) { return a.removed; }).subscribe(function (app) {
+                var name = app.name;
+                if ($('#app-' + name).length) {
+                    $('#app-' + name).css({ 'background-color': 'grey' });
+                }
             });
 
             $('#login').click(function () {
-                conn.qs = { 'user': $('#user').val() };
                 $('#user').attr("disabled", "disabled");
                 $('#login').hide();
 
-                conn.start();
+                r.start({ 'user': $('#user').val() });
             });
         });
     </script>
