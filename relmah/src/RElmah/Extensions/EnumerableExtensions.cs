@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RElmah.Extensions
 {
@@ -22,6 +23,11 @@ namespace RElmah.Extensions
         public static IEnumerable<T> ToSingleton<T>(this T source)
         {
             return new[] {source};
+        }
+
+        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source)
+        {
+            return source ?? Enumerable.Empty<T>();
         }
     }
 }
