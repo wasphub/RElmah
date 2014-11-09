@@ -27,7 +27,7 @@ namespace RElmah.Models.Configuration
 
         public User AddToken(string token)
         {
-            return new User(Name, Tokens.Concat(token.ToSingleton()));
+            return new User(Name, Tokens.EmptyIfNull().Concat(token.ToSingleton()));
         }
     }
 }

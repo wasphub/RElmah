@@ -20,6 +20,7 @@ namespace RElmah.Host.SignalR.Hubs
         public override Task OnConnected()
         {
             var apps = Enumerable.Empty<string>();
+
             _connector.Connect(_userIdProvider.GetUserId(Context.Request), Context.ConnectionId, a =>
             {
                 apps = apps.Concat(new[] { a });

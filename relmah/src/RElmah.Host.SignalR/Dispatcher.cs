@@ -20,8 +20,8 @@ namespace RElmah.Host.SignalR
 
             errorsInbox.GetErrorsStream().Subscribe(p => DispatchError(p));
 
-            configurationProvider.ObserveClusterApplications().Subscribe(DispatchUsersApplication);
             configurationProvider.ObserveClusterUsers().Subscribe(DispatchUserApplications);
+            configurationProvider.ObserveClusterApplications().Subscribe(DispatchUsersApplication);
         }
 
         public void DispatchUserApplications(Delta<Relationship<Cluster, User>> payload)
