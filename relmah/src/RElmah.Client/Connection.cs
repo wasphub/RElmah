@@ -12,9 +12,9 @@ namespace RElmah.Client
 
         private readonly Subject<ErrorPayload> _errors = new Subject<ErrorPayload>();
 
-        public Connection(string endpoint)
+        public Connection(string endpoint, string user)
         {
-            _connection = new HubConnection(endpoint);
+            _connection = new HubConnection(endpoint, "user=" + user);
 
             var proxy = _connection.CreateHubProxy("relmah-errors");
 
