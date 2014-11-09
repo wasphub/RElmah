@@ -22,6 +22,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Client", "Samples\RE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Source", "Samples\RElmah.Source\RElmah.Source.csproj", "{813CAA47-8B20-40CF-8017-7CF0918366B5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JS", "JS", "{4E4EF74B-9518-459E-8734-489238AFD9A0}"
+	ProjectSection(SolutionItems) = preProject
+		RElmah.JS\relmah.js = RElmah.JS\relmah.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

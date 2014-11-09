@@ -59,7 +59,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\relmah\relmah.js" />
+    <Content Include="..\..\RElmah.JS\relmah.js">
+      <Link>Scripts\relmah\relmah.js</Link>
+    </Content>
     <Content Include="Scripts\rx.async.compat.js" />
     <Content Include="Scripts\rx.async.compat.min.js" />
     <Content Include="Scripts\rx.async.js" />
@@ -124,6 +126,9 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(SolutionDir)RElmah.JS\relmah.js" "$(ProjectDir)scripts\relmah"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
