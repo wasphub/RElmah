@@ -24,7 +24,7 @@ namespace RElmah.Server
                     {
                         var c = await cu.AddCluster("foo");
                         var a = await cu.AddApplication("sample");
-                        var u = await cu.AddUser("wasp");
+                        var u = await cu.AddUser(@"WaspBookWin81\wasp");
 
                         cu.AddApplicationToCluster(c.Value.Name, a.Value.Name);
                         cu.AddUserToCluster(c.Value.Name, u.Value.Name);
