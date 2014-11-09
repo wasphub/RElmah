@@ -70,9 +70,6 @@
     <Content Include="Scripts\rx.compat.min.js" />
     <Content Include="Scripts\rx.js" />
     <Content Include="Scripts\rx.min.js" />
-    <Content Include="Scripts\underscore.js" />
-    <Content Include="Scripts\underscore.min.js" />
-    <Content Include="Scripts\underscore.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
