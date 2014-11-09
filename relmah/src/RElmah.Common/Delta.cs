@@ -1,4 +1,4 @@
-﻿namespace RElmah.Models
+﻿namespace RElmah.Common
 {
     public enum DeltaType
     {

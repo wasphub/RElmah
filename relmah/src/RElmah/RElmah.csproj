@@ -78,9 +78,7 @@
     <Compile Include="Models\Configuration\Application.cs" />
     <Compile Include="Models\Configuration\Cluster.cs" />
     <Compile Include="Models\Configuration\User.cs" />
-    <Compile Include="Models\Errors\Error.cs" />
     <Compile Include="Models\Errors\ErrorPayload.cs" />
-    <Compile Include="Models\Delta.cs" />
     <Compile Include="Models\Relationship.cs" />
     <Compile Include="Models\ValueOrError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,6 +90,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RElmah.Common\RElmah.Common.csproj">
+      <Project>{187CC6A7-8D7E-4D9D-A954-08B68F9C69D4}</Project>
+      <Name>RElmah.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
+using RElmah.Common;
 using RElmah.Host.SignalR.Hubs;
 using RElmah.Models;
 using RElmah.Models.Configuration;

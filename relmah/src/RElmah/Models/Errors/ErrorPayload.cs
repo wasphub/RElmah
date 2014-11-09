@@ -1,4 +1,6 @@
-﻿namespace RElmah.Models.Errors
+﻿using RElmah.Common;
+
+namespace RElmah.Models.Errors
 {
     public class ErrorPayload
     {

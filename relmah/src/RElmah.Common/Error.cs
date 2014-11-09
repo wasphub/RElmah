@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RElmah.Models.Errors
+namespace RElmah.Common
 {
     public class Error
     {
