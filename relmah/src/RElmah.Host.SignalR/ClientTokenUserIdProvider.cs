@@ -6,7 +6,9 @@ namespace RElmah.Host.SignalR
     {
         public string GetUserId(IRequest request)
         {
-            return request.QueryString["user"];
+            return request.User.Identity.IsAuthenticated 
+                ? request.User.Identity.Name 
+                : request.QueryString["user"];
         }
     }
 }
