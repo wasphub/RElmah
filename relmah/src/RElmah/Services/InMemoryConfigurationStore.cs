@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using RElmah.Models;
 using RElmah.Models.Configuration;
@@ -93,7 +94,7 @@ namespace RElmah.Services
             var c = _clusters[cluster];
             var u = _users[user];
 
-            var value = c.AddUser(u);
+            var value = c.SetUser(u);
             _clusters.SetItem(cluster, value);
             return Task.FromResult(ValueOrError.Create(Relationship.Create(value, u)));
         }
@@ -131,6 +132,15 @@ namespace RElmah.Services
         public IEnumerable<Application> GetUserApplications(string user)
         {
             throw new System.NotImplementedException();
+        }
+
+        public Task<ValueOrError<User>> AddUserToken(string user, string token)
+        {
+            var u = _users[user].AddToken(token);
+            foreach (var c in _clusters.Values.Where(c => c.HasUser(user)))
+                _clusters.SetItem(c.Name, c.SetUser(u));
+
+            return Task.FromResult(new ValueOrError<User>(u));
         }
     }
 }

@@ -91,5 +91,10 @@ namespace RElmah.Services.Nulls
         {
             throw new System.NotImplementedException();
         }
+
+        public Task<ValueOrError<User>> AddUserToken(string user, string token)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

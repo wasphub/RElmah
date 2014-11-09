@@ -107,9 +107,9 @@ namespace RElmah.Models.Configuration
             return new Cluster(Name, _applications.Remove(name), _users);
         }
 
-        public Cluster AddUser(User user)
+        public Cluster SetUser(User user)
         {
-            return new Cluster(Name, _applications, _users.Add(user.Name, user));
+            return new Cluster(Name, _applications, _users.SetItem(user.Name, user));
         }
 
         public Cluster RemoveUser(User app)
@@ -120,6 +120,11 @@ namespace RElmah.Models.Configuration
         public Cluster RemoveUser(string name)
         {
             return new Cluster(Name, _applications, _users.Remove(name));
+        }
+
+        public bool HasUser(string user)
+        {
+            return _users.Keys.Contains(user);
         }
     }
 }

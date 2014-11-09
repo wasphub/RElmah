@@ -29,8 +29,6 @@
                         apps[k] && applications.onNext({ name: k, removed: true });
                         apps[k] = false;
                     }
-
-                    proxy.invoke('monitor', existingApps, removedApps);
                 });
 
                 conn.qs = { user: opts && opts.user };

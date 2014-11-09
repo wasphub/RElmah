@@ -216,5 +216,10 @@ namespace RElmah.Services
                 ? _usersApplications[user]
                 : Enumerable.Empty<Application>();
         }
+
+        public async Task<ValueOrError<User>> AddUserToken(string user, string token)
+        {
+            return await _configurationStore.AddUserToken(user, token);
+        }
     }
 }

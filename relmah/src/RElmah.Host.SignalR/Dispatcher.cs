@@ -18,43 +18,65 @@ namespace RElmah.Host.SignalR
         {
             _configurationUpdater  = configurationUpdater;
 
-            errorsInbox.GetErrorsStream().Subscribe(p => DispatchError(p)); 
+            errorsInbox.GetErrorsStream().Subscribe(p => DispatchError(p));
 
-            configurationProvider.ObserveClusterUsers().Subscribe(DispatchUserApplications);
             configurationProvider.ObserveClusterApplications().Subscribe(DispatchUsersApplication);
+            configurationProvider.ObserveClusterUsers().Subscribe(DispatchUserApplications);
         }
 
         public void DispatchUserApplications(Delta<Relationship<Cluster, User>> payload)
         {
             var apps = 
-                    from a in payload.Target.Primary.Applications 
-                    select a.Name;
+                from a in payload.Target.Primary.Applications 
+                select a.Name;
             apps = apps.ToArray();
 
-            _context
-                .Clients
-                .User(payload.Target.Secondary.Name)
-                .applications(
-                    payload.Type == DeltaType.Added
-                    ? apps
-                    : Enumerable.Empty<string>(),
-                    payload.Type == DeltaType.Removed   
-                    ? apps
-                    : Enumerable.Empty<string>());
+            if (payload.Type == DeltaType.Added)
+            {
+                foreach (var app in apps)
+                    _context.Groups.Add(payload.Target.Secondary.Token, app);
+                
+                _context
+                    .Clients
+                    .User(payload.Target.Secondary.Name)
+                    .applications(apps, Enumerable.Empty<string>());
+            }
+            else
+            {
+                foreach (var app in apps)
+                    _context.Groups.Remove(payload.Target.Secondary.Token, app);
+
+                _context
+                    .Clients
+                    .User(payload.Target.Secondary.Name)
+                    .applications(Enumerable.Empty<string>(), apps);
+            }
         }
 
         public void DispatchUsersApplication(Delta<Relationship<Cluster, Application>> payload)
         {
+            var apps = 
+                from a in payload.Target.Primary.Applications
+                select a.Name;
+            apps = apps.ToArray();
+
+            var action = payload.Type == DeltaType.Added
+                ? new Action<string, string>((t, g) => _context.Groups.Add(t, g))
+                : (t, g) => _context.Groups.Remove(t, g);
+
             foreach (var user in payload.Target.Primary.Users)
+            {
+                action(user.Token, payload.Target.Secondary.Name);
+
                 _context
                     .Clients
                     .User(user.Name)
                     .applications(
-                        from a in payload.Target.Primary.Applications 
-                        select a.Name, 
-                        payload.Type == DeltaType.Removed 
-                        ? new [] { payload.Target.Secondary.Name }
-                        : Enumerable.Empty<string>());
+                        apps,
+                        payload.Type == DeltaType.Removed
+                            ? new[] {payload.Target.Secondary.Name}
+                            : Enumerable.Empty<string>());
+            }
         }
 
         public Task DispatchError(ErrorPayload payload)

@@ -13,5 +13,12 @@
         }
 
         public string Name { get; private set; }
+        public string Token { get; private set; }
+
+        public User AddToken(string token)
+        {
+            var u = new User(Name) { Token = token };
+            return u;
+        }
     }
 }

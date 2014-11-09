@@ -11,8 +11,10 @@ namespace RElmah.Host.SignalR
             _configurationUpdater  = configurationUpdater;
         }
 
-        public void Connect(string user, Action<string> connector)
+        public void Connect(string user, string token, Action<string> connector)
         {
+            _configurationUpdater.AddUserToken(user, token);
+
             foreach (var app in _configurationUpdater.GetUserApplications(user))
                 connector(app.Name);
         }

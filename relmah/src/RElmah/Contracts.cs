@@ -43,7 +43,7 @@ namespace RElmah
 
     public interface IConnector
     {
-        void Connect(string user, Action<string> connector);
+        void Connect(string user, string token, Action<string> connector);
     }
 
     public interface IConfigurationUpdater
@@ -65,6 +65,7 @@ namespace RElmah
         Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application);
         Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application);
         IEnumerable<Application> GetUserApplications(string user);
+        Task<ValueOrError<User>> AddUserToken(string user, string token);
     }
 
     public interface IConfigurationStore : IConfigurationUpdater
