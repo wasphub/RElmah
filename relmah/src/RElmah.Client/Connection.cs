@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
@@ -12,9 +13,12 @@ namespace RElmah.Client
 
         private readonly Subject<ErrorPayload> _errors = new Subject<ErrorPayload>();
 
-        public Connection(string endpoint, string user)
+        public Connection(string endpoint, ICredentials credentials)
         {
-            _connection = new HubConnection(endpoint, "user=" + user);
+            _connection = new HubConnection(endpoint)
+            {
+                Credentials = credentials
+            };
 
             var proxy = _connection.CreateHubProxy("relmah-errors");
 
@@ -22,6 +26,8 @@ namespace RElmah.Client
                 "error",
                 p => _errors.OnNext(p));
         }
+
+        public Connection(string endpoint) : this(endpoint, CredentialCache.DefaultCredentials) { }
 
         public Task Start()
         {
