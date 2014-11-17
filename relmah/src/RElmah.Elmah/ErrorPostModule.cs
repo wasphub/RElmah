@@ -71,7 +71,7 @@ namespace RElmah.Elmah
             try
             {
                 var request = (HttpWebRequest)WebRequest.Create(_targetUrl);
-                request.Credentials = new NetworkCredential(@"WaspBookWin81\wasp", @"N0c0mment");
+                request.Credentials = CredentialCache.DefaultNetworkCredentials;
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
 
