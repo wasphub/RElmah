@@ -16,8 +16,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
+    <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -77,6 +77,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RElmah.Elmah\RElmah.Elmah.csproj">
+      <Project>{f791bce5-7b0c-4002-b7b7-aea4fa04df88}</Project>
+      <Name>RElmah.Elmah</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
