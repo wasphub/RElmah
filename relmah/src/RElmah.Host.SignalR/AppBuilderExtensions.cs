@@ -24,16 +24,16 @@ namespace RElmah.Host.SignalR
             var ei    = new ErrorsInbox();
             var cs    = new InMemoryConfigurationStore();
             var ch    = new ConfigurationHolder(cs);
-            var d     = new Dispatcher(ei, ch, ch);
             var c     = new Connector(ch);
 
-            registry.Register(typeof(IErrorsInbox), () => ei);
-            registry.Register(typeof(IDispatcher),  () => d);
-            registry.Register(typeof(IConnection), () => c);
+            registry.Register(typeof(IErrorsInbox),           () => ei);
+            registry.Register(typeof(IConnection),            () => c);
             registry.Register(typeof(IConfigurationProvider), () => ch);
-            registry.Register(typeof(IConfigurationUpdater), () => ch);
-            registry.Register(typeof(IConfigurationStore), () => cs);
-            registry.Register(typeof(IUserIdProvider), () => ctuip);
+            registry.Register(typeof(IConfigurationUpdater),  () => ch);
+            registry.Register(typeof(IConfigurationStore),    () => cs);
+            registry.Register(typeof(IUserIdProvider),        () => ctuip);
+
+            Dispatcher.Wire(ei, ch);
 
             registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, ctuip));
 
