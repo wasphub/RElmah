@@ -11,9 +11,8 @@ namespace RElmah.Models
             return new User(name);
         }
 
-        User(string name)
+        User(string name) : this(name, new string[] { })
         {
-            Name = name;
         }
 
         User(string name, IEnumerable<string> tokens)
