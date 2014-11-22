@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RElmah.Models
+namespace RElmah.Grounding
 {
     public class ValueOrError<T>
     {

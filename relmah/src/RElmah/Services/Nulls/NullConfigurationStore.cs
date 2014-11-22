@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using RElmah.Grounding;
 using RElmah.Models;
-using RElmah.Models.Configuration;
 
 namespace RElmah.Services.Nulls
 {

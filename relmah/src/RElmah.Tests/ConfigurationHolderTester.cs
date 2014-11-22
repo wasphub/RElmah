@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RElmah.Common;
+using RElmah.Grounding;
 using RElmah.Models;
-using RElmah.Models.Configuration;
 using RElmah.Services;
 using Xunit;
 

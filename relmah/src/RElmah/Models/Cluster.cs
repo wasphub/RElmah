@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.EnterpriseServices;
 using System.Linq;
 
-namespace RElmah.Models.Configuration
+namespace RElmah.Models
 {
     public class Cluster
     {

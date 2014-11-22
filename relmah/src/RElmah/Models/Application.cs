@@ -1,4 +1,4 @@
-﻿namespace RElmah.Models.Configuration
+﻿namespace RElmah.Models
 {
     public class Application
     {

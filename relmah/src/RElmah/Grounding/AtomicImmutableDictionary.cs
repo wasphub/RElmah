@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using RElmah.Models;
 
-namespace RElmah.Models
+namespace RElmah.Grounding
 {
     public class AtomicImmutableDictionary<TK, TV> : IImmutableDictionary<TK, TV>
     {

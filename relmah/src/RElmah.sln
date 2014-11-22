@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah", "RElmah\RElmah.csproj", "{A416ED91-F73F-4F01-94D0-E1D3E2B37BA9}"
 EndProject
@@ -35,6 +35,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Client", "RElmah.Client\RElmah.Client.csproj", "{E060A8C6-F69C-4908-AD4F-ADFD07A129FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Elmah", "RElmah.Elmah\RElmah.Elmah.csproj", "{F791BCE5-7B0C-4002-B7B7-AEA4FA04DF88}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{31B5F81F-14D1-438B-99B0-840C33668EA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{8EB9853F-41B2-4650-931F-9BC3DC26B8A9} = {31B5F81F-14D1-438B-99B0-840C33668EA4}
 		{5A31FC67-9707-41D7-BB12-A307C9A7B9FB} = {45DE8F9D-E3D9-425F-BEFC-E904E75D3765}
 		{813CAA47-8B20-40CF-8017-7CF0918366B5} = {45DE8F9D-E3D9-425F-BEFC-E904E75D3765}
 		{7A43F767-7FDD-40BE-94AD-906F491BAE47} = {45DE8F9D-E3D9-425F-BEFC-E904E75D3765}

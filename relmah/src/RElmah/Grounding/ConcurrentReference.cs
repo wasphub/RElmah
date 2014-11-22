@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace RElmah.Models
+namespace RElmah.Grounding
 {
     public class ConcurrentReference<T> where T : class
     {

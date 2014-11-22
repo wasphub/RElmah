@@ -2,7 +2,7 @@
 using System.Linq;
 using RElmah.Extensions;
 
-namespace RElmah.Models.Configuration
+namespace RElmah.Models
 {
     public class User
     {
