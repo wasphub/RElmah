@@ -2,9 +2,9 @@
 using System.Linq;
 using Microsoft.AspNet.SignalR;
 using RElmah.Common;
-using RElmah.Host.SignalR.Hubs;
+using RElmah.Host.Hubs;
 
-namespace RElmah.Host.SignalR
+namespace RElmah.Host
 {
     public static class Dispatcher
     {
@@ -23,8 +23,8 @@ namespace RElmah.Host.SignalR
 
                 if (payload.Type == DeltaType.Added)
                 {
-                    foreach (var app in apps)
-                        foreach (var token in payload.Target.Secondary.Tokens)
+                    foreach (var token in payload.Target.Secondary.Tokens)
+                        foreach (var app in apps)
                             context.Groups.Add(token, app);
                 
                     context

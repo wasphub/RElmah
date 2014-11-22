@@ -1,11 +1,12 @@
 ﻿using System;
 using Microsoft.AspNet.SignalR;
 using Owin;
-using RElmah.Host.SignalR.Hubs;
+using RElmah.Host.Hubs;
+using RElmah.Host.Services;
 using RElmah.Middleware;
 using RElmah.Services;
 
-namespace RElmah.Host.SignalR
+namespace RElmah.Host
 {
     public class Settings
     {
@@ -20,22 +21,24 @@ namespace RElmah.Host.SignalR
 
             //TODO: improve the way this part can be customized from outside
 
-            var ctuip = new ClientTokenUserIdProvider();
-            var ei    = new ErrorsInbox();
-            var cs    = new InMemoryConfigurationStore();
-            var ch    = new ConfigurationHolder(cs);
-            var c     = new Connector(ch);
+            var ei      = new ErrorsInbox();
+            var cs      = new InMemoryConfigurationStore();
+            var ch      = new ConfigurationHolder(cs);
+            var c       = new Connector(ch);
+            //var ctuip = new ClientTokenUserIdProvider();
 
+            //Infrastructure
             registry.Register(typeof(IErrorsInbox),           () => ei);
             registry.Register(typeof(IConnection),            () => c);
             registry.Register(typeof(IConfigurationProvider), () => ch);
             registry.Register(typeof(IConfigurationUpdater),  () => ch);
             registry.Register(typeof(IConfigurationStore),    () => cs);
-            registry.Register(typeof(IUserIdProvider),        () => ctuip);
+            //registry.Register(typeof(IUserIdProvider),      () => ctuip);
 
             Dispatcher.Wire(ei, ch);
 
-            registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, ctuip));
+            //Hubs
+            registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, registry.Resolve<IUserIdProvider>()));
 
             if (settings != null && settings.InitializeConfiguration != null)
                 settings.InitializeConfiguration(ch);

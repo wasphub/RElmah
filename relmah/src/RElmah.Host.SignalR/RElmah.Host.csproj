@@ -7,8 +7,8 @@
     <ProjectGuid>{8C7B3D26-F32A-4845-9DDF-7359AA5B232E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RElmah.Host.SignalR</RootNamespace>
-    <AssemblyName>RElmah.Host.SignalR</AssemblyName>
+    <RootNamespace>RElmah.Host</RootNamespace>
+    <AssemblyName>RElmah.Host</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -74,7 +74,7 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="AppBuilderExtensions.cs" />
-    <Compile Include="ClientTokenUserIdProvider.cs" />
+    <Compile Include="Services\ClientTokenUserIdProvider.cs" />
     <Compile Include="Connector.cs" />
     <Compile Include="Dispatcher.cs" />
     <Compile Include="Hubs\ErrorsHub.cs" />

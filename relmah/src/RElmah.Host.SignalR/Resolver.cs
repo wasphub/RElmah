@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.SignalR;
 
-namespace RElmah.Host.SignalR
+namespace RElmah.Host
 {
     class Resolver : IResolver
     {

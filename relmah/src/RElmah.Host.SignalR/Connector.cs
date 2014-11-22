@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RElmah.Host.SignalR
+namespace RElmah.Host
 {
     public class Connector : IConnector
     {

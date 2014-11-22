@@ -99,9 +99,9 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\RElmah.Host.SignalR\RElmah.Host.SignalR.csproj">
+    <ProjectReference Include="..\..\RElmah.Host.SignalR\RElmah.Host.csproj">
       <Project>{8C7B3D26-F32A-4845-9DDF-7359AA5B232E}</Project>
-      <Name>RElmah.Host.SignalR</Name>
+      <Name>RElmah.Host</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\RElmah\RElmah.csproj">
       <Project>{A416ED91-F73F-4F01-94D0-E1D3E2B37BA9}</Project>
