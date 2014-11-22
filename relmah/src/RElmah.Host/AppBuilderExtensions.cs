@@ -2,7 +2,6 @@
 using Microsoft.AspNet.SignalR;
 using Owin;
 using RElmah.Host.Hubs;
-using RElmah.Host.Services;
 using RElmah.Middleware;
 using RElmah.Services;
 
@@ -23,7 +22,12 @@ namespace RElmah.Host
             //TODO: improve the way this part can be customized from outside
 
             var ei      = new ErrorsInbox();
-            var cs      = new InMemoryConfigurationStore();
+            var cs      = settings.SafeCall(
+                            s => s.BuildConfigurationStore(), 
+                            () => new InMemoryConfigurationStore(), 
+                            () => settings != null, 
+                            () => settings.BuildConfigurationStore != null);
+
             var ch      = new ConfigurationHolder(cs);
             var c       = new Connector(ch);
             //var ctuip = new ClientTokenUserIdProvider();
