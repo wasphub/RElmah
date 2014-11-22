@@ -11,6 +11,7 @@ namespace RElmah.Host
     public class Settings
     {
         public Action<IConfigurationUpdater> InitializeConfiguration { get; set; }
+        public Func<IConfigurationStore> BuildConfigurationStore { get; set; }
     }
 
     public static class AppBuilderExtensions
