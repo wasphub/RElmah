@@ -137,9 +137,10 @@ namespace RElmah.Services
         public Task<ValueOrError<User>> AddUserToken(string user, string token)
         {
             var u = _users[user].AddToken(token);
+            _users.SetItem(user, u);
+
             foreach (var c in _clusters.Values.Where(c => c.HasUser(user)))
                 _clusters.SetItem(c.Name, c.SetUser(u));
-
             return Task.FromResult(new ValueOrError<User>(u));
         }
     }
