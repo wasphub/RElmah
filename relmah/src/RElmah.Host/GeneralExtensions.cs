@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using RElmah.Grounding;
 
 namespace RElmah.Host
 {
@@ -9,11 +10,28 @@ namespace RElmah.Host
         {
             var checks =
                 from g in guards
-                let success = g()
-                select success;
+                let success = g.Catch()
+                select success.HasValue && success.Value;
 
-            var ok = checks.TakeWhile(c => c).Count() == guards.Length;
-            return ok ? call(target) : @default();
+            return checks.TakeWhile(c => c).Count() == guards.Length 
+                 ? call(target) 
+                 : @default();
+        }
+
+        public static ValueOrError<T> Catch<T>(this Func<T> call)
+        {
+            T result;
+
+            try
+            {
+                result = call();
+            }
+            catch (Exception ex)
+            {
+                return new ValueOrError<T>(ex);
+            }
+
+            return new ValueOrError<T>(result);
         }
     }
 }
