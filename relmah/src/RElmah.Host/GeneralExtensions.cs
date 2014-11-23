@@ -6,11 +6,11 @@ namespace RElmah.Host
 {
     public static class GeneralExtensions
     {
-        public static TR SafeCall<TT, TR>(this TT target, Func<TT, TR> call, Func<TR> @default, params Func<bool>[] guards) where TT : class
+        public static TR SafeCall<TT, TR>(this TT target, Func<TT, TR> call, Func<TR> @default, params Func<TT, bool>[] guards) where TT : class
         {
             var checks =
                 from g in guards
-                let success = g.Catch()
+                let success = new Func<bool>(() => g(target)).Catch()
                 select success.HasValue && success.Value;
 
             return target != null && checks.TakeWhile(c => c).Count() == guards.Length 

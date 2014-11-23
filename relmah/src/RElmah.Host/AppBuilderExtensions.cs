@@ -23,10 +23,9 @@ namespace RElmah.Host
 
             var ei      = new ErrorsInbox();
             var cs      = settings.SafeCall(
-                            s => s.BuildConfigurationStore(), 
+                            s  => s.BuildConfigurationStore(), 
                             () => new InMemoryConfigurationStore(), 
-                            () => settings != null, 
-                            () => settings.BuildConfigurationStore != null);
+                            s  => s != null && s.BuildConfigurationStore != null);
 
             var ch      = new ConfigurationHolder(cs);
             var c       = new Connector(ch);
