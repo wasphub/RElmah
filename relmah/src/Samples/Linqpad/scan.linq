@@ -14,7 +14,13 @@ c.Start();
 
 var q = 
 	from error in c.Errors
-	where error.Error.Type.IndexOf("Argument", StringComparison.OrdinalIgnoreCase) > -1
-	select new { error.Error, error.Error.Time };
+	group error.Error by error.Error.Type into gs
+	select gs;
+	
+q.Subscribe(gs => 
+	gs.Scan(
+		new { gs.Key, Count = 0 }, 
+		(a, g) => new { a.Key, Count = a.Count + 1 })
+	  .DumpLive());
 	  
 q.DumpLive();
