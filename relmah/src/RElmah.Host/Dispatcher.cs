@@ -16,8 +16,20 @@ namespace RElmah.Host
 
             //errors
 
-            errorsInbox.GetErrorsStream().Subscribe(payload => context.Clients.Group(payload.SourceId).error(payload));
+            errorsInbox
+                .GetErrorsStream()
+                .Subscribe(payload => context.Clients.Group(payload.SourceId).error(payload));
 
+            #region Complex example
+            /*
+            errorsInbox
+                .GetErrorsStream()
+                .Zip(errorsInbox.GetErrorsStream().Skip(1), (a, b) => new {a, b})
+                .Where(z => z.a.Error.Type != z.b.Error.Type)
+                .Throttle(TimeSpan.FromMilliseconds(3000))
+                .Select(z => z.b).Subscribe(payload => context.Clients.Group(payload.SourceId).error(payload));
+            */
+            #endregion
 
             //user additions
 
@@ -94,7 +106,7 @@ namespace RElmah.Host
                     .applications(p.Apps, p.Removals));
 
 
-            //Trivial way to subscribe
+            #region Trivial way to subscribe
             /*
             errorsInbox.GetErrorsStream().Subscribe(payload => context.Clients.Group(payload.SourceId).error(payload));
 
@@ -155,8 +167,8 @@ namespace RElmah.Host
                                 : Enumerable.Empty<string>());
                 }
             });
-             
             */
+            #endregion
         }
     }
 }
