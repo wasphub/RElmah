@@ -8,57 +8,64 @@
     <script src="Scripts/rx.js"></script>
     <script src="Scripts/rx.async.js"></script>
     <script src="Scripts/rx.binding.js"></script>
+    <script src="Scripts/rx.coincidence.js"></script>
 
     <script src="Scripts/relmah/relmah.js"></script>
 
     <script>
         $(function () {
 
-            var r = relmah("http://localhost:9474/signalr", {
-                    errors: function (errs) {
-                        return errs;
-                    }
-                }),
-                errors = r.getErrors(),
-                apps   = r.getApplications();
+            var r       = relmah("http://localhost:9474/signalr"),
+                $apps   = $('#apps'),
+                $groups = $('#groups');
 
-            errors.subscribe(function (e) {
-                var cont = $('<li/>');
+            //streams
 
-                $('<span/>')
-                    .text(e.Error.Message)
-                    .appendTo(cont);
+            var
+                errors     = r.getErrors(),
+                apps       = r.getApplications(),
+                errorTypes = errors.groupBy(function (e) {
+                    return e.Error.Type;
+                });
 
-                cont.prependTo($('#errors-' + e.SourceId));
-            });
+            //subscriptions
 
-            apps.filter(function (a) { return !a.removed; }).subscribe(function (app) {
-                var name = app.name;
-                if (!$('#app-' + name).length) {
-                    var cont = $('<li/>')
-                        .attr('id', 'app-' + name);
+            errorTypes
+                .subscribe(function (type) {
+                    var g = $('<li/>');
+                    $groups.append(g);
 
-                    $('<p/>')
-                        .text(name)
-                        .appendTo(cont);
+                    type
+                        .scan(0, function (a) { return a + 1; })
+                        .subscribe(function (e) { g.text(type.key + ': ' + e); });
+                });
 
-                    $('<ul/>')
-                        .attr('id', 'errors-' + name)
-                        .appendTo(cont);
+            apps
+                .filter(function (a) { return !a.removed; })
+                .subscribe(function (app) {
+                    var name = app.name;
+                    $('<li/>')
+                        .attr('id', 'app-' + name)
+                        .append($('<p/>').text(name))
+                        .append($('<ul/>').attr('id', 'errors-' + name))
+                        .appendTo($apps);
+                    $('#app-' + name).css({ 'background-color': 'yellow' });
+                });
 
-                    cont.appendTo($('#apps'));
-                }
+            apps
+                .filter(function (a) { return a.removed; })
+                .subscribe(function (app) {
+                    $('#app-' + app.name).css({ 'background-color': 'grey' });
+                });
 
-                $('#app-' + name).css({ 'background-color': 'yellow' });
-            });
+            errors
+                .subscribe(function (e) {
+                    $('<li/>')
+                        .append($('<span/>').text(e.Error.Message))
+                        .prependTo($('#errors-' + e.SourceId));
+                });
 
-            apps.filter(function (a) { return a.removed; }).subscribe(function (app) {
-                var name = app.name;
-                if ($('#app-' + name).length) {
-                    $('#app-' + name).css({ 'background-color': 'grey' });
-                }
-            });
-
+            //startup
             $('#login').click(function () {
                 $('#user').attr("disabled", "disabled");
                 $('#login').hide();
@@ -69,7 +76,16 @@
     </script>
 </head>
     <body>
-        <input type="text" id="user"/><button id="login">Login</button>
-        <ul id="apps"></ul>
+        <div>
+            <input type="text" id="user" /><button id="login">Login</button>
+        </div>
+        <div>
+            Error groups:
+            <ul id="groups"></ul>         
+        </div>
+        <div>
+            Errors by source:
+            <ul id="apps"></ul>
+        </div>
     </body>
 </html>
