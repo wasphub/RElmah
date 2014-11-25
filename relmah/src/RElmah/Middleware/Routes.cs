@@ -13,7 +13,8 @@ namespace RElmah.Middleware
     {
         public async static Task PostError(
             IErrorsInbox inbox,
-            IDictionary<string, object> environment)
+            IDictionary<string, object> environment,
+            IDictionary<string, string> keys = null)
         {
             var executor = new Func<IDictionary<string, object>, Task<ErrorPayload>>(async e =>
             {
@@ -32,138 +33,132 @@ namespace RElmah.Middleware
 
         public async static Task Clusters(
             IConfigurationUpdater updater,
-            IDictionary<string, object> environment)
+            IDictionary<string, object> environment,
+            IDictionary<string, string> keys = null)
         {
-            var build = new Func<OwinRequest, Task<string>>(async r =>
-            {
-                var @params = await r.ReadFormAsync();
-                return await Task.FromResult(@params["name"]);
-            });
-
             var request = new OwinRequest(environment);
             if (request.Method == "POST")
             {
-                await updater.AddCluster(await build(request));
+                var form = await request.ReadFormAsync();
+                await updater.AddCluster(form["name"]);
                 return;
             }
 
-            var payload = request.Uri.Segments.Count() > 3
-                ? (dynamic)(await updater.GetCluster(request.Uri.Segments.Skip(3).First()))
-                : await updater.GetClusters();
+            if (keys == null) return;
 
-            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(payload));
+            var r = keys.Keys.Count == 1
+                  ? (dynamic)(await updater.GetCluster(keys["cluster"]))
+                  : await updater.GetClusters();
+
+            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(r));
         }
 
         public async static Task Applications(
             IConfigurationUpdater updater,
-            IDictionary<string, object> environment)
+            IDictionary<string, object> environment,
+            IDictionary<string, string> keys = null)
         {
-            var build = new Func<OwinRequest, Task<string>>(async r =>
-            {
-                var @params = await r.ReadFormAsync();
-                return await Task.FromResult(@params["name"]);
-            });
-
             var request = new OwinRequest(environment);
             if (request.Method == "POST")
             {
-                await updater.AddApplication(await build(request));
+                var form = await request.ReadFormAsync();
+                await updater.AddApplication(form["name"]);
                 return;
             }
 
-            var payload = request.Uri.Segments.Count() > 3
-                ? (dynamic)(await updater.GetApplication(request.Uri.Segments.Skip(3).First()))
-                : await updater.GetApplications();
+            if (keys == null) return;
 
-            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(payload));
+            var r = keys.Keys.Count == 1
+                  ? (dynamic)(await updater.GetApplication(keys["app"]))
+                  : await updater.GetApplications();
+
+            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(r));
         }
 
         public async static Task Users(
             IConfigurationUpdater updater,
-            IDictionary<string, object> environment)
+            IDictionary<string, object> environment,
+            IDictionary<string, string> keys = null)
         {
-            var build = new Func<OwinRequest, Task<string>>(async r =>
-            {
-                var @params = await r.ReadFormAsync();
-                return await Task.FromResult(@params["name"]);
-            });
-
             var request = new OwinRequest(environment);
             if (request.Method == "POST")
             {
-                await updater.AddUser(await build(request));
+                var form = await request.ReadFormAsync();
+                await updater.AddUser(form["name"]);
                 return;
             }
 
-            var payload = request.Uri.Segments.Count() > 3
-                ? (dynamic)(await updater.GetUser(request.Uri.Segments.Skip(3).First()))
-                : await updater.GetUsers();
+            if (keys == null) return;
 
-            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(payload));
+            var r = keys.Keys.Count == 1
+                  ? (dynamic)(await updater.GetUser(keys["user"]))
+                  : await updater.GetUsers();
+
+            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(r));
         }
 
         public async static Task ClusterUsers(
             IConfigurationUpdater updater,
-            IDictionary<string, object> environment)
+            IDictionary<string, object> environment,
+            IDictionary<string, string> keys = null)
         {
-            var build = new Func<OwinRequest, Task<Tuple<string, string>>>(async r =>
-            {
-                var @params = await r.ReadFormAsync();
-                return await Task.FromResult(Tuple.Create(@params["cluster"], @params["user"]));
-            });
-
             var request = new OwinRequest(environment);
             if (request.Method == "POST")
             {
-                var form = await build(request);
-                await updater.AddUserToCluster(form.Item1, form.Item2);
+                var form = await request.ReadFormAsync();
+                await updater.AddUserToCluster(form["cluster"], form["user"]);
                 return;
             }
+
+            if (keys == null || keys.Keys.Count < 1) return;
 
             if (request.Method == "DELETE")
             {
-                var form = await build(request);
-                await updater.RemoveUserFromCluster(form.Item1, form.Item2);
+                await updater.RemoveUserFromCluster(keys["cluster"], keys["user"]);
                 return;
             }
 
-            var payload = request.Uri.Segments.Count() > 3
-                ? (dynamic)(await updater.GetCluster(request.Uri.Segments.Skip(3).First()))
-                : await updater.GetClusters();
+            var cluster = await updater.GetCluster(keys["cluster"]);
 
-            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(payload));
+            if (!cluster.HasValue) return;
+
+            var r = keys.Keys.Count == 2
+                  ? (dynamic)cluster.Value.GetUser(keys["user"])
+                  : cluster.Value.Users;
+
+            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(r));
         }
 
         public async static Task ClusterApplications(
             IConfigurationUpdater updater,
-            IDictionary<string, object> environment)
+            IDictionary<string, object> environment,
+            IDictionary<string, string> keys = null)
         {
-            var build = new Func<OwinRequest, Task<Tuple<string, string>>>(async r =>
-            {
-                var @params = await r.ReadFormAsync();
-                return await Task.FromResult(Tuple.Create(@params["cluster"], @params["application"]));
-            });
-
             var request = new OwinRequest(environment);
             if (request.Method == "POST")
             {
-                var form = await build(request);
-                await updater.AddApplicationToCluster(form.Item1, form.Item2);
+                var form = await request.ReadFormAsync();
+                await updater.AddApplicationToCluster(form["cluster"], form["app"]);
                 return;
             }
 
-            if (request.Method == "DELETE")
+            if (keys == null || keys.Keys.Count < 1) return;
+
+            if (request.Method == "DELETE" && keys.Keys.Count == 2)
             {
-                var form = await build(request);
-                await updater.RemoveApplicationFromCluster(form.Item1, form.Item2);
+                await updater.RemoveApplicationFromCluster(keys["cluster"], keys["app"]);
                 return;
             }
 
-            var payload = request.Uri.Segments.Count() > 3
-                ? (dynamic)(await updater.GetCluster(request.Uri.Segments.Skip(3).First()))
-                : await updater.GetClusters();
+            var cluster = await updater.GetCluster(keys["cluster"]);
 
-            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(payload));
+            if (!cluster.HasValue) return;
+
+            var r = keys.Keys.Count == 2
+                  ? (dynamic)cluster.Value.GetApplication(keys["app"])
+                  : cluster.Value.Applications;
+
+            await new OwinResponse(environment).WriteAsync(JsonConvert.SerializeObject(r));
         }
     }
 }
