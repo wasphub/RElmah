@@ -23,13 +23,15 @@ namespace RElmah.Server
                 {
                     InitializeConfiguration = async cu =>
                     {
-                        var c = await cu.AddCluster("foo");
-                        var a = await cu.AddApplication("sample");
-                        var u = await cu.AddUser(@"WaspBookWin81\wasp");
+                        var c  = await cu.AddCluster("foo");
+                        var a  = await cu.AddApplication("sample");
+                        var u1 = await cu.AddUser(@"WaspBookWin81\wasp");
+                        var u2 = await cu.AddUser(@"wasp");
 
                         Task.WaitAll(
                             cu.AddApplicationToCluster(c.Value.Name, a.Value.Name),
-                            cu.AddUserToCluster(c.Value.Name, u.Value.Name));
+                            cu.AddUserToCluster(c.Value.Name, u1.Value.Name),
+                            cu.AddUserToCluster(c.Value.Name, u2.Value.Name));
                     }
                 });
         }
