@@ -29,5 +29,15 @@ namespace RElmah.Extensions
         {
             return source ?? Enumerable.Empty<T>();
         }
+
+        public static IEnumerable<KeyValuePair<int, T>> Index<T>(this IEnumerable<T> source)
+        {
+            var e = source.GetEnumerator();
+            var i = 0;
+            while (e.MoveNext())
+            {
+                yield return new KeyValuePair<int, T>(i++, e.Current);
+            }
+        }
     }
 }
