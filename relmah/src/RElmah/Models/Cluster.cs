@@ -91,6 +91,16 @@ namespace RElmah.Models
         public IEnumerable<Application> Applications { get { return _applications.Values; } }
         public IEnumerable<User> Users { get { return _users.Values; } }
 
+        public Application GetApplication(string name)
+        {
+            return _applications[name];
+        }
+
+        public User GetUser(string name)
+        {
+            return _users[name];
+        }
+
         public Cluster AddApplication(Application app)
         {
             return new Cluster(Name, _applications.Add(app.Name, app), _users);
