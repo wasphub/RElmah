@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using RElmah.Extensions;
 
 namespace RElmah.Models
 {
@@ -93,12 +94,12 @@ namespace RElmah.Models
 
         public Application GetApplication(string name)
         {
-            return _applications[name];
+            return _applications.Get(name, null);
         }
 
         public User GetUser(string name)
         {
-            return _users[name];
+            return _users.Get(name, null);
         }
 
         public Cluster AddApplication(Application app)

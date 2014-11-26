@@ -1,82 +1,128 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Owin;
-using RElmah.Extensions;
+using Newtonsoft.Json;
+using RElmah.Common;
 
 namespace RElmah.Middleware
 {
     public class RElmahMiddleware : OwinMiddleware
     {
-        private readonly IDictionary<string, Func<IDictionary<string, object>, IDictionary<string, string>, Task>> _routes;
+        public override Task Invoke(IOwinContext context)
+        {
+            return Router.Invoke(context, Next.Invoke);
+        }
 
         public RElmahMiddleware(OwinMiddleware next, IResolver resolver)
             : base(next)
         {
-            const string relmah = "relmah";
-
-            var inbox = new Lazy<IErrorsInbox>(resolver.Resolve<IErrorsInbox>);
+            var inbox   = new Lazy<IErrorsInbox>(resolver.Resolve<IErrorsInbox>);
             var updater = new Lazy<IConfigurationUpdater>(resolver.Resolve<IConfigurationUpdater>);
 
-            var keyer = new Func<string, string>(s => string.Format("/{0}/{1}", relmah, ToRegex(s)));
+            Router.Build(builder => builder
 
-            _routes = new Dictionary<string, Func<IDictionary<string, object>, IDictionary<string, string>, Task>>
-            {
-                { keyer("post-error"),                       (e, ks) => Routes.PostError(inbox.Value, e, ks) },
-                
-                { keyer("clusters/{cluster}/apps/{app}"),    (e, ks) => Routes.ClusterApplications(updater.Value, e, ks) },
-                { keyer("clusters/{cluster}/apps"),          (e, ks) => Routes.ClusterApplications(updater.Value, e, ks) },
-                { keyer("clusters/{cluster}/users/{user}"),  (e, ks) => Routes.ClusterUsers(updater.Value, e, ks) },
-                { keyer("clusters/{cluster}/users"),         (e, ks) => Routes.ClusterUsers(updater.Value, e, ks) },
-                { keyer("clusters/{cluster}"),               (e, ks) => Routes.Clusters(updater.Value, e, ks) },
-                { keyer("clusters"),                         (e, ks) => Routes.Clusters(updater.Value, e, ks) },
-                
-                { keyer("applications/(?'app'.*)"),          (e, ks) => Routes.Applications(updater.Value, e, ks) },
-                { keyer("applications"),                     (e, ks) => Routes.Applications(updater.Value, e, ks) },
-                
-                { keyer("users/(?'user'.*)"),                (e, ks) => Routes.Users(updater.Value, e, ks) },                
-                { keyer("users"),                            (e, ks) => Routes.Users(updater.Value, e, ks) },
-            };
-        }
+                .ForRoute("clusters/{cluster}/apps/{app}", route => route
+                    .Get(async (environment, keys) =>
+                    {
+                        var cluster = await updater.Value.GetCluster(keys["cluster"]);
+                        return cluster.HasValue 
+                             ? cluster.Value.GetApplication(keys["app"])
+                             : null;
+                    })
+                    .Delete(async (environment, keys) => 
+                        await updater.Value.RemoveApplicationFromCluster(keys["cluster"], keys["app"]))
+                )
+                .ForRoute("clusters/{cluster}/apps", route => route
+                    .Post(async (environment, keys, form) => 
+                        await updater.Value.AddApplicationToCluster(keys["cluster"], form["name"]))
+                    .Get(async (environment, keys) =>
+                    {
+                        var cluster = await updater.Value.GetCluster(keys["cluster"]);
+                        return cluster.HasValue
+                             ? cluster.Value.Applications
+                             : null;
+                    })
+                )
 
-        static string ToRegex(string pattern)
-        {
-            return Regex.Replace(pattern, @"\{(?'x'\w*)\}", @"(?'$1'.*)");
-        }
+                .ForRoute("clusters/{cluster}/users/{user}", route => route
+                    .Get(async (environment, keys) =>
+                    {
+                        var cluster = await updater.Value.GetCluster(keys["cluster"]);
+                        return cluster.HasValue
+                             ? cluster.Value.GetUser(keys["user"])
+                             : null;
+                    })
+                    .Delete(async (environment, keys) =>
+                        await updater.Value.RemoveUserFromCluster(keys["cluster"], keys["user"]))
+                )
+                .ForRoute("clusters/{cluster}/users", route => route
+                    .Post(async (environment, keys, form) => 
+                        await updater.Value.AddUserToCluster(keys["cluster"], form["name"]))
+                    .Get(async (environment, keys) =>
+                    {
+                        var cluster = await updater.Value.GetCluster(keys["cluster"]);
+                        return cluster.HasValue
+                             ? cluster.Value.Users
+                             : null;
+                    })
+                )
 
-        public override Task Invoke(IOwinContext context)
-        {
-            var request = new OwinRequest(context.Environment);
-            var segments = request.Uri.Segments;
-            var raw = string.Join(null, segments);
+                .ForRoute("clusters/{cluster}", route => route
+                    .Get(async (environment, keys) => 
+                        await updater.Value.GetCluster(keys["cluster"]))
+                    .Delete(async (environment, keys) =>
+                        await updater.Value.RemoveCluster(keys["cluster"]))
+                )
+                .ForRoute("clusters", route => route
+                    .Post(async (environment, keys, form) => 
+                        await updater.Value.AddCluster(form["name"]))
+                    .Get(async (environment, keys) => 
+                        await updater.Value.GetClusters())
+                )
 
-            var matches =
-                from kvp in _routes
-                let matcher = new Regex(kvp.Key)
-                let match = matcher.Match(raw)
-                where match.Success
-                let route = _routes[kvp.Key]
-                let groups = match.Groups
-                    .Cast<Group>()
-                    .Index()
-                select new
-                {
-                    Params =
-                        from g in groups
-                        select new KeyValuePair<string, string>(
-                            matcher.GroupNameFromNumber(g.Key),
-                            g.Value.Value),
-                    Route = route
-                };
+                .ForRoute("users/{user}", route => route
+                    .Get(async (environment, keys) =>
+                        await updater.Value.GetUser(keys["user"]))
+                    .Delete(async (environment, keys) =>
+                        await updater.Value.RemoveUser(keys["user"]))
+                )
+                .ForRoute("users", route => route
+                    .Post(async (environment, keys, form) => 
+                        await updater.Value.AddUser(form["name"]))
+                    .Get(async (environment, keys) =>
+                        await updater.Value.GetUsers())
+                )
 
-            var invocation = matches.FirstOrDefault();
+                .ForRoute("apps/{app}", route => route
+                    .Get(async (environment, keys) =>
+                        await updater.Value.GetApplication(keys["app"]))
+                    .Delete(async (environment, keys) =>
+                        await updater.Value.RemoveApplication(keys["app"]))
+                )
+                .ForRoute("apps", route => route
+                    .Post(async (environment, keys, form) => 
+                        await updater.Value.AddApplication(form["name"]))
+                    .Get(async (environment, keys) =>
+                        await updater.Value.GetApplications())
+                )
 
-            return invocation != null 
-                 ? invocation.Route(context.Environment, invocation.Params.Where(k => k.Key != "0").ToDictionary(k => k.Key, v => v.Value)) 
-                 : Next.Invoke(context);
+                .ForRoute("post-error", route => route
+                    .Post(async (environment, keys, form) =>
+                    {
+                        var errorText = Encoding.UTF8.GetString(Convert.FromBase64String(form["error"]));
+                        var sourceId  = form["sourceId"];
+                        var errorId   = form["errorId"];
+                        var infoUrl   = form["infoUrl"];
+
+                        var payload   = new ErrorPayload(sourceId, JsonConvert.DeserializeObject<Error>(errorText), errorId, infoUrl);
+
+                        await inbox.Value.Post(payload);
+
+                        return payload;
+                    })
+                )
+            );
         }
     }
 }
