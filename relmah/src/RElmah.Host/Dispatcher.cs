@@ -25,7 +25,7 @@ namespace RElmah.Host
             errorsInbox
                 .GetErrorsStream()
                 .Zip(errorsInbox.GetErrorsStream().Skip(1), (a, b) => new {a, b})
-                .Where(z => z.a.Error.Type != z.b.Error.Type)
+                .Where(z => z.a.Error.Type != z.b.Error.Type && z.a.SourceId != z.b.SourceId)
                 .Throttle(TimeSpan.FromMilliseconds(3000))
                 .Select(z => z.b).Subscribe(payload => context.Clients.Group(payload.SourceId).error(payload));
             */
