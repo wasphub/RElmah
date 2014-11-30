@@ -44,11 +44,12 @@
                 .filter(function (a) { return !a.removed; })
                 .subscribe(function (app) {
                     var name = app.name;
-                    $('<li/>')
-                        .attr('id', 'app-' + name)
-                        .append($('<p/>').text(name))
-                        .append($('<ul/>').attr('id', 'errors-' + name))
-                        .appendTo($apps);
+                    if (!$('#app-' + name).length)
+                        $('<li/>')
+                            .attr('id', 'app-' + name)
+                            .append($('<p/>').text(name))
+                            .append($('<ul/>').attr('id', 'errors-' + name))
+                            .appendTo($apps);
                     $('#app-' + name).css({ 'background-color': 'yellow' });
                 });
 
@@ -70,14 +71,14 @@
                 $('#user').attr("disabled", "disabled");
                 $('#login').hide();
 
-                r.start({ 'user': $('#user').val() });
+                r.start();
             });
         });
     </script>
 </head>
     <body>
         <div>
-            <input type="text" id="user" /><button id="login">Login</button>
+            <button id="login">Login</button>
         </div>
         <div>
             Error groups:
