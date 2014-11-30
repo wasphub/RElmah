@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using RElmah.Common;
+using RElmah.Extensions;
 
 namespace RElmah.Middleware
 {
@@ -45,6 +46,19 @@ namespace RElmah.Middleware
                     })
                 )
 
+                //AD users
+                .ForRoute("clusters/{cluster}/users/{domain}/{user}", route => route
+                    .Get(async (environment, keys) =>
+                    {
+                        var cluster = await updater.Value.GetCluster(keys["cluster"]);
+                        return cluster.HasValue
+                             ? cluster.Value.GetUser(string.Format(@"{0}\{1}", keys["domain"], keys["user"]))
+                             : null;
+                    })
+                    .Delete(async (environment, keys) =>
+                        await updater.Value.RemoveUserFromCluster(keys["cluster"], string.Format(@"{0}\{1}", keys["domain"], keys["user"])))
+                )
+                //plain users
                 .ForRoute("clusters/{cluster}/users/{user}", route => route
                     .Get(async (environment, keys) =>
                     {
@@ -110,10 +124,10 @@ namespace RElmah.Middleware
                 .ForRoute("post-error", route => route
                     .Post(async (environment, keys, form) =>
                     {
-                        var errorText = Encoding.UTF8.GetString(Convert.FromBase64String(form["error"]));
-                        var sourceId  = form["sourceId"];
-                        var errorId   = form["errorId"];
-                        var infoUrl   = form["infoUrl"];
+                        var errorText = Encoding.UTF8.GetString(Convert.FromBase64String(form.Get("error")));
+                        var sourceId  = form.Get("sourceId");
+                        var errorId   = form.Get("errorId");
+                        var infoUrl   = form.Get("infoUrl");
 
                         var payload   = new ErrorPayload(sourceId, JsonConvert.DeserializeObject<Error>(errorText), errorId, infoUrl);
 

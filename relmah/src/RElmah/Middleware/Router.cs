@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using RElmah.Extensions;
@@ -14,7 +16,7 @@ namespace RElmah.Middleware
     internal static class Router
     {
         public delegate Task<object> AsyncHttpRequest    (IDictionary<string, object> env, IDictionary<string, string> keys);
-        public delegate Task<object> AsyncHttpFormRequest(IDictionary<string, object> env, IDictionary<string, string> keys, IFormCollection form);
+        public delegate Task<object> AsyncHttpFormRequest(IDictionary<string, object> env, IDictionary<string, string> keys, IDictionary<string, string> form);
 
         public class Route
         {
@@ -72,8 +74,11 @@ namespace RElmah.Middleware
                 var handler     = _handlers    .GetValueOrDefault(request.Method, async (_, __) =>      await Task.FromResult((object)null));
                 var formHandler = _formHandlers.GetValueOrDefault(request.Method, async (_, __, ___) => await Task.FromResult((object)null));
 
+                keys            = keys.ToDictionary(k => k.Key, v => WebUtility.UrlDecode(v.Value));
                 var r           = request.Method == "POST"
-                                ? await formHandler(environment, keys, await request.ReadFormAsync()) 
+                                ? await formHandler(environment, keys, 
+                                    (await request.ReadFormAsync())
+                                    .Select(w => w != null ? w[0] : null)) 
                                 : await handler(environment, keys);
 
                 response.StatusCode = r == null ? (int)HttpStatusCode.NotFound : (int)HttpStatusCode.OK;
