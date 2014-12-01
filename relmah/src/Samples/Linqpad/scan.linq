@@ -21,6 +21,7 @@ q.Subscribe(gs =>
 	gs.Scan(
 		new { gs.Key, Count = 0 }, 
 		(a, g) => new { a.Key, Count = a.Count + 1 })
-	  .DumpLive());
+	  .DumpLive()
+);
 	  
 q.DumpLive();

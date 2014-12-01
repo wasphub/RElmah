@@ -125,18 +125,20 @@ namespace RElmah.Middleware
 
         static string ToRegex(string pattern)
         {
-            return Regex.Replace(pattern, @"\{(?'x'\w*)\}", @"(?'$1'.*)");
+            return Regex.Replace(pattern, @"\{(?'x'\w*)\}", @"(?'$1'[^/]+)");
         }
 
         public static Task Invoke(IOwinContext context, Func<IOwinContext, Task> next)
         {
+            const string relmah = "relmah";
+
             var request  = new OwinRequest(context.Environment);
             var segments = request.Uri.Segments;
             var raw      = String.Join(null, segments);
 
             var matches =
                 from key in _builder.RoutesKeys
-                let matcher = new Regex(ToRegex(key))
+                let matcher = new Regex(string.Format("^/{0}/{1}/?$", relmah, ToRegex(key)))
                 let match   = matcher.Match(raw)
                 where match.Success
                 let groups  = match
