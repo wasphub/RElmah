@@ -30,16 +30,6 @@
 
             //subscriptions
 
-            errorTypes
-                .subscribe(function (type) {
-                    var g = $('<li/>');
-                    $groups.append(g);
-
-                    type
-                        .scan(0, function (a) { return a + 1; })
-                        .subscribe(function (e) { g.text(type.key + ': ' + e); });
-                });
-
             apps
                 .filter(function (a) { return !a.removed; })
                 .subscribe(function (app) {
@@ -64,6 +54,16 @@
                     $('<li/>')
                         .append($('<span/>').text(e.Error.Message))
                         .prependTo($('#errors-' + e.SourceId));
+                });
+
+            errorTypes
+                .subscribe(function (type) {
+                    var g = $('<li/>');
+                    $groups.append(g);
+
+                    type
+                        .scan(0, function (a) { return a + 1; })
+                        .subscribe(function (e) { g.text(type.key + ': ' + e); });
                 });
 
             //startup
