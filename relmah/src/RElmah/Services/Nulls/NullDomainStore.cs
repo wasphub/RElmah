@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using RElmah.Grounding;
 using RElmah.Models;
@@ -9,92 +10,92 @@ namespace RElmah.Services.Nulls
     {
         public Task<ValueOrError<Cluster>> AddCluster(string name)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<Cluster>(Cluster.Create(name)));
         }
 
         public Task<ValueOrError<bool>> RemoveCluster(string name)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<bool>(true));
         }
 
         public Task<IEnumerable<Cluster>> GetClusters()
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(Enumerable.Empty<Cluster>());
         }
 
         public Task<ValueOrError<Cluster>> GetCluster(string name)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<Cluster>(Cluster.Create(name)));
         }
 
         public Task<ValueOrError<Application>> AddApplication(string name)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<Application>(Application.Create(name)));
         }
 
         public Task<ValueOrError<bool>> RemoveApplication(string name)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<bool>(true));
         }
 
         public Task<IEnumerable<Application>> GetApplications()
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(Enumerable.Empty<Application>());
         }
 
         public Task<ValueOrError<Application>> GetApplication(string name)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<Application>(Application.Create(name)));
         }
 
         public Task<ValueOrError<User>> AddUser(string name)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<User>(User.Create(name)));
         }
 
         public Task<ValueOrError<bool>> RemoveUser(string name)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<bool>(true));
         }
 
         public Task<IEnumerable<User>> GetUsers()
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(Enumerable.Empty<User>());
         }
 
         public Task<ValueOrError<User>> GetUser(string name)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<User>(User.Create(name)));
         }
 
         public Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(new Relationship<Cluster, User>(Cluster.Create(cluster), User.Create(user))));
         }
 
         public Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(new Relationship<Cluster, User>(Cluster.Create(cluster), User.Create(user))));
         }
 
         public Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(new Relationship<Cluster, Application>(Cluster.Create(cluster), Application.Create(application))));
         }
 
         public Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(new Relationship<Cluster, Application>(Cluster.Create(cluster), Application.Create(application))));
         }
 
         public IEnumerable<Application> GetUserApplications(string user)
         {
-            throw new System.NotImplementedException();
+            return Enumerable.Empty<Application>();
         }
 
         public Task<ValueOrError<User>> AddUserToken(string user, string token)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ValueOrError<User>(User.Create(user).AddToken(token)));
         }
     }
 }
