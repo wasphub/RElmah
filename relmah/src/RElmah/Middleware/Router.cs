@@ -122,24 +122,23 @@ namespace RElmah.Middleware
                 IDictionary<string, string> keys, OwinRequest request,
                 AsyncHttpRequestHandler handler)
             {
-                var rs = new OwinResponse(environment);
+                var response = new OwinResponse(environment);
 
-                var rf = (Func<Task<object>>)(async () => handler.Executor(
+                var executor = (Func<Task<object>>)(async () => handler.Executor(
                     environment,
                     keys,
                     from w in request.HasForm()
-                                ? (IEnumerable<KeyValuePair<string, string[]>>)(await request.ReadFormAsync().ConfigureAwait(false))
-                                : EmptyForm
+                              ? (IEnumerable<KeyValuePair<string, string[]>>)(await request.ReadFormAsync().ConfigureAwait(false))
+                              : EmptyForm
                     select w != null ? w[0] : null));
 
-                var r = await rf().ConfigureAwait(false);
+                var result = await executor().ConfigureAwait(false);
 
-                await rs.WriteAsync(JsonConvert.SerializeObject(r)).ConfigureAwait(false);
+                await response.WriteAsync(JsonConvert.SerializeObject(result)).ConfigureAwait(false);
 
-                rs.StatusCode = handler.StatusCodeGenerator != null
-                                ? handler.StatusCodeGenerator(r)
-                                : (int)HttpStatusCode.OK;
-
+                response.StatusCode = handler.StatusCodeGenerator != null
+                                    ? handler.StatusCodeGenerator(result)
+                                    : (int)HttpStatusCode.OK;
             }
         }
 
