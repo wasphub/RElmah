@@ -70,8 +70,14 @@ namespace RElmah
         IObservable<Delta<Relationship<Cluster, Application>>> ObserveClusterApplications();
     }
 
-    public interface IResolver
+    public interface IResolver 
     {
         T Resolve<T>();
+    }
+
+    public interface IRegistry : IResolver
+    {
+        void Register<T>(Func<T> supplier);
+        void Register(Type type, Func<object> supplier);
     }
 }

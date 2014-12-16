@@ -9,7 +9,8 @@ namespace RElmah.Host
 {
     public class Settings
     {
-        public Action<IConfigurationUpdater> Bootstrapper { get; set; }
+        public Action<IRegistry> BootstrapRegistry { get; set; }
+        public Action<IConfigurationUpdater> BootstrapConfiguration { get; set; }
         public Func<IConfigurationStore> BuildConfigurationStore { get; set; }
 
         public bool ExposeConfigurationWebApi { get; set; }
@@ -19,19 +20,16 @@ namespace RElmah.Host
     {
         public static IAppBuilder UseRElmah(this IAppBuilder builder, Settings settings = null)
         {
-            var registry = GlobalHost.DependencyResolver;
+            var registry = new Registry();
 
-            //TODO: improve the way this part can be customized from outside
-
-            var ei      = new ErrorsInbox();
-            var cs      = settings.SafeCall(
-                            s  => s.BuildConfigurationStore(), 
-                            () => new InMemoryConfigurationStore(), 
-                            s  => s != null && s.BuildConfigurationStore != null);
-
-            var ch      = new ConfigurationHolder(cs);
-            var c       = new Connector(ch);
-            //var ctuip = new ClientTokenUserIdProvider();
+            var ei       = new ErrorsInbox();
+            var cs       = settings.SafeCall(
+                             s  => s.BuildConfigurationStore(), 
+                             () => new InMemoryConfigurationStore(), 
+                             s  => s != null && s.BuildConfigurationStore != null);
+                         
+            var ch       = new ConfigurationHolder(cs);
+            var c        = new Connector(ch);
 
             //Infrastructure
             registry.Register(typeof(IErrorsInbox),           () => ei);
@@ -39,19 +37,19 @@ namespace RElmah.Host
             registry.Register(typeof(IConfigurationProvider), () => ch);
             registry.Register(typeof(IConfigurationUpdater),  () => ch);
             registry.Register(typeof(IConfigurationStore),    () => cs);
-            //registry.Register(typeof(IUserIdProvider),      () => ctuip);
 
             //Hubs
             registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, registry.Resolve<IUserIdProvider>()));
 
-            if (settings != null && settings.Bootstrapper != null)
-                settings.Bootstrapper(ch);
+            if (settings != null && settings.BootstrapRegistry != null)
+                settings.BootstrapRegistry(registry);
 
-            var resolver = new Resolver();
+            if (settings != null && settings.BootstrapConfiguration != null)
+                settings.BootstrapConfiguration(ch);
 
-            builder = builder.UseRElmahMiddleware<ErrorsMiddleware>(resolver);
+            builder = builder.UseRElmahMiddleware<ErrorsMiddleware>(registry);
             if (settings != null && settings.ExposeConfigurationWebApi)
-                builder = builder.UseRElmahMiddleware<ConfigurationMiddleware>(resolver);
+                builder = builder.UseRElmahMiddleware<ConfigurationMiddleware>(registry);
 
             //Init app streams
             Dispatcher.Wire(ei, ch);

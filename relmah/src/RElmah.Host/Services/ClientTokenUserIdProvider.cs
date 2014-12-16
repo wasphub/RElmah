@@ -2,7 +2,7 @@
 
 namespace RElmah.Host.Services
 {
-    class ClientTokenUserIdProvider : IUserIdProvider
+    public class ClientTokenUserIdProvider : IUserIdProvider
     {
         public string GetUserId(IRequest request)
         {
