@@ -124,30 +124,22 @@ namespace RElmah.Middleware
             {
                 var rs = new OwinResponse(environment);
 
-                try
-                {
-                    var rf = (Func<Task<object>>)(async () => handler.Executor(
-                        environment,
-                        keys,
-                        from w in request.HasForm()
-                                  ? (IEnumerable<KeyValuePair<string, string[]>>)(await request.ReadFormAsync().ConfigureAwait(false))
-                                  : EmptyForm
-                        select w != null ? w[0] : null));
+                var rf = (Func<Task<object>>)(async () => handler.Executor(
+                    environment,
+                    keys,
+                    from w in request.HasForm()
+                                ? (IEnumerable<KeyValuePair<string, string[]>>)(await request.ReadFormAsync().ConfigureAwait(false))
+                                : EmptyForm
+                    select w != null ? w[0] : null));
 
-                    var r = await rf().ConfigureAwait(false);
+                var r = await rf().ConfigureAwait(false);
 
-                    await rs.WriteAsync(JsonConvert.SerializeObject(r)).ConfigureAwait(false);
+                await rs.WriteAsync(JsonConvert.SerializeObject(r)).ConfigureAwait(false);
 
-                    rs.StatusCode = handler.StatusCodeGenerator != null
-                                  ? handler.StatusCodeGenerator(r)
-                                  : (int)HttpStatusCode.OK;
-                }
-                catch (Exception)
-                {
-                    rs.StatusCode = (int) HttpStatusCode.InternalServerError;
+                rs.StatusCode = handler.StatusCodeGenerator != null
+                                ? handler.StatusCodeGenerator(r)
+                                : (int)HttpStatusCode.OK;
 
-                    throw;
-                }
             }
         }
 
