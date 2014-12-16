@@ -21,20 +21,20 @@ namespace RElmah.Middleware
 
                 .WithPrefix(settings.Prefix)
                 .ForRoute("clusters/{cluster}/apps/{app}", route => route
-                    .Get(async (environment, keys) =>
+                    .Get(async (environment, keys, _) =>
                     {
                         var cluster = await updater.Value.GetCluster(keys["cluster"]);
                         return cluster.HasValue 
                             ? cluster.Value.GetApplication(keys["app"])
                             : null;
                     })
-                    .Delete(async (environment, keys) => 
+                    .Delete(async (environment, keys, _) => 
                         await updater.Value.RemoveApplicationFromCluster(keys["cluster"], keys["app"]))
                 )
                 .ForRoute("clusters/{cluster}/apps", route => route
                     .Post(async (environment, keys, form) => 
                         await updater.Value.AddApplicationToCluster(keys["cluster"], form["name"]))
-                    .Get(async (environment, keys) =>
+                    .Get(async (environment, keys, _) =>
                     {
                         var cluster = await updater.Value.GetCluster(keys["cluster"]);
                         return cluster.HasValue
@@ -45,32 +45,32 @@ namespace RElmah.Middleware
 
                 //AD users
                 .ForRoute("clusters/{cluster}/users/{domain}/{user}", route => route
-                    .Get(async (environment, keys) =>
+                    .Get(async (environment, keys, _) =>
                     {
                         var cluster = await updater.Value.GetCluster(keys["cluster"]);
                         return cluster.HasValue
                             ? cluster.Value.GetUser(string.Format(@"{0}\{1}", keys["domain"], keys["user"]))
                             : null;
                     })
-                    .Delete(async (environment, keys) =>
+                    .Delete(async (environment, keys, _) =>
                         await updater.Value.RemoveUserFromCluster(keys["cluster"], string.Format(@"{0}\{1}", keys["domain"], keys["user"])))
                 )
                 //plain users
                 .ForRoute("clusters/{cluster}/users/{user}", route => route
-                    .Get(async (environment, keys) =>
+                    .Get(async (environment, keys, _) =>
                     {
                         var cluster = await updater.Value.GetCluster(keys["cluster"]);
                         return cluster.HasValue
                             ? cluster.Value.GetUser(keys["user"])
                             : null;
                     })
-                    .Delete(async (environment, keys) =>
+                    .Delete(async (environment, keys, _) =>
                         await updater.Value.RemoveUserFromCluster(keys["cluster"], keys["user"]))
                 )
                 .ForRoute("clusters/{cluster}/users", route => route
                     .Post(async (environment, keys, form) => 
                         await updater.Value.AddUserToCluster(keys["cluster"], form["name"]))
-                    .Get(async (environment, keys) =>
+                    .Get(async (environment, keys, _) =>
                     {
                         var cluster = await updater.Value.GetCluster(keys["cluster"]);
                         return cluster.HasValue
@@ -80,45 +80,45 @@ namespace RElmah.Middleware
                 )
 
                 .ForRoute("clusters/{cluster}", route => route
-                    .Get(async (environment, keys) => 
+                    .Get(async (environment, keys, _) => 
                         await updater.Value.GetCluster(keys["cluster"]))
-                    .Delete(async (environment, keys) =>
+                    .Delete(async (environment, keys, _) =>
                         await updater.Value.RemoveCluster(keys["cluster"]))
                 )
                 .ForRoute("clusters", route => route
                     .Post(async (environment, keys, form) => 
                         await updater.Value.AddCluster(form["name"]))
-                    .Get(async (environment, keys) => 
+                    .Get(async (environment, keys, _) => 
                         await updater.Value.GetClusters())
                 )
 
                 .ForRoute("users/{user}", route => route
-                    .Get(async (environment, keys) =>
+                    .Get(async (environment, keys, _) =>
                         await updater.Value.GetUser(keys["user"]))
-                    .Delete(async (environment, keys) =>
+                    .Delete(async (environment, keys, _) =>
                         await updater.Value.RemoveUser(keys["user"]))
                 )
                 .ForRoute("users", route => route
                     .Post(async (environment, keys, form) => 
                         await updater.Value.AddUser(form["name"]))
-                    .Get(async (environment, keys) =>
+                    .Get(async (environment, keys, _) =>
                         await updater.Value.GetUsers())
                 )
 
                 .ForRoute("apps/{app}", route => route
-                    .Get(async (environment, keys) =>
+                    .Get(async (environment, keys, _) =>
                         await updater.Value.GetApplication(keys["app"]))
-                    .Delete(async (environment, keys) =>
+                    .Delete(async (environment, keys, _) =>
                         await updater.Value.RemoveApplication(keys["app"]))
                 )
                 .ForRoute("apps", route => route
                     .Post(async (environment, keys, form) => 
                         await updater.Value.AddApplication(form["name"]))
-                    .Get(async (environment, keys) =>
+                    .Get(async (environment, keys, _) =>
                         await updater.Value.GetApplications())
                 )
 
-                );
+            );
         }
     }
 }
