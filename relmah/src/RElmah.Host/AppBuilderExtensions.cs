@@ -7,12 +7,22 @@ using RElmah.Services;
 
 namespace RElmah.Host
 {
+    public class Bootstrapper
+    {
+        public Action<IRegistry> Registry { get; set; }
+        public Action<IConfigurationUpdater> Configuration { get; set; }
+    }
+
     public class Settings
     {
-        public Action<IRegistry> BootstrapRegistry { get; set; }
-        public Action<IConfigurationUpdater> BootstrapConfiguration { get; set; }
-        public Func<IConfigurationStore> BuildConfigurationStore { get; set; }
+        public Settings()
+        {
+            Bootstrapper = new Bootstrapper();
+        }
 
+        public Bootstrapper Bootstrapper { get; set; }
+
+        public Func<IConfigurationStore> BuildConfigurationStore { get; set; }
         public bool ExposeConfigurationWebApi { get; set; }
     }
 
@@ -41,11 +51,11 @@ namespace RElmah.Host
             //Hubs
             registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, registry.Resolve<IUserIdProvider>()));
 
-            if (settings != null && settings.BootstrapRegistry != null)
-                settings.BootstrapRegistry(registry);
+            if (settings != null && settings.Bootstrapper.Registry != null)
+                settings.Bootstrapper.Registry(registry);
 
-            if (settings != null && settings.BootstrapConfiguration != null)
-                settings.BootstrapConfiguration(ch);
+            if (settings != null && settings.Bootstrapper.Configuration != null)
+                settings.Bootstrapper.Configuration(ch);
 
             builder = builder.UseRElmahMiddleware<ErrorsMiddleware>(registry);
             if (settings != null && settings.ExposeConfigurationWebApi)
