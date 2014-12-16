@@ -9,7 +9,7 @@ namespace RElmah.Host
 {
     public class Settings
     {
-        public Action<IConfigurationUpdater> InitializeConfiguration { get; set; }
+        public Action<IConfigurationUpdater> Bootstrapper { get; set; }
         public Func<IConfigurationStore> BuildConfigurationStore { get; set; }
     }
 
@@ -44,8 +44,8 @@ namespace RElmah.Host
             //Hubs
             registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, registry.Resolve<IUserIdProvider>()));
 
-            if (settings != null && settings.InitializeConfiguration != null)
-                settings.InitializeConfiguration(ch);
+            if (settings != null && settings.Bootstrapper != null)
+                settings.Bootstrapper(ch);
 
             return builder.UseRElmahMiddleware<RElmahMiddleware>(new Resolver());
         }

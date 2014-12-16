@@ -21,7 +21,7 @@ namespace RElmah.Server
 
                 .UseRElmah(new Settings
                 {
-                    InitializeConfiguration = async cu =>
+                    Bootstrapper = async cu =>
                     {
                         var c  = await cu.AddCluster("foo");
                         var a  = await cu.AddApplication("sample");
