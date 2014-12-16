@@ -28,11 +28,11 @@ namespace RElmah.Middleware
                     .Post(async (environment, keys, form) =>
                     {
                         var errorText = Encoding.UTF8.GetString(Convert.FromBase64String(form.Get("error")));
-                        var sourceId = form.Get("sourceId");
-                        var errorId = form.Get("errorId");
-                        var infoUrl = form.Get("infoUrl");
+                        var sourceId  = form.Get("sourceId");
+                        var errorId   = form.Get("errorId");
+                        var infoUrl   = form.Get("infoUrl");
 
-                        var payload = new ErrorPayload(sourceId, JsonConvert.DeserializeObject<Error>(errorText), errorId, infoUrl);
+                        var payload   = new ErrorPayload(sourceId, JsonConvert.DeserializeObject<Error>(errorText), errorId, infoUrl);
 
                         await inbox.Value.Post(payload);
 

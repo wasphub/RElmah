@@ -18,7 +18,7 @@ namespace RElmah.Middleware
 
         public class Route
         {
-            private readonly ImmutableDictionary<string, AsyncHttpRequest> _handlers     = ImmutableDictionary<string, AsyncHttpRequest>.Empty;
+            private readonly ImmutableDictionary<string, AsyncHttpRequest>     _handlers     = ImmutableDictionary<string, AsyncHttpRequest>.Empty;
             private readonly ImmutableDictionary<string, AsyncHttpFormRequest> _formHandlers = ImmutableDictionary<string, AsyncHttpFormRequest>.Empty;
 
             Route()
