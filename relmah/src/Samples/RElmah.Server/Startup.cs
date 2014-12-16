@@ -23,10 +23,20 @@ namespace RElmah.Server
 
                 .UseRElmah(new Settings
                 {
-                    ExposeConfigurationWebApi = true,
-                    Bootstrapper = new Bootstrapper
+                    Errors = new ErrorsSettings
                     {
-                        Configuration = async cu =>
+                        Prefix = "relmah-errors"
+                    },
+
+                    Domain = new DomainSettings
+                    {
+                        Exposed = true,
+                        Prefix  = "relmah-domain"
+                    },
+
+                    Bootstrap = new BootstrapperSettings
+                    {
+                        Domain = async cu =>
                         {
                             var c  = await cu.AddCluster("foo");
                             var a  = await cu.AddApplication("sample");

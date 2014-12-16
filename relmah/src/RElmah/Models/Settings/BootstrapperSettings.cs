@@ -2,9 +2,9 @@ using System;
 
 namespace RElmah.Models.Settings
 {
-    public class Bootstrapper
+    public class BootstrapperSettings
     {
         public Action<IRegistry> Registry { get; set; }
-        public Action<IDomainWriter> Configuration { get; set; }
+        public Action<IDomainWriter> Domain { get; set; }
     }
 }

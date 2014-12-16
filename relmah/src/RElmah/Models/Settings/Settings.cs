@@ -6,13 +6,25 @@ namespace RElmah.Models.Settings
     {
         public Settings()
         {
-            Bootstrapper = new Bootstrapper();
+            Bootstrap = new BootstrapperSettings();
+            Errors       = new ErrorsSettings();
+            Domain       = new DomainSettings();
         }
+        public BootstrapperSettings Bootstrap { get; set; }
+        public ErrorsSettings Errors { get; set; }
+        public DomainSettings Domain { get; set; }
 
+    }
+
+    public class ErrorsSettings
+    {
         public string Prefix { get; set; }
-        public Bootstrapper Bootstrapper { get; set; }
+    }
 
-        public Func<IDomainStore> BuildConfigurationStore { get; set; }
-        public bool ExposeConfigurationWebApi { get; set; }
+    public class DomainSettings
+    {
+        public string Prefix { get; set; }
+        public Func<IDomainStore> DomainStoreBuilder { get; set; }
+        public bool Exposed { get; set; }
     }
 }

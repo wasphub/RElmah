@@ -12,7 +12,7 @@ namespace RElmah.Middleware
             return Router.Invoke(context, Next.Invoke);
         }
 
-        public DomainMiddleware(OwinMiddleware next, IResolver resolver, Settings settings)
+        public DomainMiddleware(OwinMiddleware next, IResolver resolver, DomainSettings settings)
             : base(next)
         {
             var updater = new Lazy<IDomainWriter>(resolver.Resolve<IDomainWriter>);

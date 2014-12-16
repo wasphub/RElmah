@@ -15,9 +15,9 @@ namespace RElmah.Host.Extensions.AppBuilder
 
             var ei       = new ErrorsInbox();
             var cs       = settings.SafeCall(
-                             s  => s.BuildConfigurationStore(), 
-                             () => new InMemoryDomainStore(), 
-                             s  => s != null && s.BuildConfigurationStore != null);
+                             s  => s.Domain.DomainStoreBuilder(), 
+                             () => new InMemoryDomainStore(),
+                             s => s != null && s.Domain != null && s.Domain.DomainStoreBuilder != null);
                          
             var ch       = new DomainHolder(cs);
             var c        = new Connector(ch);
@@ -32,15 +32,16 @@ namespace RElmah.Host.Extensions.AppBuilder
             //Hubs
             registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, registry.Resolve<IUserIdProvider>()));
 
-            if (settings != null && settings.Bootstrapper.Registry != null)
-                settings.Bootstrapper.Registry(registry);
+            if (settings != null && settings.Bootstrap.Registry != null)
+                settings.Bootstrap.Registry(registry);
 
-            if (settings != null && settings.Bootstrapper.Configuration != null)
-                settings.Bootstrapper.Configuration(ch);
+            if (settings != null && settings.Bootstrap.Domain != null)
+                settings.Bootstrap.Domain(ch);
 
-            builder = builder.UseRElmahMiddleware<ErrorsMiddleware>(registry, settings);
-            if (settings != null && settings.ExposeConfigurationWebApi)
-                builder = builder.UseRElmahMiddleware<DomainMiddleware>(registry);
+            if (settings != null && settings.Errors != null)
+                builder = builder.UseRElmahMiddleware<ErrorsMiddleware>(registry, settings.Errors);
+            if (settings != null && settings.Domain != null && settings.Domain.Exposed)
+                builder = builder.UseRElmahMiddleware<DomainMiddleware>(registry, settings.Domain);
 
             //Init app streams
             Observervations.Start(ei, ch);

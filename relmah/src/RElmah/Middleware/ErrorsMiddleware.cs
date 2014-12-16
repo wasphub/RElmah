@@ -16,7 +16,7 @@ namespace RElmah.Middleware
             return Router.Invoke(context, Next.Invoke);
         }
 
-        public ErrorsMiddleware(OwinMiddleware next, IResolver resolver, Settings settings)
+        public ErrorsMiddleware(OwinMiddleware next, IResolver resolver, ErrorsSettings settings)
             : base(next)
         {
             var inbox = new Lazy<IErrorsInbox>(resolver.Resolve<IErrorsInbox>);

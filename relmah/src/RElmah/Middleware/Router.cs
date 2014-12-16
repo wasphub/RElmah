@@ -18,7 +18,7 @@ namespace RElmah.Middleware
 
         public class Route
         {
-            private readonly ImmutableDictionary<string, AsyncHttpRequest>     _handlers     = ImmutableDictionary<string, AsyncHttpRequest>.Empty;
+            private readonly ImmutableDictionary<string, AsyncHttpRequest> _handlers     = ImmutableDictionary<string, AsyncHttpRequest>.Empty;
             private readonly ImmutableDictionary<string, AsyncHttpFormRequest> _formHandlers = ImmutableDictionary<string, AsyncHttpFormRequest>.Empty;
 
             Route()
@@ -91,12 +91,12 @@ namespace RElmah.Middleware
 
             private readonly ImmutableDictionary<string, Route> _routes = ImmutableDictionary<string, Route>.Empty;
             private readonly ImmutableList<string> _keys = ImmutableList<string>.Empty;
-            
+
             public string Prefix { get; private set; }
         
             RouteBuilder(string prefix)
             {
-                Prefix = string.IsNullOrWhiteSpace(prefix) ? DefaultPrefix : prefix;
+                Prefix = String.IsNullOrWhiteSpace(prefix) ? DefaultPrefix : prefix;
             }
             RouteBuilder(RouteBuilder rb, string pattern, Route route)
             {
@@ -125,11 +125,11 @@ namespace RElmah.Middleware
             }
         }
 
-        private static RouteBuilder _builder = RouteBuilder.Empty;
+        private static ImmutableList<RouteBuilder> _builders = ImmutableList<RouteBuilder>.Empty;
 
         public static void Build(Func<RouteBuilder, RouteBuilder> build)
         {
-            _builder = build(_builder);
+            _builders = _builders.Add(build(RouteBuilder.Empty));
         }
 
         static string ToRegex(string pattern)
@@ -144,8 +144,9 @@ namespace RElmah.Middleware
             var raw      = String.Join(null, segments);
 
             var matches =
-                from key in _builder.RoutesKeys
-                let matcher = new Regex(string.Format("^/{0}/{1}/?$", _builder.Prefix, ToRegex(key)))
+                from builder in _builders
+                from key in builder.RoutesKeys
+                let matcher = new Regex(String.Format("^/{0}/{1}/?$", builder.Prefix, ToRegex(key)))
                 let match   = matcher.Match(raw)
                 where match.Success
                 let groups  = match
@@ -159,7 +160,7 @@ namespace RElmah.Middleware
                 select new
                 {
                     Params = @params.Skip(1).ToDictionary(k => k.Key, v => v.Value),
-                    Route  = _builder.Routes[key]
+                    Route  = builder.Routes[key]
                 };
 
             var invocation = matches.FirstOrDefault();
