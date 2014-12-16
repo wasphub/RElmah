@@ -1,31 +1,11 @@
-﻿using System;
-using Microsoft.AspNet.SignalR;
+﻿using Microsoft.AspNet.SignalR;
 using Owin;
 using RElmah.Host.Hubs;
 using RElmah.Middleware;
 using RElmah.Services;
 
-namespace RElmah.Host
+namespace RElmah.Host.Extensions.AppBuilder
 {
-    public class Bootstrapper
-    {
-        public Action<IRegistry> Registry { get; set; }
-        public Action<IConfigurationUpdater> Configuration { get; set; }
-    }
-
-    public class Settings
-    {
-        public Settings()
-        {
-            Bootstrapper = new Bootstrapper();
-        }
-
-        public Bootstrapper Bootstrapper { get; set; }
-
-        public Func<IConfigurationStore> BuildConfigurationStore { get; set; }
-        public bool ExposeConfigurationWebApi { get; set; }
-    }
-
     public static class AppBuilderExtensions
     {
         public static IAppBuilder UseRElmah(this IAppBuilder builder, Settings settings = null)
@@ -62,7 +42,7 @@ namespace RElmah.Host
                 builder = builder.UseRElmahMiddleware<ConfigurationMiddleware>(registry);
 
             //Init app streams
-            Dispatcher.Wire(ei, ch);
+            Observervations.Start(ei, ch);
 
             return builder;
         }

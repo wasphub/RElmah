@@ -2,7 +2,7 @@
 using System.Linq;
 using RElmah.Grounding;
 
-namespace RElmah.Host
+namespace RElmah.Host.Extensions
 {
     public static class GeneralExtensions
     {

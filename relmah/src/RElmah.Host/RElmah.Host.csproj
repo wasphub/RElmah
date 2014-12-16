@@ -73,11 +73,13 @@
     <Compile Include="..\Common\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="AppBuilderExtensions.cs" />
-    <Compile Include="GeneralExtensions.cs" />
+    <Compile Include="Extensions\AppBuilder\AppBuilderExtensions.cs" />
+    <Compile Include="Extensions\AppBuilder\Bootstrapper.cs" />
+    <Compile Include="Extensions\AppBuilder\Settings.cs" />
+    <Compile Include="Extensions\GeneralExtensions.cs" />
     <Compile Include="Services\ClientTokenUserIdProvider.cs" />
     <Compile Include="Connector.cs" />
-    <Compile Include="Dispatcher.cs" />
+    <Compile Include="Observervations.cs" />
     <Compile Include="Hubs\ErrorsHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registry.cs" />
@@ -95,6 +97,7 @@
       <Name>RElmah</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

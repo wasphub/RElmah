@@ -3,6 +3,8 @@ using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Owin;
 using RElmah.Host;
+using RElmah.Host.Extensions;
+using RElmah.Host.Extensions.AppBuilder;
 
 [assembly: OwinStartup(typeof(RElmah.Server.Startup))]
 

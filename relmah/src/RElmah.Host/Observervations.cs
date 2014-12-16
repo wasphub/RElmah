@@ -8,9 +8,9 @@ using RElmah.Host.Hubs;
 
 namespace RElmah.Host
 {
-    public static class Dispatcher
+    public static class Observervations
     {
-        public static void Wire(IErrorsInbox errorsInbox, IConfigurationProvider configurationProvider)
+        public static void Start(IErrorsInbox errorsInbox, IConfigurationProvider configurationProvider)
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>();
 
