@@ -31,7 +31,7 @@
             //subscriptions
 
             apps
-                .filter(function (a) { return !a.removed; })
+                .filter(function (a) { return a.action === 'added'; })
                 .subscribe(function (app) {
                     var name = app.name;
                     if (!$('#app-' + name).length)
@@ -44,7 +44,7 @@
                 });
 
             apps
-                .filter(function (a) { return a.removed; })
+                .filter(function (a) { return a.action === 'removed'; })
                 .subscribe(function (app) {
                     $('#app-' + app.name).css({ 'background-color': 'grey' });
                 });

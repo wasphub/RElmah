@@ -21,12 +21,12 @@
                     var i, k;
                     for (i = 0; i < existingApps.length; i++) {
                         k = existingApps[i];
-                        !apps[k] && applications.onNext({ name: k, removed: false });
+                        !apps[k] && applications.onNext({ name: k, action: 'added' });
                         apps[k] = true;
                     }
                     for (i = 0; removedApps && i < removedApps.length; i++) {
                         k = removedApps[i];
-                        apps[k] && applications.onNext({ name: k, removed: true });
+                        apps[k] && applications.onNext({ name: k, action: 'removed' });
                         apps[k] = false;
                     }
                 });
