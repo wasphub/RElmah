@@ -117,7 +117,7 @@ namespace RElmah.Middleware
 
             static readonly IDictionary<string, string[]> EmptyForm = new Dictionary<string, string[]>();
 
-            private async Task ExecuteAsync(
+            private static async Task ExecuteAsync(
                 IDictionary<string, object> environment, 
                 IDictionary<string, string> keys, OwinRequest request,
                 AsyncHttpRequestHandler handler)
@@ -126,10 +126,10 @@ namespace RElmah.Middleware
 
                 var executor = (Func<Task<object>>)(async () =>
                 {
-                    var form = from f in request.HasForm()
+                    var form = from w in request.HasForm()
                                          ? (IEnumerable<KeyValuePair<string, string[]>>)(await request.ReadFormAsync().ConfigureAwait(false))
                                          : EmptyForm
-                               select f != null ? f[0] : null;
+                               select w != null ? w[0] : null;
 
                     return handler.Executor(
                         environment,
