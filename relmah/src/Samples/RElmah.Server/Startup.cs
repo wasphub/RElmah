@@ -21,6 +21,7 @@ namespace RElmah.Server
 
                 .UseRElmah(new Settings
                 {
+                    ExposeConfigurationWebApi = true,
                     Bootstrapper = async cu =>
                     {
                         var c  = await cu.AddCluster("foo");

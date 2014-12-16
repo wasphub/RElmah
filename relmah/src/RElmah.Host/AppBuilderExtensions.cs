@@ -11,6 +11,8 @@ namespace RElmah.Host
     {
         public Action<IConfigurationUpdater> Bootstrapper { get; set; }
         public Func<IConfigurationStore> BuildConfigurationStore { get; set; }
+
+        public bool ExposeConfigurationWebApi { get; set; }
     }
 
     public static class AppBuilderExtensions
@@ -39,15 +41,22 @@ namespace RElmah.Host
             registry.Register(typeof(IConfigurationStore),    () => cs);
             //registry.Register(typeof(IUserIdProvider),      () => ctuip);
 
-            Dispatcher.Wire(ei, ch);
-
             //Hubs
             registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, registry.Resolve<IUserIdProvider>()));
 
             if (settings != null && settings.Bootstrapper != null)
                 settings.Bootstrapper(ch);
 
-            return builder.UseRElmahMiddleware<RElmahMiddleware>(new Resolver());
+            var resolver = new Resolver();
+
+            builder = builder.UseRElmahMiddleware<ErrorsMiddleware>(resolver);
+            if (settings != null && settings.ExposeConfigurationWebApi)
+                builder = builder.UseRElmahMiddleware<ConfigurationMiddleware>(resolver);
+
+            //Init app streams
+            Dispatcher.Wire(ei, ch);
+
+            return builder;
         }
 
         static IAppBuilder UseRElmahMiddleware<T>(this IAppBuilder builder, params object[] args)

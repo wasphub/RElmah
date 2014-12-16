@@ -1,24 +1,19 @@
 using System;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Owin;
-using Newtonsoft.Json;
-using RElmah.Common;
-using RElmah.Extensions;
 
 namespace RElmah.Middleware
 {
-    public class RElmahMiddleware : OwinMiddleware
+    public class ConfigurationMiddleware : OwinMiddleware
     {
         public override Task Invoke(IOwinContext context)
         {
             return Router.Invoke(context, Next.Invoke);
         }
 
-        public RElmahMiddleware(OwinMiddleware next, IResolver resolver)
+        public ConfigurationMiddleware(OwinMiddleware next, IResolver resolver)
             : base(next)
         {
-            var inbox   = new Lazy<IErrorsInbox>(resolver.Resolve<IErrorsInbox>);
             var updater = new Lazy<IConfigurationUpdater>(resolver.Resolve<IConfigurationUpdater>);
 
             Router.Build(builder => builder
@@ -28,8 +23,8 @@ namespace RElmah.Middleware
                     {
                         var cluster = await updater.Value.GetCluster(keys["cluster"]);
                         return cluster.HasValue 
-                             ? cluster.Value.GetApplication(keys["app"])
-                             : null;
+                            ? cluster.Value.GetApplication(keys["app"])
+                            : null;
                     })
                     .Delete(async (environment, keys) => 
                         await updater.Value.RemoveApplicationFromCluster(keys["cluster"], keys["app"]))
@@ -41,8 +36,8 @@ namespace RElmah.Middleware
                     {
                         var cluster = await updater.Value.GetCluster(keys["cluster"]);
                         return cluster.HasValue
-                             ? cluster.Value.Applications
-                             : null;
+                            ? cluster.Value.Applications
+                            : null;
                     })
                 )
 
@@ -52,8 +47,8 @@ namespace RElmah.Middleware
                     {
                         var cluster = await updater.Value.GetCluster(keys["cluster"]);
                         return cluster.HasValue
-                             ? cluster.Value.GetUser(string.Format(@"{0}\{1}", keys["domain"], keys["user"]))
-                             : null;
+                            ? cluster.Value.GetUser(string.Format(@"{0}\{1}", keys["domain"], keys["user"]))
+                            : null;
                     })
                     .Delete(async (environment, keys) =>
                         await updater.Value.RemoveUserFromCluster(keys["cluster"], string.Format(@"{0}\{1}", keys["domain"], keys["user"])))
@@ -64,8 +59,8 @@ namespace RElmah.Middleware
                     {
                         var cluster = await updater.Value.GetCluster(keys["cluster"]);
                         return cluster.HasValue
-                             ? cluster.Value.GetUser(keys["user"])
-                             : null;
+                            ? cluster.Value.GetUser(keys["user"])
+                            : null;
                     })
                     .Delete(async (environment, keys) =>
                         await updater.Value.RemoveUserFromCluster(keys["cluster"], keys["user"]))
@@ -77,8 +72,8 @@ namespace RElmah.Middleware
                     {
                         var cluster = await updater.Value.GetCluster(keys["cluster"]);
                         return cluster.HasValue
-                             ? cluster.Value.Users
-                             : null;
+                            ? cluster.Value.Users
+                            : null;
                     })
                 )
 
@@ -121,22 +116,7 @@ namespace RElmah.Middleware
                         await updater.Value.GetApplications())
                 )
 
-                .ForRoute("post-error", route => route
-                    .Post(async (environment, keys, form) =>
-                    {
-                        var errorText = Encoding.UTF8.GetString(Convert.FromBase64String(form.Get("error")));
-                        var sourceId  = form.Get("sourceId");
-                        var errorId   = form.Get("errorId");
-                        var infoUrl   = form.Get("infoUrl");
-
-                        var payload   = new ErrorPayload(sourceId, JsonConvert.DeserializeObject<Error>(errorText), errorId, infoUrl);
-
-                        await inbox.Value.Post(payload);
-
-                        return payload;
-                    })
-                )
-            );
+                );
         }
     }
 }
