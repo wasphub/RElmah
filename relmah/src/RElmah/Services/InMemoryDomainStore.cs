@@ -21,14 +21,14 @@ namespace RElmah.Services
         {
             var cluster = Cluster.Create(name);
             _clusters.Add(cluster.Name, cluster);
-            return Task.Factory.StartNew(() => ValueOrError.Create(cluster));
+            return Task.FromResult(ValueOrError.Create(cluster));
         }
 
         public Task<ValueOrError<bool>> RemoveCluster(string name)
         {
             _clusters.Remove(name);
 
-            return Task.Factory.StartNew(() => ValueOrError.Create(true));
+            return Task.FromResult(ValueOrError.Create(true));
         }
 
         public Task<IEnumerable<Cluster>> GetClusters()
@@ -45,14 +45,15 @@ namespace RElmah.Services
         {
             var application = Application.Create(name);
             _applications.Add(application.Name, application);
-            return Task.Factory.StartNew(() => ValueOrError.Create(application));
+
+            return Task.FromResult(ValueOrError.Create(application));
         }
 
         public Task<ValueOrError<bool>> RemoveApplication(string name)
         {
             _applications.Remove(name);
 
-            return Task.Factory.StartNew(() => ValueOrError.Create(true));
+            return Task.FromResult(ValueOrError.Create(true));
         }
 
         public Task<IEnumerable<Application>> GetApplications()
@@ -69,14 +70,14 @@ namespace RElmah.Services
         {
             var user = User.Create(name);
             _users.Add(user.Name, user);
-            return Task.Factory.StartNew(() => ValueOrError.Create(user));
+            return Task.FromResult(ValueOrError.Create(user));
         }
 
         public Task<ValueOrError<bool>> RemoveUser(string name)
         {
             _users.Remove(name);
 
-            return Task.Factory.StartNew(() => ValueOrError.Create(true));
+            return Task.FromResult(ValueOrError.Create(true));
         }
 
         public Task<IEnumerable<User>> GetUsers()
