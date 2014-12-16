@@ -124,13 +124,18 @@ namespace RElmah.Middleware
             {
                 var response = new OwinResponse(environment);
 
-                var executor = (Func<Task<object>>)(async () => handler.Executor(
-                    environment,
-                    keys,
-                    from w in request.HasForm()
-                              ? (IEnumerable<KeyValuePair<string, string[]>>)(await request.ReadFormAsync().ConfigureAwait(false))
-                              : EmptyForm
-                    select w != null ? w[0] : null));
+                var executor = (Func<Task<object>>)(async () =>
+                {
+                    var form = from f in request.HasForm()
+                                         ? (IEnumerable<KeyValuePair<string, string[]>>)(await request.ReadFormAsync().ConfigureAwait(false))
+                                         : EmptyForm
+                               select f != null ? f[0] : null;
+
+                    return handler.Executor(
+                        environment,
+                        keys,
+                        form.ToDictionary());
+                });
 
                 var result = await executor().ConfigureAwait(false);
 

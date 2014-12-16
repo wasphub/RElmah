@@ -36,9 +36,9 @@ namespace RElmah.Extensions
             return source.ToDictionary(k => k.Key, v => v.Value);
         }
 
-        public static IDictionary<TK, TR> Select<TK, TV, TR>(this IEnumerable<KeyValuePair<TK, TV>> source, Func<TV, TR> selector)
+        public static IEnumerable<KeyValuePair<TK, TR>> Select<TK, TV, TR>(this IEnumerable<KeyValuePair<TK, TV>> source, Func<TV, TR> selector)
         {
-            return source.ToDictionary(k => k.Key, v => selector(v.Value));
+            return from kvp in source select new KeyValuePair<TK, TR>(kvp.Key, selector(kvp.Value));
         }
     }
 }
