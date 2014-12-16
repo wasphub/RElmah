@@ -96,33 +96,53 @@ namespace RElmah.Middleware
 
             public async Task Invoke(IDictionary<string, object> environment, IDictionary<string, string> keys)
             {
-                var request     = new OwinRequest(environment);
+                var completed = new TaskCompletionSource<bool>();
 
-                var handler     = _handlers    .GetValueOrDefault(request.Method, async (_, __) =>      await Task.FromResult((object)null));
-                var formHandler = _formHandlers.GetValueOrDefault(request.Method, async (_, __, ___) => await Task.FromResult((object)null));
+                try
+                {          
+                    var request     = new OwinRequest(environment);
 
-                keys            = keys.ToDictionary(k => k.Key, v => WebUtility.UrlDecode(v.Value));
+                    var handler     = _handlers    .GetValueOrDefault(request.Method, async (_, __) =>      await Task.FromResult((object)null));
+                    var formHandler = _formHandlers.GetValueOrDefault(request.Method, async (_, __, ___) => await Task.FromResult((object)null));
 
-                var rf          = request.HasForm()
-                                ? (Func<Task<object>>)(async () => formHandler(
-                                    environment, 
-                                    keys, 
-                                    from w in (await request.ReadFormAsync()) 
-                                    select w != null ? w[0] : null))
-                                : () => handler(
-                                    environment, 
-                                    keys);
+                    keys            = keys.ToDictionary(k => k.Key, v => WebUtility.UrlDecode(v.Value));
 
-                var r           = await rf();
+                    await ExecuteAsync(environment, keys, request, formHandler, handler).ConfigureAwait(false);
 
-                var response = new OwinResponse(environment)
+                    completed.TrySetResult(true);
+                }
+                catch (Exception ex)
                 {
-                    StatusCode = _statusCodeGenerator != null 
-                               ? _statusCodeGenerator(r) 
-                               : (int)HttpStatusCode.OK
-                };
+                    completed.TrySetException(ex);
+                    throw;
+                }
+            }
 
-                await response.WriteAsync(JsonConvert.SerializeObject(r));
+            private async Task ExecuteAsync(
+                IDictionary<string, object> environment, 
+                IDictionary<string, string> keys, OwinRequest request,
+                AsyncHttpFormRequest formHandler, 
+                AsyncHttpRequest handler)
+            {
+                var rf = request.HasForm()
+                       ? (Func<Task<object>>) (async () => formHandler(
+                           environment,
+                           keys,
+                           from w in (await request.ReadFormAsync().ConfigureAwait(false))
+                           select w != null ? w[0] : null))
+                       : () => handler(
+                           environment,
+                           keys);
+
+                var r = await rf().ConfigureAwait(false);
+
+                var response = new OwinResponse(environment);
+
+                await response.WriteAsync(JsonConvert.SerializeObject(r)).ConfigureAwait(false);
+
+                response.StatusCode = _statusCodeGenerator != null
+                                    ? _statusCodeGenerator(r)
+                                    : (int)HttpStatusCode.OK;
             }
         }
 
