@@ -20,17 +20,6 @@ namespace RElmah.Host
                 .GetErrorsStream()
                 .Subscribe(payload => context.Clients.Group(payload.SourceId).error(payload));
 
-            #region Complex example
-            /*
-            errorsInbox
-                .GetErrorsStream()
-                .Zip(errorsInbox.GetErrorsStream().Skip(1), (a, b) => new {a, b})
-                .Where(z => z.a.Error.Type != z.b.Error.Type && z.a.SourceId != z.b.SourceId)
-                .Throttle(TimeSpan.FromMilliseconds(3000))
-                .Select(z => z.b).Subscribe(payload => context.Clients.Group(payload.SourceId).error(payload));
-            */
-            #endregion
-
             //user additions
 
             var userAdditions = 
@@ -105,71 +94,6 @@ namespace RElmah.Host
                 context
                     .Clients.User(p.User.Name)
                     .applications(p.Additions, p.Removals));
-
-
-            #region Trivial way to subscribe
-            /*
-            errorsInbox.GetErrorsStream().Subscribe(payload => context.Clients.Group(payload.SourceId).error(payload));
-
-            domainReader.ObserveClusterUsers().Subscribe(payload =>
-            {
-                var apps = 
-                    from a in payload.Target.Primary.Applications 
-                    select a.Name;
-                apps = apps.ToArray();
-
-                if (payload.Type == DeltaType.Added)
-                {
-                    foreach (var token in payload.Target.Secondary.Tokens)
-                        foreach (var app in apps)
-                            context.Groups.Add(token, app);
-                
-                    context
-                        .Clients
-                        .User(payload.Target.Secondary.Name)
-                        .applications(apps, Enumerable.Empty<string>());
-                }
-                else
-                {
-                    foreach (var app in apps)
-                        foreach (var token in payload.Target.Secondary.Tokens)
-                            context.Groups.Remove(token, app);
-
-                    context
-                        .Clients
-                        .User(payload.Target.Secondary.Name)
-                        .applications(Enumerable.Empty<string>(), apps);
-                }
-            });
-
-            domainReader.ObserveClusterApplications().Subscribe(payload1 =>
-            {
-                var apps = 
-                    from a in payload1.Target.Primary.Applications
-                    select a.Name;
-                apps = apps.ToArray();
-
-                var action = payload1.Type == DeltaType.Added
-                    ? new Action<string, string>((t, g) => context.Groups.Add(t, g))
-                    : (t, g) => context.Groups.Remove(t, g);
-
-                foreach (var user in payload1.Target.Primary.Users)
-                {
-                    foreach (var token in user.Tokens)
-                        action(token, payload1.Target.Secondary.Name);
-
-                    context
-                        .Clients
-                        .User(user.Name)
-                        .applications(
-                            apps,
-                            payload1.Type == DeltaType.Removed
-                                ? new[] {payload1.Target.Secondary.Name}
-                                : Enumerable.Empty<string>());
-                }
-            });
-            */
-            #endregion
         }
     }
 }
