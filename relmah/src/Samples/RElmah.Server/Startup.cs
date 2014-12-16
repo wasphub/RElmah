@@ -2,11 +2,10 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Owin;
-using RElmah.Host;
-using RElmah.Host.Extensions;
 using RElmah.Host.Extensions.AppBuilder;
+using RElmah.Server;
 
-[assembly: OwinStartup(typeof(RElmah.Server.Startup))]
+[assembly: OwinStartup(typeof(Startup))]
 
 namespace RElmah.Server
 {
