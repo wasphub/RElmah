@@ -90,11 +90,12 @@ namespace RElmah.Host
                 select new
                 {
                     p.Type,
-                    User     = user, 
-                    Action   = action, 
-                    Apps     = p.Target.Primary.Applications,
-                    Removals = removals,
-                    Target   = target
+                    User      = user, 
+                    Action    = action, 
+                    Additions = from a in p.Target.Primary.Applications 
+                                select a.Name,
+                    Removals  = removals,
+                    Target    = target
                 };
 
             appDeltas.Subscribe(p =>
@@ -103,7 +104,7 @@ namespace RElmah.Host
             appDeltas.Subscribe(p =>
                 context
                     .Clients.User(p.User.Name)
-                    .applications(p.Apps, p.Removals));
+                    .applications(p.Additions, p.Removals));
 
 
             #region Trivial way to subscribe
