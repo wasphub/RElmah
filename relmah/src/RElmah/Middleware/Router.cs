@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Owin;
@@ -13,31 +14,32 @@ namespace RElmah.Middleware
 {
     internal static class Router
     {
-        public delegate Task<object> AsyncHttpRequest    (IDictionary<string, object> env, IDictionary<string, string> keys);
-        public delegate Task<object> AsyncHttpFormRequest(IDictionary<string, object> env, IDictionary<string, string> keys, IDictionary<string, string> form);
+        public delegate Task<object> AsyncHttpRequest(IDictionary<string, object> env, IDictionary<string, string> keys, IDictionary<string, string> form);
 
         public class Route
         {
-            private readonly ImmutableDictionary<string, AsyncHttpRequest>     _handlers     = ImmutableDictionary<string, AsyncHttpRequest>.Empty;
-            private readonly ImmutableDictionary<string, AsyncHttpFormRequest> _formHandlers = ImmutableDictionary<string, AsyncHttpFormRequest>.Empty;
+            class AsyncHttpRequestHandler
+            {
+                public AsyncHttpRequest Executor { get; private set; }
+                public Func<object, int> StatusCodeGenerator { get; private set; }
+                public AsyncHttpRequestHandler(AsyncHttpRequest executor, Func<object, int> statusCodeGenerator = null)
+                {
+                    Executor = executor;
+                    StatusCodeGenerator = statusCodeGenerator ?? (_ => (int)HttpStatusCode.OK);
+                }
 
-            private readonly Func<object, int> _statusCodeGenerator = null;
+                public static readonly AsyncHttpRequestHandler Null = new AsyncHttpRequestHandler(async (_, __, ___) => await Task.FromResult((object) null));
+            }
+
+            private readonly ImmutableDictionary<string, AsyncHttpRequestHandler> _handlers = ImmutableDictionary<string, AsyncHttpRequestHandler>.Empty;
 
             Route()
             {
-
             }
+
             Route(Route r, string verb, AsyncHttpRequest handler, Func<object, int> statusCodeGenerator)
             {
-                _statusCodeGenerator = statusCodeGenerator;
-                _handlers            = r._handlers.Add(verb, handler);
-                _formHandlers        = r._formHandlers;
-            }
-            Route(Route r, string verb, AsyncHttpFormRequest handler, Func<object, int> statusCodeGenerator)
-            {
-                _statusCodeGenerator = statusCodeGenerator;
-                _handlers            = r._handlers;
-                _formHandlers        = r._formHandlers.Add(verb, handler);
+                _handlers  = r._handlers.Add(verb, new AsyncHttpRequestHandler(handler, statusCodeGenerator));
             }
 
             public static Route Empty
@@ -46,11 +48,6 @@ namespace RElmah.Middleware
             }
 
             private Route Handle(string verb, AsyncHttpRequest handler, Func<object, int> statusCodeGenerator = null)
-            {
-                return new Route(this, verb, handler, statusCodeGenerator);
-            }
-
-            private Route Handle(string verb, AsyncHttpFormRequest handler, Func<object, int> statusCodeGenerator = null)
             {
                 return new Route(this, verb, handler, statusCodeGenerator);
             }
@@ -74,7 +71,7 @@ namespace RElmah.Middleware
                         : (int)HttpStatusCode.OK));
             }
 
-            public Route Put(AsyncHttpFormRequest handler, Func<object, int> statusCodeGenerator = null)
+            public Route Put(AsyncHttpRequest handler, Func<object, int> statusCodeGenerator = null)
             {
                 return Handle("PUT",
                     handler,
@@ -84,7 +81,7 @@ namespace RElmah.Middleware
                         : (int)HttpStatusCode.OK));
             }
             
-            public Route Post(AsyncHttpFormRequest handler, Func<object, int> statusCodeGenerator = null)
+            public Route Post(AsyncHttpRequest handler, Func<object, int> statusCodeGenerator = null)
             {
                 return Handle("POST",
                     handler,
@@ -100,49 +97,57 @@ namespace RElmah.Middleware
 
                 try
                 {          
-                    var request     = new OwinRequest(environment);
+                    var request  = new OwinRequest(environment);
 
-                    var handler     = _handlers    .GetValueOrDefault(request.Method, async (_, __) =>      await Task.FromResult((object)null));
-                    var formHandler = _formHandlers.GetValueOrDefault(request.Method, async (_, __, ___) => await Task.FromResult((object)null));
+                    var handler  = _handlers.GetValueOrDefault(request.Method, AsyncHttpRequestHandler.Null);
 
-                    keys            = keys.ToDictionary(k => k.Key, v => WebUtility.UrlDecode(v.Value));
+                    keys         = keys.ToDictionary(k => k.Key, v => WebUtility.UrlDecode(v.Value));
 
-                    await ExecuteAsync(environment, keys, request, formHandler, handler).ConfigureAwait(false);
+                    await ExecuteAsync(environment, keys, request, handler).ConfigureAwait(false);
 
                     completed.TrySetResult(true);
                 }
                 catch (Exception ex)
                 {
                     completed.TrySetException(ex);
+
                     throw;
                 }
             }
 
+            static readonly IDictionary<string, string[]> EmptyForm = new Dictionary<string, string[]>();
+
             private async Task ExecuteAsync(
                 IDictionary<string, object> environment, 
                 IDictionary<string, string> keys, OwinRequest request,
-                AsyncHttpFormRequest formHandler, 
-                AsyncHttpRequest handler)
+                AsyncHttpRequestHandler handler)
             {
-                var rf = request.HasForm()
-                       ? (Func<Task<object>>) (async () => formHandler(
-                           environment,
-                           keys,
-                           from w in (await request.ReadFormAsync().ConfigureAwait(false))
-                           select w != null ? w[0] : null))
-                       : () => handler(
-                           environment,
-                           keys);
+                var rs = new OwinResponse(environment);
 
-                var r = await rf().ConfigureAwait(false);
+                try
+                {
+                    var rf = (Func<Task<object>>)(async () => handler.Executor(
+                        environment,
+                        keys,
+                        from w in request.HasForm()
+                                  ? (IEnumerable<KeyValuePair<string, string[]>>)(await request.ReadFormAsync().ConfigureAwait(false))
+                                  : EmptyForm
+                        select w != null ? w[0] : null));
 
-                var response = new OwinResponse(environment);
+                    var r = await rf().ConfigureAwait(false);
 
-                await response.WriteAsync(JsonConvert.SerializeObject(r)).ConfigureAwait(false);
+                    await rs.WriteAsync(JsonConvert.SerializeObject(r)).ConfigureAwait(false);
 
-                response.StatusCode = _statusCodeGenerator != null
-                                    ? _statusCodeGenerator(r)
-                                    : (int)HttpStatusCode.OK;
+                    rs.StatusCode = handler.StatusCodeGenerator != null
+                                  ? handler.StatusCodeGenerator(r)
+                                  : (int)HttpStatusCode.OK;
+                }
+                catch (Exception)
+                {
+                    rs.StatusCode = (int) HttpStatusCode.InternalServerError;
+
+                    throw;
+                }
             }
         }
 
