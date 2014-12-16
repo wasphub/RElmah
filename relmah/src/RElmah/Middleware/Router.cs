@@ -87,18 +87,16 @@ namespace RElmah.Middleware
 
         public class RouteBuilder
         {
+            private const string DefaultPrefix = "relmah";
+
             private readonly ImmutableDictionary<string, Route> _routes = ImmutableDictionary<string, Route>.Empty;
             private readonly ImmutableList<string> _keys = ImmutableList<string>.Empty;
             
             public string Prefix { get; private set; }
         
-            RouteBuilder()
-            {
-
-            }
             RouteBuilder(string prefix)
             {
-                Prefix = prefix;
+                Prefix = string.IsNullOrWhiteSpace(prefix) ? DefaultPrefix : prefix;
             }
             RouteBuilder(RouteBuilder rb, string pattern, Route route)
             {
@@ -113,7 +111,7 @@ namespace RElmah.Middleware
 
             public static RouteBuilder Empty
             {
-                get { return new RouteBuilder(); }
+                get { return new RouteBuilder(DefaultPrefix); }
             }
 
             public RouteBuilder WithPrefix(string prefix)
@@ -141,8 +139,6 @@ namespace RElmah.Middleware
 
         public static Task Invoke(IOwinContext context, Func<IOwinContext, Task> next)
         {
-            const string relmah = "relmah";
-
             var request  = new OwinRequest(context.Environment);
             var segments = request.Uri.Segments;
             var raw      = String.Join(null, segments);

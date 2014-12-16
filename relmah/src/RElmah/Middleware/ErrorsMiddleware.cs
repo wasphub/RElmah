@@ -5,6 +5,7 @@ using Microsoft.Owin;
 using Newtonsoft.Json;
 using RElmah.Common;
 using RElmah.Extensions;
+using RElmah.Models.Settings;
 
 namespace RElmah.Middleware
 {
@@ -15,13 +16,14 @@ namespace RElmah.Middleware
             return Router.Invoke(context, Next.Invoke);
         }
 
-        public ErrorsMiddleware(OwinMiddleware next, IResolver resolver)
+        public ErrorsMiddleware(OwinMiddleware next, IResolver resolver, Settings settings)
             : base(next)
         {
             var inbox = new Lazy<IErrorsInbox>(resolver.Resolve<IErrorsInbox>);
 
             Router.Build(builder => builder
 
+                .WithPrefix(settings.Prefix)
                 .ForRoute("post-error", route => route
                     .Post(async (environment, keys, form) =>
                     {

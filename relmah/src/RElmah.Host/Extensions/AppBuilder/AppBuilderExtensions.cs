@@ -2,6 +2,7 @@
 using Owin;
 using RElmah.Host.Hubs;
 using RElmah.Middleware;
+using RElmah.Models.Settings;
 using RElmah.Services;
 
 namespace RElmah.Host.Extensions.AppBuilder
@@ -37,7 +38,7 @@ namespace RElmah.Host.Extensions.AppBuilder
             if (settings != null && settings.Bootstrapper.Configuration != null)
                 settings.Bootstrapper.Configuration(ch);
 
-            builder = builder.UseRElmahMiddleware<ErrorsMiddleware>(registry);
+            builder = builder.UseRElmahMiddleware<ErrorsMiddleware>(registry, settings);
             if (settings != null && settings.ExposeConfigurationWebApi)
                 builder = builder.UseRElmahMiddleware<DomainMiddleware>(registry);
 

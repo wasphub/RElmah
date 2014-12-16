@@ -74,8 +74,6 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Extensions\AppBuilder\AppBuilderExtensions.cs" />
-    <Compile Include="Extensions\AppBuilder\Bootstrapper.cs" />
-    <Compile Include="Extensions\AppBuilder\Settings.cs" />
     <Compile Include="Extensions\GeneralExtensions.cs" />
     <Compile Include="Services\ClientTokenUserIdProvider.cs" />
     <Compile Include="Connector.cs" />

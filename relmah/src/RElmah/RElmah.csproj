@@ -78,6 +78,8 @@
     <Compile Include="Middleware\Router.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Cluster.cs" />
+    <Compile Include="Models\Settings\Bootstrapper.cs" />
+    <Compile Include="Models\Settings\Settings.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Foundation\Relationship.cs" />
     <Compile Include="Foundation\ValueOrError.cs" />

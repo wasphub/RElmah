@@ -1,6 +1,6 @@
 using System;
 
-namespace RElmah.Host.Extensions.AppBuilder
+namespace RElmah.Models.Settings
 {
     public class Bootstrapper
     {

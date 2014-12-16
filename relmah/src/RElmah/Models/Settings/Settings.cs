@@ -1,6 +1,6 @@
 using System;
 
-namespace RElmah.Host.Extensions.AppBuilder
+namespace RElmah.Models.Settings
 {
     public class Settings
     {
@@ -9,6 +9,7 @@ namespace RElmah.Host.Extensions.AppBuilder
             Bootstrapper = new Bootstrapper();
         }
 
+        public string Prefix { get; set; }
         public Bootstrapper Bootstrapper { get; set; }
 
         public Func<IDomainStore> BuildConfigurationStore { get; set; }

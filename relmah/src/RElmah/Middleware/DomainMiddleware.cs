@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Owin;
+using RElmah.Models.Settings;
 
 namespace RElmah.Middleware
 {
@@ -11,13 +12,14 @@ namespace RElmah.Middleware
             return Router.Invoke(context, Next.Invoke);
         }
 
-        public DomainMiddleware(OwinMiddleware next, IResolver resolver)
+        public DomainMiddleware(OwinMiddleware next, IResolver resolver, Settings settings)
             : base(next)
         {
             var updater = new Lazy<IDomainWriter>(resolver.Resolve<IDomainWriter>);
 
             Router.Build(builder => builder
 
+                .WithPrefix(settings.Prefix)
                 .ForRoute("clusters/{cluster}/apps/{app}", route => route
                     .Get(async (environment, keys) =>
                     {
