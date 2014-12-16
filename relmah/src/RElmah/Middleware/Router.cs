@@ -89,13 +89,21 @@ namespace RElmah.Middleware
         {
             private readonly ImmutableDictionary<string, Route> _routes = ImmutableDictionary<string, Route>.Empty;
             private readonly ImmutableList<string> _keys = ImmutableList<string>.Empty;
-                    
+            
+            public string Prefix { get; private set; }
+        
             RouteBuilder()
             {
 
             }
+            RouteBuilder(string prefix)
+            {
+                Prefix = prefix;
+            }
             RouteBuilder(RouteBuilder rb, string pattern, Route route)
             {
+                Prefix = rb.Prefix;
+
                 _routes = rb._routes.Add(pattern, route);
                 _keys   = rb._keys.Add(pattern);
             }
@@ -106,6 +114,11 @@ namespace RElmah.Middleware
             public static RouteBuilder Empty
             {
                 get { return new RouteBuilder(); }
+            }
+
+            public RouteBuilder WithPrefix(string prefix)
+            {
+                return new RouteBuilder(prefix);
             }
 
             public RouteBuilder ForRoute(string pattern, Func<Route, Route> buildRoute)
@@ -136,7 +149,7 @@ namespace RElmah.Middleware
 
             var matches =
                 from key in _builder.RoutesKeys
-                let matcher = new Regex(string.Format("^/{0}/{1}/?$", relmah, ToRegex(key)))
+                let matcher = new Regex(string.Format("^/{0}/{1}/?$", _builder.Prefix, ToRegex(key)))
                 let match   = matcher.Match(raw)
                 where match.Success
                 let groups  = match
