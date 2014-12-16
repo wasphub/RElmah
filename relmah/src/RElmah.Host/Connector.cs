@@ -4,18 +4,18 @@ namespace RElmah.Host
 {
     public class Connector : IConnector
     {
-        private readonly IConfigurationUpdater  _configurationUpdater;
+        private readonly IDomainWriter  _domainWriter;
 
-        public Connector(IConfigurationUpdater configurationUpdater)
+        public Connector(IDomainWriter domainWriter)
         {
-            _configurationUpdater  = configurationUpdater;
+            _domainWriter  = domainWriter;
         }
 
         public void Connect(string user, string token, Action<string> connector)
         {
-            _configurationUpdater.AddUserToken(user, token);
+            _domainWriter.AddUserToken(user, token);
 
-            foreach (var app in _configurationUpdater.GetUserApplications(user))
+            foreach (var app in _domainWriter.GetUserApplications(user))
                 connector(app.Name);
         }
     }

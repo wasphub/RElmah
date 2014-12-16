@@ -11,7 +11,7 @@ namespace RElmah.Host.Extensions.AppBuilder
 
         public Bootstrapper Bootstrapper { get; set; }
 
-        public Func<IConfigurationStore> BuildConfigurationStore { get; set; }
+        public Func<IDomainStore> BuildConfigurationStore { get; set; }
         public bool ExposeConfigurationWebApi { get; set; }
     }
 }

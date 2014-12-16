@@ -15,18 +15,18 @@ namespace RElmah.Host.Extensions.AppBuilder
             var ei       = new ErrorsInbox();
             var cs       = settings.SafeCall(
                              s  => s.BuildConfigurationStore(), 
-                             () => new InMemoryConfigurationStore(), 
+                             () => new InMemoryDomainStore(), 
                              s  => s != null && s.BuildConfigurationStore != null);
                          
-            var ch       = new ConfigurationHolder(cs);
+            var ch       = new DomainHolder(cs);
             var c        = new Connector(ch);
 
             //Infrastructure
-            registry.Register(typeof(IErrorsInbox),           () => ei);
-            registry.Register(typeof(IConnection),            () => c);
-            registry.Register(typeof(IConfigurationProvider), () => ch);
-            registry.Register(typeof(IConfigurationUpdater),  () => ch);
-            registry.Register(typeof(IConfigurationStore),    () => cs);
+            registry.Register(typeof(IErrorsInbox),  () => ei);
+            registry.Register(typeof(IConnection),   () => c);
+            registry.Register(typeof(IDomainReader), () => ch);
+            registry.Register(typeof(IDomainWriter), () => ch);
+            registry.Register(typeof(IDomainStore),  () => cs);
 
             //Hubs
             registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, registry.Resolve<IUserIdProvider>()));
@@ -39,7 +39,7 @@ namespace RElmah.Host.Extensions.AppBuilder
 
             builder = builder.UseRElmahMiddleware<ErrorsMiddleware>(registry);
             if (settings != null && settings.ExposeConfigurationWebApi)
-                builder = builder.UseRElmahMiddleware<ConfigurationMiddleware>(registry);
+                builder = builder.UseRElmahMiddleware<DomainMiddleware>(registry);
 
             //Init app streams
             Observervations.Start(ei, ch);

@@ -10,7 +10,7 @@ namespace RElmah.Host
 {
     public static class Observervations
     {
-        public static void Start(IErrorsInbox errorsInbox, IConfigurationProvider configurationProvider)
+        public static void Start(IErrorsInbox errorsInbox, IDomainReader domainReader)
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>();
 
@@ -34,7 +34,7 @@ namespace RElmah.Host
             //user additions
 
             var userAdditions = 
-                from p in configurationProvider.ObserveClusterUsers()
+                from p in domainReader.ObserveClusterUsers()
                 where p.Type == DeltaType.Added
                 select p;
 
@@ -56,7 +56,7 @@ namespace RElmah.Host
             //User removals
 
             var userRemovals = 
-                from p in configurationProvider.ObserveClusterUsers()
+                from p in domainReader.ObserveClusterUsers()
                 where p.Type == DeltaType.Removed
                 select p;
 
@@ -78,7 +78,7 @@ namespace RElmah.Host
             //apps deltas
 
             var appDeltas =
-                from p in configurationProvider.ObserveClusterApplications()
+                from p in domainReader.ObserveClusterApplications()
                 let action   = p.Type == DeltaType.Added
                              ? new Action<string, string>((t, g) => context.Groups.Add(t, g))
                              : (t, g) => context.Groups.Remove(t, g)
@@ -110,7 +110,7 @@ namespace RElmah.Host
             /*
             errorsInbox.GetErrorsStream().Subscribe(payload => context.Clients.Group(payload.SourceId).error(payload));
 
-            configurationProvider.ObserveClusterUsers().Subscribe(payload =>
+            domainReader.ObserveClusterUsers().Subscribe(payload =>
             {
                 var apps = 
                     from a in payload.Target.Primary.Applications 
@@ -141,7 +141,7 @@ namespace RElmah.Host
                 }
             });
 
-            configurationProvider.ObserveClusterApplications().Subscribe(payload1 =>
+            domainReader.ObserveClusterApplications().Subscribe(payload1 =>
             {
                 var apps = 
                     from a in payload1.Target.Primary.Applications

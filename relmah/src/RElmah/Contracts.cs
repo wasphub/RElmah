@@ -35,7 +35,7 @@ namespace RElmah
         void Connect(string user, string token, Action<string> connector);
     }
 
-    public interface IConfigurationUpdater
+    public interface IDomainWriter
     {
         Task<ValueOrError<Cluster>> AddCluster(string name);
         Task<ValueOrError<bool>> RemoveCluster(string name);
@@ -57,11 +57,11 @@ namespace RElmah
         Task<ValueOrError<User>> AddUserToken(string user, string token);
     }
 
-    public interface IConfigurationStore : IConfigurationUpdater
+    public interface IDomainStore : IDomainWriter
     {
     }
 
-    public interface IConfigurationProvider
+    public interface IDomainReader
     {
         IObservable<Delta<Cluster>> ObserveClusters();
         IObservable<Delta<Application>> ObserveApplications();

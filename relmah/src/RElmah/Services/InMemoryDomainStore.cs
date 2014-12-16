@@ -6,7 +6,7 @@ using RElmah.Models;
 
 namespace RElmah.Services
 {
-    public class InMemoryConfigurationStore : IConfigurationStore
+    public class InMemoryDomainStore : IDomainStore
     {
         private readonly AtomicImmutableDictionary<string, Cluster> _clusters =
             new AtomicImmutableDictionary<string, Cluster>();

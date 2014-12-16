@@ -4,17 +4,17 @@ using Microsoft.Owin;
 
 namespace RElmah.Middleware
 {
-    public class ConfigurationMiddleware : OwinMiddleware
+    public class DomainMiddleware : OwinMiddleware
     {
         public override Task Invoke(IOwinContext context)
         {
             return Router.Invoke(context, Next.Invoke);
         }
 
-        public ConfigurationMiddleware(OwinMiddleware next, IResolver resolver)
+        public DomainMiddleware(OwinMiddleware next, IResolver resolver)
             : base(next)
         {
-            var updater = new Lazy<IConfigurationUpdater>(resolver.Resolve<IConfigurationUpdater>);
+            var updater = new Lazy<IDomainWriter>(resolver.Resolve<IDomainWriter>);
 
             Router.Build(builder => builder
 

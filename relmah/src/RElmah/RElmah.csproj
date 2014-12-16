@@ -71,21 +71,21 @@
     <Compile Include="Contracts.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Middleware\ConfigurationMiddleware.cs" />
+    <Compile Include="Middleware\DomainMiddleware.cs" />
     <Compile Include="Middleware\ErrorsMiddleware.cs" />
-    <Compile Include="Grounding\AtomicImmutableDictionary.cs" />
-    <Compile Include="Grounding\ConcurrentReference.cs" />
+    <Compile Include="Foundation\AtomicImmutableDictionary.cs" />
+    <Compile Include="Foundation\ConcurrentReference.cs" />
     <Compile Include="Middleware\Router.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Cluster.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Grounding\Relationship.cs" />
-    <Compile Include="Grounding\ValueOrError.cs" />
+    <Compile Include="Foundation\Relationship.cs" />
+    <Compile Include="Foundation\ValueOrError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ConfigurationHolder.cs" />
+    <Compile Include="Services\DomainHolder.cs" />
     <Compile Include="Services\ErrorsInbox.cs" />
-    <Compile Include="Services\InMemoryConfigurationStore.cs" />
-    <Compile Include="Services\Nulls\NullConfigurationStore.cs" />
+    <Compile Include="Services\InMemoryDomainStore.cs" />
+    <Compile Include="Services\Nulls\NullDomainStore.cs" />
     <Compile Include="Services\Nulls\NullErrorsBacklog.cs" />
   </ItemGroup>
   <ItemGroup>

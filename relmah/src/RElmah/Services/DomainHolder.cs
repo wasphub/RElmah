@@ -13,11 +13,11 @@ using RElmah.Services.Nulls;
 
 namespace RElmah.Services
 {
-    public class ConfigurationHolder : IConfigurationProvider, IConfigurationUpdater
+    public class DomainHolder : IDomainReader, IDomainWriter
     {
         delegate ImmutableHashSet<T> HashsetJunction<T>(ImmutableHashSet<T> set, IEnumerable<T> apps);
 
-        private readonly IConfigurationStore _configurationStore;
+        private readonly IDomainStore _domainStore;
 
         private readonly Subject<Delta<Cluster>>                            _clusterDeltas                = new Subject<Delta<Cluster>>();
         private readonly Subject<Delta<Application>>                        _applicationDeltas            = new Subject<Delta<Application>>();
@@ -28,9 +28,9 @@ namespace RElmah.Services
 
         private readonly AtomicImmutableDictionary<string, ImmutableHashSet<Application>> _usersApplications   = new AtomicImmutableDictionary<string, ImmutableHashSet<Application>>();
  
-        public ConfigurationHolder(IConfigurationStore configurationStore)
+        public DomainHolder(IDomainStore domainStore)
         {
-            _configurationStore = configurationStore;
+            _domainStore = domainStore;
 
 
             HashsetJunction<Application> union  = (c, apps) => c.Union(apps);
@@ -64,7 +64,7 @@ namespace RElmah.Services
             clusterApps.Subscribe(p => _usersApplications.SetItem(p.User, p.Op(p.Current, p.Applications)));
         }
 
-        public ConfigurationHolder() : this(new NullConfigurationStore()) { }
+        public DomainHolder() : this(new NullDomainStore()) { }
 
         public IObservable<Delta<Cluster>> ObserveClusters()
         {
@@ -73,7 +73,7 @@ namespace RElmah.Services
 
         public async Task<ValueOrError<Cluster>> AddCluster(string name)
         {
-            var s = await _configurationStore.AddCluster(name);
+            var s = await _domainStore.AddCluster(name);
 
             if (s.HasValue) _clusterDeltas.OnNext(Delta.Create(s.Value, DeltaType.Added));
 
@@ -82,7 +82,7 @@ namespace RElmah.Services
 
         public async Task<ValueOrError<bool>> RemoveCluster(string name)
         {
-            var s = await _configurationStore.RemoveCluster(name);
+            var s = await _domainStore.RemoveCluster(name);
 
             if (s.HasValue) _clusterDeltas.OnNext(Delta.Create(Cluster.Create(name), DeltaType.Removed));
 
@@ -91,12 +91,12 @@ namespace RElmah.Services
 
         public Task<IEnumerable<Cluster>> GetClusters()
         {
-            return _configurationStore.GetClusters();
+            return _domainStore.GetClusters();
         }
 
         public Task<ValueOrError<Cluster>> GetCluster(string name)
         {
-            return _configurationStore.GetCluster(name);
+            return _domainStore.GetCluster(name);
         }
 
         public IObservable<Delta<Application>> ObserveApplications()
@@ -106,7 +106,7 @@ namespace RElmah.Services
 
         public async Task<ValueOrError<Application>> AddApplication(string name)
         {
-            var s = await _configurationStore.AddApplication(name);
+            var s = await _domainStore.AddApplication(name);
 
             if (s.HasValue) _applicationDeltas.OnNext(Delta.Create(s.Value, DeltaType.Added));
 
@@ -115,7 +115,7 @@ namespace RElmah.Services
 
         public async Task<ValueOrError<bool>> RemoveApplication(string name)
         {
-            var s = await _configurationStore.RemoveApplication(name);
+            var s = await _domainStore.RemoveApplication(name);
 
             if (s.HasValue) _applicationDeltas.OnNext(Delta.Create(Application.Create(name), DeltaType.Removed));
 
@@ -124,12 +124,12 @@ namespace RElmah.Services
 
         public Task<IEnumerable<Application>> GetApplications()
         {
-            return _configurationStore.GetApplications();
+            return _domainStore.GetApplications();
         }
 
         public Task<ValueOrError<Application>> GetApplication(string name)
         {
-            return _configurationStore.GetApplication(name);
+            return _domainStore.GetApplication(name);
         }
 
         public IObservable<Delta<User>> ObserveUsers()
@@ -139,7 +139,7 @@ namespace RElmah.Services
 
         public async Task<ValueOrError<User>> AddUser(string name)
         {
-            var s = await _configurationStore.AddUser(name);
+            var s = await _domainStore.AddUser(name);
 
             if (s.HasValue) _userDeltas.OnNext(Delta.Create(s.Value, DeltaType.Added));
 
@@ -148,7 +148,7 @@ namespace RElmah.Services
 
         public async Task<ValueOrError<bool>> RemoveUser(string name)
         {
-            var s = await _configurationStore.RemoveUser(name);
+            var s = await _domainStore.RemoveUser(name);
 
             if (s.HasValue) _userDeltas.OnNext(Delta.Create(User.Create(name), DeltaType.Removed));
 
@@ -157,17 +157,17 @@ namespace RElmah.Services
 
         public Task<IEnumerable<User>> GetUsers()
         {
-            return _configurationStore.GetUsers();
+            return _domainStore.GetUsers();
         }
 
         public Task<ValueOrError<User>> GetUser(string name)
         {
-            return _configurationStore.GetUser(name);
+            return _domainStore.GetUser(name);
         }
 
         public async Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user)
         {
-            var s = await _configurationStore.AddUserToCluster(cluster, user);
+            var s = await _domainStore.AddUserToCluster(cluster, user);
 
             if (s.HasValue) _clusterUserOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Added));
 
@@ -176,7 +176,7 @@ namespace RElmah.Services
 
         public async Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user)
         {
-            var s = await _configurationStore.RemoveUserFromCluster(cluster, user);
+            var s = await _domainStore.RemoveUserFromCluster(cluster, user);
 
             if (s.HasValue) _clusterUserOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Removed));
 
@@ -185,7 +185,7 @@ namespace RElmah.Services
 
         public async Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application)
         {
-            var s = await _configurationStore.AddApplicationToCluster(cluster, application);
+            var s = await _domainStore.AddApplicationToCluster(cluster, application);
 
             if (s.HasValue) _clusterApplicationOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Added));
 
@@ -194,7 +194,7 @@ namespace RElmah.Services
 
         public async Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application)
         {
-            var s = await _configurationStore.RemoveApplicationFromCluster(cluster, application);
+            var s = await _domainStore.RemoveApplicationFromCluster(cluster, application);
 
             if (s.HasValue) _clusterApplicationOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Removed));
 
@@ -220,7 +220,7 @@ namespace RElmah.Services
 
         public async Task<ValueOrError<User>> AddUserToken(string user, string token)
         {
-            return await _configurationStore.AddUserToken(user, token);
+            return await _domainStore.AddUserToken(user, token);
         }
     }
 }

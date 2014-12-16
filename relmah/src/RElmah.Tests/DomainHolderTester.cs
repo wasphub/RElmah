@@ -10,7 +10,7 @@ using Xunit;
 
 namespace RElmah.Tests
 {
-    public class ConfigurationHolderTester
+    public class DomainHolderTester
     {
         const string ClusterName = "c1";
 
@@ -24,7 +24,7 @@ namespace RElmah.Tests
                 cs.Add(n, Cluster.Create(n));
                 return cs[n];
             });
-            var sut = new ConfigurationHolder(new Fakes.StubIConfigurationStore
+            var sut = new DomainHolder(new Fakes.StubIDomainStore
             {
                 AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(fc(n))),
                 GetClusters = () => Task.FromResult((IEnumerable<Cluster>)cs.Values)
@@ -66,7 +66,7 @@ namespace RElmah.Tests
             });
             var remover = new Func<string, bool>(cs.Remove);
 
-            var sut = new ConfigurationHolder(new Fakes.StubIConfigurationStore
+            var sut = new DomainHolder(new Fakes.StubIDomainStore
             {
                 AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(adder(n))),
                 GetClusters = () => Task.FromResult((IEnumerable<Cluster>)cs.Values),
