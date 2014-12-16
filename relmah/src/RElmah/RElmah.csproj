@@ -71,6 +71,7 @@
     <Compile Include="Contracts.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\OwinExtensions.cs" />
     <Compile Include="Middleware\DomainMiddleware.cs" />
     <Compile Include="Middleware\ErrorsMiddleware.cs" />
     <Compile Include="Foundation\AtomicImmutableDictionary.cs" />

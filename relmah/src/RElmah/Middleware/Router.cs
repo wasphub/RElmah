@@ -21,19 +21,23 @@ namespace RElmah.Middleware
             private readonly ImmutableDictionary<string, AsyncHttpRequest>     _handlers     = ImmutableDictionary<string, AsyncHttpRequest>.Empty;
             private readonly ImmutableDictionary<string, AsyncHttpFormRequest> _formHandlers = ImmutableDictionary<string, AsyncHttpFormRequest>.Empty;
 
+            private readonly Func<object, int> _statusCodeGenerator = null;
+
             Route()
             {
 
             }
-            Route(Route r, string verb, AsyncHttpRequest handler)
+            Route(Route r, string verb, AsyncHttpRequest handler, Func<object, int> statusCodeGenerator)
             {
-                _handlers     = r._handlers.Add(verb, handler);
-                _formHandlers = r._formHandlers;
+                _statusCodeGenerator = statusCodeGenerator;
+                _handlers            = r._handlers.Add(verb, handler);
+                _formHandlers        = r._formHandlers;
             }
-            Route(Route r, string verb, AsyncHttpFormRequest handler)
+            Route(Route r, string verb, AsyncHttpFormRequest handler, Func<object, int> statusCodeGenerator)
             {
-                _handlers     = r._handlers;
-                _formHandlers = r._formHandlers.Add(verb, handler);
+                _statusCodeGenerator = statusCodeGenerator;
+                _handlers            = r._handlers;
+                _formHandlers        = r._formHandlers.Add(verb, handler);
             }
 
             public static Route Empty
@@ -41,45 +45,82 @@ namespace RElmah.Middleware
                 get { return new Route(); }
             }
 
-            private Route Handle(string verb, AsyncHttpRequest handler)
+            private Route Handle(string verb, AsyncHttpRequest handler, Func<object, int> statusCodeGenerator = null)
             {
-                return new Route(this, verb, handler);
+                return new Route(this, verb, handler, statusCodeGenerator);
             }
 
-            private Route Handle(string verb, AsyncHttpFormRequest handler)
+            private Route Handle(string verb, AsyncHttpFormRequest handler, Func<object, int> statusCodeGenerator = null)
             {
-                return new Route(this, verb, handler);
+                return new Route(this, verb, handler, statusCodeGenerator);
             }
 
-            public Route Get(AsyncHttpRequest handler)
+            public Route Get(AsyncHttpRequest handler, Func<object, int> statusCodeGenerator = null)
             {
-                return Handle("GET", handler);
+                return Handle("GET",
+                    handler,
+                    statusCodeGenerator ?? (r => 
+                        r == null
+                        ? (int)HttpStatusCode.NotFound
+                        : (int)HttpStatusCode.OK));
             }
-            public Route Delete(AsyncHttpRequest handler)
+            public Route Delete(AsyncHttpRequest handler, Func<object, int> statusCodeGenerator = null)
             {
-                return Handle("DELETE", handler);
+                return Handle("DELETE", 
+                    handler,
+                    statusCodeGenerator ?? (r =>
+                        r == null
+                        ? (int)HttpStatusCode.NoContent
+                        : (int)HttpStatusCode.OK));
             }
-            public Route Post(AsyncHttpFormRequest handler)
+
+            public Route Put(AsyncHttpFormRequest handler, Func<object, int> statusCodeGenerator = null)
             {
-                return Handle("POST", handler);
+                return Handle("PUT",
+                    handler,
+                    statusCodeGenerator ?? (r =>
+                        r == null
+                        ? (int)HttpStatusCode.NoContent
+                        : (int)HttpStatusCode.OK));
+            }
+            
+            public Route Post(AsyncHttpFormRequest handler, Func<object, int> statusCodeGenerator = null)
+            {
+                return Handle("POST",
+                    handler,
+                    statusCodeGenerator ?? (r =>
+                        r == null
+                        ? (int)HttpStatusCode.NoContent
+                        : (int)HttpStatusCode.Created));
             }
 
             public async Task Invoke(IDictionary<string, object> environment, IDictionary<string, string> keys)
             {
                 var request     = new OwinRequest(environment);
-                var response    = new OwinResponse(environment);
 
                 var handler     = _handlers    .GetValueOrDefault(request.Method, async (_, __) =>      await Task.FromResult((object)null));
                 var formHandler = _formHandlers.GetValueOrDefault(request.Method, async (_, __, ___) => await Task.FromResult((object)null));
 
                 keys            = keys.ToDictionary(k => k.Key, v => WebUtility.UrlDecode(v.Value));
-                var r           = request.Method == "POST"
-                                ? await formHandler(environment, keys, 
-                                    (await request.ReadFormAsync())
-                                    .Select(w => w != null ? w[0] : null)) 
-                                : await handler(environment, keys);
 
-                response.StatusCode = r == null ? (int)HttpStatusCode.NotFound : (int)HttpStatusCode.OK;
+                var rf          = request.HasForm()
+                                ? (Func<Task<object>>)(async () => formHandler(
+                                    environment, 
+                                    keys, 
+                                    from w in (await request.ReadFormAsync()) 
+                                    select w != null ? w[0] : null))
+                                : () => handler(
+                                    environment, 
+                                    keys);
+
+                var r           = await rf();
+
+                var response = new OwinResponse(environment)
+                {
+                    StatusCode = _statusCodeGenerator != null 
+                               ? _statusCodeGenerator(r) 
+                               : (int)HttpStatusCode.OK
+                };
 
                 await response.WriteAsync(JsonConvert.SerializeObject(r));
             }
@@ -100,7 +141,7 @@ namespace RElmah.Middleware
             }
             RouteBuilder(RouteBuilder rb, string pattern, Route route)
             {
-                Prefix = rb.Prefix;
+                Prefix  = rb.Prefix;
 
                 _routes = rb._routes.Add(pattern, route);
                 _keys   = rb._keys.Add(pattern);
