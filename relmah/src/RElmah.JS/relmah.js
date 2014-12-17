@@ -1,12 +1,14 @@
 ﻿relmah = (function () {
     "use strict";
 
+
     return function (endpoint, subs) {
         var conn,
-            errors = new Rx.Subject(),
-            applications = new Rx.Subject(),
+            errors,
+            applications,
             es, as,
-            apps = {};
+            apps = {},
+            starting;
 
         subs = subs || {};
 
@@ -15,6 +17,16 @@
                 conn = $.hubConnection(endpoint);
 
                 var proxy = conn.createHubProxy('relmah-errors');
+
+                errors && errors.dispose();
+                applications && applications.dispose();
+                es && es.dispose();
+                as && as.dispose();
+
+                errors = new Rx.Subject();
+                applications = new Rx.Subject();
+                es = null;
+                as = null;
 
                 proxy.on('error', function (p) {
                     errors.onNext(p);
@@ -33,8 +45,10 @@
                     }
                 });
 
-                conn.qs = { user: opts && opts.user };
 
+                starting && starting();
+
+                conn.qs = { user: opts && opts.user };
                 return conn.start();
             },
             getErrors: function () {
@@ -48,6 +62,9 @@
             stop: function () {
                 apps = {};
                 return conn && conn.stop();
+            },
+            starting: function(callback) {
+                starting = callback;
             },
             disconnected: function(callback) {
                 return conn.disconnected(callback);

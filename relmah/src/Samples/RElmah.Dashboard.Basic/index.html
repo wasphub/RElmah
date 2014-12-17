@@ -21,51 +21,52 @@
 
             //streams
 
-            var
-                errors = r.getErrors(),
-                apps = r.getApplications(),
-                errorTypes = errors.groupBy(function (e) {
-                    return e.Error.Type;
-                });
+            r.starting(function() {
+                var
+                    errors     = r.getErrors(),
+                    apps       = r.getApplications(),
+                    errorTypes = errors.groupBy(function (e) {
+                        return e.Error.Type;
+                    });
 
-            //subscriptions
+                //subscriptions
 
-            apps
-                .filter(function (a) { return a.action === 'added'; })
-                .subscribe(function (app) {
-                    var name = app.name;
-                    if (!$('#app-' + name).length)
+                apps
+                    .filter(function (a) { return a.action === 'added'; })
+                    .subscribe(function (app) {
+                        var name = app.name;
+                        if (!$('#app-' + name).length)
+                            $('<li/>')
+                                .attr('id', 'app-' + name)
+                                .append($('<p/>').text(name))
+                                .append($('<ul/>').attr('id', 'errors-' + name))
+                                .appendTo($apps);
+                        $('#app-' + name).css({ 'background-color': 'yellow' });
+                    });
+
+                apps
+                    .filter(function (a) { return a.action === 'removed'; })
+                    .subscribe(function (app) {
+                        $('#app-' + app.name).css({ 'background-color': 'grey' });
+                    });
+
+                errors
+                    .subscribe(function (e) {
                         $('<li/>')
-                            .attr('id', 'app-' + name)
-                            .append($('<p/>').text(name))
-                            .append($('<ul/>').attr('id', 'errors-' + name))
-                            .appendTo($apps);
-                    $('#app-' + name).css({ 'background-color': 'yellow' });
-                });
+                            .append($('<span/>').text(e.Error.Message))
+                            .prependTo($('#errors-' + e.SourceId));
+                    });
 
-            apps
-                .filter(function (a) { return a.action === 'removed'; })
-                .subscribe(function (app) {
-                    $('#app-' + app.name).css({ 'background-color': 'grey' });
-                });
+                errorTypes
+                    .subscribe(function (type) {
+                        var g = $('<li/>');
+                        $groups.append(g);
 
-            errors
-                .subscribe(function (e) {
-                    $('<li/>')
-                        .append($('<span/>').text(e.Error.Message))
-                        .prependTo($('#errors-' + e.SourceId));
-                });
-
-            errorTypes
-                .subscribe(function (type) {
-                    var g = $('<li/>');
-                    $groups.append(g);
-
-                    type
-                        .scan(0, function (a) { return a + 1; })
-                        .subscribe(function (e) { g.text(type.key + ': ' + e); });
-                });
-
+                        type
+                            .scan(0, function (a) { return a + 1; })
+                            .subscribe(function (e) { g.text(type.key + ': ' + e); });
+                    });
+            });
 
             //startup
             $('#login').click(function () {
