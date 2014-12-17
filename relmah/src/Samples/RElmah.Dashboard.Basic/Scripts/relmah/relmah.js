@@ -54,7 +54,6 @@
                     }
                 });
 
-
                 starting && starting();
 
                 conn.qs = { user: opts && opts.user };
