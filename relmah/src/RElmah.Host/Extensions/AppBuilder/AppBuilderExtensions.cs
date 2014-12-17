@@ -29,13 +29,15 @@ namespace RElmah.Host.Extensions.AppBuilder
 
             var c        = new Connector(ei, ch, ch);
 
+            var dp       = new DelegatingUserIdProvider(ip);
+
             //Infrastructure
             registry.Register(typeof(IErrorsInbox),    () => ei);
             registry.Register(typeof(IConnection),     () => c);
             registry.Register(typeof(IDomainReader),   () => ch);
             registry.Register(typeof(IDomainWriter),   () => ch);
             registry.Register(typeof(IDomainStore),    () => cs);
-            registry.Register(typeof(IUserIdProvider), () => new DelegatingUserIdProvider(ip));
+            registry.Register(typeof(IUserIdProvider), () => dp);
 
             //Hubs
             registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, registry.Resolve<IUserIdProvider>()));
