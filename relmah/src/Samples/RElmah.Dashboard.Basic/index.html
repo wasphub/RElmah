@@ -15,15 +15,15 @@
     <script>
         $(function () {
 
-            var r       = relmah("http://localhost:9474/signalr"),
-                $apps   = $('#apps'),
+            var r = relmah("http://localhost:9474/signalr"),
+                $apps = $('#apps'),
                 $groups = $('#groups');
 
             //streams
 
             var
-                errors     = r.getErrors(),
-                apps       = r.getApplications(),
+                errors = r.getErrors(),
+                apps = r.getApplications(),
                 errorTypes = errors.groupBy(function (e) {
                     return e.Error.Type;
                 });
@@ -66,25 +66,43 @@
                         .subscribe(function (e) { g.text(type.key + ': ' + e); });
                 });
 
+
             //startup
             $('#login').click(function () {
                 $('#login').hide();
-                r.start();
+                $('#logout').show();
+                $('#display').show();
+                r.start().done(function () {
+                    r.disconnected(function () {
+                        $('#groups').empty();
+                        $('#apps').empty();
+                    });
+                });
+            });
+
+            $('#logout').click(function () {
+                $('#logout').hide();
+                $('#login').show();
+                $('#display').hide();
+                r.stop();
             });
         });
     </script>
 </head>
-    <body>
-        <div>
-            <button id="login">Login</button>
-        </div>
+<body>
+    <div>
+        <button id="login">Login</button>
+        <button id="logout" style="display: none">Logout</button>
+    </div>
+    <div id="display" style="display: none">
         <div>
             Error groups:
-            <ul id="groups"></ul>         
+            <ul id="groups"></ul>
         </div>
         <div>
             Errors by source:
             <ul id="apps"></ul>
         </div>
-    </body>
+    </div>
+</body>
 </html>
