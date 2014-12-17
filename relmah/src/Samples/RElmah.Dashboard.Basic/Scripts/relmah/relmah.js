@@ -1,11 +1,28 @@
 ﻿relmah = (function () {
     "use strict";
 
+    function FilteredSubject(filter, previous) {
+        var that = this;
+
+        previous && previous.dispose && previous.dispose();
+
+        that.subject  = new Rx.Subject();
+        that.filtered = filter && typeof (filter) === 'function' && filter(that.subject) || that.subject;
+
+        that.dispose = function () {
+            that.subject.dispose();
+            that.filtered.dispose();
+        }
+
+        that.onNext = function (n) {
+            that.subject.onNext(n);
+        }
+    }
+
     return function (endpoint, subs) {
         var conn,
             errors,
             applications,
-            es, as,
             apps = {},
             starting;
 
@@ -17,15 +34,8 @@
 
                 var proxy = conn.createHubProxy('relmah-errors');
 
-                errors && errors.dispose();
-                applications && applications.dispose();
-                es && es.dispose();
-                as && as.dispose();
-
-                errors = new Rx.Subject();
-                applications = new Rx.Subject();
-                es = null;
-                as = null;
+                errors       = new FilteredSubject(subs.errors, errors);
+                applications = new FilteredSubject(subs.applications, applications);
 
                 proxy.on('error', function (p) {
                     errors.onNext(p);
@@ -51,12 +61,10 @@
                 return conn.start();
             },
             getErrors: function () {
-                es = es || (subs.errors && typeof (subs.errors) === 'function' && subs.errors(errors) || errors);
-                return es;
+                return errors.filtered;
             },
             getApplications: function () {
-                as = as || (subs.applications && typeof (subs.applications) === 'function' && subs.applications(applications) || applications);
-                return as;
+                return applications.filtered;
             },
             stop: function () {
                 apps = {};
