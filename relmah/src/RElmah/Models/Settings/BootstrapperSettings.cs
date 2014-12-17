@@ -6,5 +6,7 @@ namespace RElmah.Models.Settings
     {
         public Action<IRegistry> Registry { get; set; }
         public Action<IDomainWriter> Domain { get; set; }
+
+        public Func<IIdentityProvider> IdentityProviderBuilder { get; set; }
     }
 }

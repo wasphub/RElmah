@@ -68,12 +68,24 @@
                     });
             });
 
+            //Enable the following line to use the basic client side token for authentication (for test purposes)
+            var userGetter = function () { return $('#user').val(); };
+
+            //Enable the following line to use Windows authentication (for test purposes)
+            //var userGetter = null;
+
+            userGetter && $('#user').show();
+
             //startup
             $('#login').click(function () {
                 $('#login').hide();
                 $('#logout').show();
                 $('#display').show();
-                r.start().done(function () {
+                $('#user').attr('disabled', 'disabled');
+
+                var opts = userGetter && { user: userGetter() };
+
+                r.start(opts).done(function () {
                     r.disconnected(function () {
                         $('#groups').empty();
                         $('#apps').empty();
@@ -85,6 +97,8 @@
                 $('#logout').hide();
                 $('#login').show();
                 $('#display').hide();
+                $('#user').attr('disabled', null);
+
                 r.stop();
             });
         });
@@ -94,6 +108,7 @@
     <div>
         <button id="login">Login</button>
         <button id="logout" style="display: none">Logout</button>
+        <input type="text" id="user" style="display: none" />
     </div>
     <div id="display" style="display: none">
         <div>

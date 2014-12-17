@@ -82,6 +82,8 @@
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Cluster.cs" />
     <Compile Include="Models\Settings\BootstrapperSettings.cs" />
+    <Compile Include="Models\Settings\DomainSettings.cs" />
+    <Compile Include="Models\Settings\ErrorsSettings.cs" />
     <Compile Include="Models\Settings\Settings.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Foundation\Relationship.cs" />

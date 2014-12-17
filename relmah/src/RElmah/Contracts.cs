@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using RElmah.Common;
 using RElmah.Grounding;
@@ -28,6 +29,11 @@ namespace RElmah
     public interface IErrorsBacklog
     {
         Task Store(ErrorPayload payload);
+    }
+
+    public interface IIdentityProvider
+    {
+        IIdentity GetIdentity(object request);
     }
 
     public interface IConnector

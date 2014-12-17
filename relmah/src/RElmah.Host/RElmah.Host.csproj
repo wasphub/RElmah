@@ -79,11 +79,13 @@
     </Compile>
     <Compile Include="Extensions\AppBuilder\AppBuilderExtensions.cs" />
     <Compile Include="Extensions\GeneralExtensions.cs" />
+    <Compile Include="Services\ClientTokenIdentityProvider.cs" />
     <Compile Include="Services\ClientTokenUserIdProvider.cs" />
     <Compile Include="Connector.cs" />
     <Compile Include="Hubs\ErrorsHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registry.cs" />
+    <Compile Include="Services\WindowsPrincipalIdentityProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
