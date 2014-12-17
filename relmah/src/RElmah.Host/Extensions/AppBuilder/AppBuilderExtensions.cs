@@ -20,7 +20,8 @@ namespace RElmah.Host.Extensions.AppBuilder
                              s => s != null && s.Domain != null && s.Domain.DomainStoreBuilder != null);
                          
             var ch       = new DomainHolder(cs);
-            var c        = new Connector(ch);
+
+            var c        = new Connector(ei, ch, ch);
 
             //Infrastructure
             registry.Register(typeof(IErrorsInbox),  () => ei);
@@ -43,8 +44,8 @@ namespace RElmah.Host.Extensions.AppBuilder
             if (settings != null && settings.Domain != null && settings.Domain.Exposed)
                 builder = builder.UseRElmahMiddleware<DomainMiddleware>(registry, settings.Domain);
 
-            //Init app streams
-            Observervations.Start(ei, ch);
+            //Init streams
+            c.Start();
 
             return builder;
         }
