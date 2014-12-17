@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Owin;
@@ -35,12 +36,12 @@ namespace RElmah.Server
                     },
 
                     Bootstrap = new BootstrapperSettings
-                    {
+                    {                     
                         Domain = async cu =>
-                        {
+                        {              
                             var c  = await cu.AddCluster("foo");
                             var a  = await cu.AddApplication("sample");
-                            var u1 = await cu.AddUser(@"WaspBookWin81\wasp");
+                            var u1 = await cu.AddUser(string.Format(@"{0}\{1}", Environment.UserDomainName, Environment.UserName));
                             var u2 = await cu.AddUser(@"wasp");
 
                             Task.WaitAll(
