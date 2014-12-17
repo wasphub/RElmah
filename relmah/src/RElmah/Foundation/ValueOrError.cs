@@ -31,5 +31,19 @@ namespace RElmah.Grounding
         {
             return new ValueOrError<T>(error);
         }
+
+        public static ValueOrError<T> Null<T>()
+        {
+            return new ValueOrError<T>(new ArgumentNullException());
+        }
+
+        public static ValueOrError<T> ToValueOrError<T>(this T value)
+        {
+            return typeof (T).IsValueType 
+                   ? !default(T).Equals(value) 
+                     ? new ValueOrError<T>(value) : new ValueOrError<T>(new ArgumentNullException())
+                   : value != null 
+                     ? new ValueOrError<T>(value) : new ValueOrError<T>(new ArgumentNullException());
+        }
     }
 }

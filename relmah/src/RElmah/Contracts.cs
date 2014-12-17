@@ -33,6 +33,7 @@ namespace RElmah
     public interface IConnector
     {
         void Connect(string user, string token, Action<string> connector);
+        void Disconnect(string token);
     }
 
     public interface IDomainWriter
@@ -55,6 +56,7 @@ namespace RElmah
         Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application);
         IEnumerable<Application> GetUserApplications(string user);
         Task<ValueOrError<User>> AddUserToken(string user, string token);
+        Task<ValueOrError<User>> RemoveUserToken(string token);
     }
 
     public interface IDomainStore : IDomainWriter

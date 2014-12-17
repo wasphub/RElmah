@@ -28,5 +28,10 @@ namespace RElmah.Models
         {
             return new User(Name, Tokens.EmptyIfNull().Concat(token.ToSingleton()));
         }
+
+        public User RemoveToken(string token)
+        {
+            return new User(Name, Tokens.EmptyIfNull().Except(token.ToSingleton()));
+        }
     }
 }

@@ -144,5 +144,26 @@ namespace RElmah.Services
                 _clusters.SetItem(c.Name, c.SetUser(u));
             return Task.FromResult(new ValueOrError<User>(u));
         }
+
+        public Task<ValueOrError<User>> RemoveUserToken(string token)
+        {
+            var us =
+                from u in _users.Values
+                where u.Tokens.Any(t => t == token)
+                select u;
+
+            var voe = us.SingleOrDefault().ToValueOrError();
+            if (!voe.HasValue) return Task.FromResult(ValueOrError.Null<User>());
+
+            var user = voe.Value;
+
+            user = user.RemoveToken(token);
+            _users.SetItem(user.Name, user);
+
+            foreach (var c in _clusters.Values.Where(c => c.HasUser(user.Name)))
+                _clusters.SetItem(c.Name, c.SetUser(user));
+
+            return Task.FromResult(new ValueOrError<User>(user));
+        }
     }
 }

@@ -32,5 +32,12 @@ namespace RElmah.Host.Hubs
 
             return base.OnConnected();
         }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            _connector.Disconnect(Context.ConnectionId);
+
+            return base.OnDisconnected(stopCalled);
+        }
     }
 }

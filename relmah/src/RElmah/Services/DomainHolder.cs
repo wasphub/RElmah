@@ -222,5 +222,10 @@ namespace RElmah.Services
         {
             return await _domainStore.AddUserToken(user, token);
         }
+
+        public async Task<ValueOrError<User>> RemoveUserToken(string token)
+        {
+            return await _domainStore.RemoveUserToken(token);
+        }
     }
 }

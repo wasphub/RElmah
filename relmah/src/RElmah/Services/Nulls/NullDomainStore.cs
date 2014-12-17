@@ -97,5 +97,10 @@ namespace RElmah.Services.Nulls
         {
             return Task.FromResult(new ValueOrError<User>(User.Create(user).AddToken(token)));
         }
+
+        public Task<ValueOrError<User>> RemoveUserToken(string token)
+        {
+            return Task.FromResult(new ValueOrError<User>((User)null));
+        }
     }
 }

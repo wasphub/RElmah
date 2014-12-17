@@ -72,6 +72,8 @@
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\OwinExtensions.cs" />
+    <Compile Include="Extensions\DisposableExtensions.cs" />
+    <Compile Include="Foundation\LayeredDisposable.cs" />
     <Compile Include="Middleware\DomainMiddleware.cs" />
     <Compile Include="Middleware\ErrorsMiddleware.cs" />
     <Compile Include="Foundation\AtomicImmutableDictionary.cs" />
