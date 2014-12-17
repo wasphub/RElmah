@@ -130,7 +130,7 @@ namespace RElmah.Middleware
                                          : EmptyForm
                                select w != null ? w[0] : null;
 
-                    return handler.Executor(
+                    return await handler.Executor(
                         environment,
                         keys,
                         form.ToDictionary());
