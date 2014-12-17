@@ -35,7 +35,7 @@
 
                 conn.qs = { user: opts && opts.user };
 
-                return conn.start().done(function () { });
+                return conn.start();
             },
             getErrors: function () {
                 es = es || (subs.errors && typeof (subs.errors) === 'function' && subs.errors(errors) || errors);
