@@ -58,7 +58,7 @@ namespace RElmah.Services
                 {
                     User = user,
                     Current = _usersApplications.Get(user, ImmutableHashSet<Application>.Empty),
-                    p.Target.Primary.Applications,
+                    Applications = p.Target.Secondary.ToSingleton(),
                     Op = op
                 };
             clusterApps.Subscribe(p => _usersApplications.SetItem(p.User, p.Op(p.Current, p.Applications)));
