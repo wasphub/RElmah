@@ -3,11 +3,11 @@ using Microsoft.AspNet.SignalR;
 
 namespace RElmah.Host.Services
 {
-    public class ClientTokenUserIdProvider : IUserIdProvider
+    public class DelegatingUserIdProvider : IUserIdProvider
     {
         private readonly IIdentityProvider _identityProvider;
 
-        public ClientTokenUserIdProvider(IIdentityProvider identityProvider)
+        public DelegatingUserIdProvider(IIdentityProvider identityProvider)
         {
             _identityProvider = identityProvider;
         }

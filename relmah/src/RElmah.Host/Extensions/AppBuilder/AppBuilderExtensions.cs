@@ -35,7 +35,7 @@ namespace RElmah.Host.Extensions.AppBuilder
             registry.Register(typeof(IDomainReader),   () => ch);
             registry.Register(typeof(IDomainWriter),   () => ch);
             registry.Register(typeof(IDomainStore),    () => cs);
-            registry.Register(typeof(IUserIdProvider), () => new ClientTokenUserIdProvider(ip));
+            registry.Register(typeof(IUserIdProvider), () => new DelegatingUserIdProvider(ip));
 
             //Hubs
             registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, registry.Resolve<IUserIdProvider>()));

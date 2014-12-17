@@ -80,7 +80,7 @@
     <Compile Include="Extensions\AppBuilder\AppBuilderExtensions.cs" />
     <Compile Include="Extensions\GeneralExtensions.cs" />
     <Compile Include="Services\ClientTokenIdentityProvider.cs" />
-    <Compile Include="Services\ClientTokenUserIdProvider.cs" />
+    <Compile Include="Services\DelegatingUserIdProvider.cs" />
     <Compile Include="Connector.cs" />
     <Compile Include="Hubs\ErrorsHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
