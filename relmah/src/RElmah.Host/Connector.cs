@@ -109,14 +109,12 @@ namespace RElmah.Host
         {
             var u = await _domainWriter.AddUserToken(user, token);
 
-            var apps = _domainWriter.GetUserApplications(user).ToObservable();
-
             //errors
             if (u.HasValue && u.Value.Tokens.Count() == 1)
             {
                 var errors =
-                    from app in apps
                     from e in _errorsInbox.GetErrorsStream()
+                    from app in _domainWriter.GetUserApplications(user).ToObservable()
                     where e.SourceId == app.Name
                     select e;
 
@@ -131,7 +129,8 @@ namespace RElmah.Host
 
 
             //apps
-            apps.Do(app => connector(app.Name)).Subscribe();
+            var apps = _domainWriter.GetUserApplications(user);
+            apps.ToObservable().Do(app => connector(app.Name)).Subscribe();
         }
 
         public async void Disconnect(string token)
