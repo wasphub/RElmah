@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Relmah by wasphub</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Relmah</h1>
+        <p>Reactive ELMAH</p>
+        <p class="view"><a href="https://github.com/wasphub/RElmah">View the Project on GitHub <small>wasphub/RElmah</small></a></p>
+        <ul>
+          <li><a href="https://github.com/wasphub/RElmah/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/wasphub/RElmah/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/wasphub/RElmah">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="relmah---reactive-elmah" class="anchor" href="#relmah---reactive-elmah" aria-hidden="true"><span class="octicon octicon-link"></span></a>RElmah - Reactive ELMAH</h1>
+
+<p>If you already used <a href="http://elmahr.apphb.com/">ElmahR</a> in the past, you already know what <strong>RElmah</strong> is about. We want to monitor applications and receive real time notifications about unhandled exceptions. But the way things are done behind the scenes are totally redesigned to offer a true <strong>reactive</strong> experience to the developer. Quickly:</p>
+
+<ul>
+<li>we have a clean separation between server and client portions</li>
+<li>we have true and independent client libraries for both JavaScript and .NET</li>
+<li>
+<a href="http://msdn.microsoft.com/en-us/data/gg577609.aspx">Rx</a> is at the core on both the server side the clients side libraries</li>
+<li>Errors, applications, basically anything that can go to a client will be managed as a push stream of information</li>
+</ul>
+
+<p>Do you want a sneak preview? What about being able to do something like this in Linqpad?</p>
+
+<div class="highlight highlight-c#"><pre><span class="pl-k">var</span> c = <span class="pl-s">new</span> Connection(<span class="pl-s1"><span class="pl-pds">"</span>http://localhost:50360/<span class="pl-pds">"</span></span>);
+<span class="pl-k">var</span> q = 
+    <span class="pl-k">from</span> error <span class="pl-k">in</span> c.Errors
+    <span class="pl-k">where</span> error.Detail.Message.StartsWith(<span class="pl-s1"><span class="pl-pds">"</span>B<span class="pl-pds">"</span></span>)
+    <span class="pl-k">select</span> error.Detail;
+
+q.DumpLive();</pre></div>
+
+<p>You get the idea :)</p>
+
+<p>Current version is 0.2, which means some foundations are there, but it's not really ready to be used yet. You might want to have a look and see if you like what's happening, and maybe contribute with ideas or coding.</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/wasphub">wasphub</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
