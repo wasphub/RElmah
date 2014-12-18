@@ -27,7 +27,9 @@ namespace RElmah.Middleware
                     StatusCodeGenerator = statusCodeGenerator ?? (_ => (int)HttpStatusCode.OK);
                 }
 
-                public static readonly AsyncHttpRequestHandler Null = new AsyncHttpRequestHandler(async (_, __, ___) => await Task.FromResult((object) null));
+                public static readonly AsyncHttpRequestHandler Null = new AsyncHttpRequestHandler(
+                    async (_, __, ___) => await Task.FromResult((object) null),
+                    _ => (int)HttpStatusCode.NotFound);
             }
 
             private readonly ImmutableDictionary<string, AsyncHttpRequestHandler> _handlers = ImmutableDictionary<string, AsyncHttpRequestHandler>.Empty;
