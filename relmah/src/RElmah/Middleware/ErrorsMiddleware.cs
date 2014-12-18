@@ -24,6 +24,7 @@ namespace RElmah.Middleware
             Router.Build(builder => builder
 
                 .WithPrefix(settings.Prefix)
+
                 .ForRoute("post-error", route => route
                     .Post(async (environment, keys, form) =>
                     {

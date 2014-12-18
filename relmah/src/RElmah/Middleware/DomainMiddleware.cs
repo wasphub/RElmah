@@ -20,6 +20,7 @@ namespace RElmah.Middleware
             Router.Build(builder => builder
 
                 .WithPrefix(settings.Prefix)
+
                 .ForRoute("clusters/{cluster}/apps/{app}", route => route
                     .Get(async (environment, keys, _) =>
                     {
