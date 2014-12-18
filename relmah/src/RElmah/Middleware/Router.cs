@@ -138,7 +138,8 @@ namespace RElmah.Middleware
 
                 var result = await executor().ConfigureAwait(false);
 
-                await response.WriteAsync(JsonConvert.SerializeObject(result)).ConfigureAwait(false);
+                if (result != null)
+                    await response.WriteAsync(JsonConvert.SerializeObject(result)).ConfigureAwait(false);
 
                 response.StatusCode = handler.StatusCodeGenerator != null
                                     ? handler.StatusCodeGenerator(result)
