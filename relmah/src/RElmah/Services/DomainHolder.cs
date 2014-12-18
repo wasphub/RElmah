@@ -211,11 +211,12 @@ namespace RElmah.Services
             return _clusterApplicationOperations;
         }
 
-        public IEnumerable<Application> GetUserApplications(string user)
+        public Task<IEnumerable<Application>> GetUserApplications(string user)
         {
-            return _usersApplications.ContainsKey(user)
+            return Task.FromResult(
+                _usersApplications.ContainsKey(user)
                 ? _usersApplications[user]
-                : Enumerable.Empty<Application>();
+                : Enumerable.Empty<Application>());
         }
 
         public async Task<ValueOrError<User>> AddUserToken(string user, string token)

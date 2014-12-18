@@ -130,7 +130,7 @@ namespace RElmah.Services
             return Task.FromResult(ValueOrError.Create(Relationship.Create(value, a)));
         }
 
-        public IEnumerable<Application> GetUserApplications(string user)
+        public Task<IEnumerable<Application>> GetUserApplications(string user)
         {
             throw new System.NotImplementedException();
         }

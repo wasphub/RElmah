@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using RElmah.Common;
 using RElmah.Extensions;
@@ -109,12 +112,14 @@ namespace RElmah.Host
         {
             var u = await _domainWriter.AddUserToken(user, token);
 
+            Func<Task<IObservable<Models.Application>>> getUserApps = async () => (await  _domainWriter.GetUserApplications(user)).ToObservable();
+
             //errors
             if (u.HasValue && u.Value.Tokens.Count() == 1)
             {
                 var errors =
                     from e in _errorsInbox.GetErrorsStream()
-                    from app in _domainWriter.GetUserApplications(user).ToObservable()
+                    from app in getUserApps().Result
                     where e.SourceId == app.Name
                     select e;
 
@@ -129,8 +134,8 @@ namespace RElmah.Host
 
 
             //apps
-            var apps = _domainWriter.GetUserApplications(user);
-            apps.ToObservable().Do(app => connector(app.Name)).Subscribe();
+            var apps = getUserApps().Result;
+            apps.Do(app => connector(app.Name)).Subscribe();
         }
 
         public async void Disconnect(string token)

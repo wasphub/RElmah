@@ -88,9 +88,9 @@ namespace RElmah.Services.Nulls
             return Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(new Relationship<Cluster, Application>(Cluster.Create(cluster), Application.Create(application))));
         }
 
-        public IEnumerable<Application> GetUserApplications(string user)
+        public Task<IEnumerable<Application>> GetUserApplications(string user)
         {
-            return Enumerable.Empty<Application>();
+            return Task.FromResult(Enumerable.Empty<Application>());
         }
 
         public Task<ValueOrError<User>> AddUserToken(string user, string token)
