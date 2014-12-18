@@ -21,7 +21,7 @@ q.DumpLive();
 ```
 You get the idea :)
 
-More to come soon.
+Current version is 0.2, which means some foundations are there, but it's not really ready to be used yet. You might want to have a look and see if you like what's happening, and maybe contribute with ideas or coding.
 
 
 
