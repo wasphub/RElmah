@@ -32,9 +32,8 @@ namespace RElmah.Services
         {
             _domainStore = domainStore;
 
-
-            HashsetJunction<Application> union  = (c, apps) => c.Union(apps);
             HashsetJunction<Application> except = (c, apps) => c.Except(apps);
+            HashsetJunction<Application> union  = (c, apps) => c.Union(apps);
 
             var clusterUsers =
                 from p in _clusterUserOperations
