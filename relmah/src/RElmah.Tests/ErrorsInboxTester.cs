@@ -9,7 +9,7 @@ namespace RElmah.Tests
     public class ErrorsInboxTester
     {
         [Fact]
-        public void IsTestingEnvisonmentOk()
+        public void IsTestingEnvironmentOk()
         {
             Assert.True(true);
         }
