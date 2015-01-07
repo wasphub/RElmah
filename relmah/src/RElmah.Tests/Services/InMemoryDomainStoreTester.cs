@@ -1,11 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using RElmah.Grounding;
-using RElmah.Models;
 using RElmah.Services;
 using Xunit;
 
-namespace RElmah.Tests
+namespace RElmah.Tests.Services
 {
     public class InMemoryDomainStoreTester
     {

@@ -8,7 +8,7 @@ using RElmah.Models;
 using RElmah.Services;
 using Xunit;
 
-namespace RElmah.Tests
+namespace RElmah.Tests.Services
 {
     public class DomainHolderTester
     {

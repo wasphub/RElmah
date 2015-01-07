@@ -4,7 +4,7 @@ using RElmah.Common;
 using RElmah.Services;
 using Xunit;
 
-namespace RElmah.Tests
+namespace RElmah.Tests.Services
 {
     public class ErrorsInboxTester
     {
