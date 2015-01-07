@@ -14,9 +14,9 @@ namespace RElmah.Host
 {
     public class Connector : IConnector
     {
-        private readonly IErrorsInbox _errorsInbox;
+        private readonly IErrorsInbox  _errorsInbox;
         private readonly IDomainReader _domainReader;
-        private readonly IDomainWriter  _domainWriter;
+        private readonly IDomainWriter _domainWriter;
 
         private readonly AtomicImmutableDictionary<string, LayeredDisposable> _subscriptions = new AtomicImmutableDictionary<string, LayeredDisposable>(); 
 
