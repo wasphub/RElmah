@@ -14,10 +14,9 @@ namespace RElmah.Extensions
                 while (e.MoveNext())
                 {
                     action(e.Current);
+                    yield return e.Current;
                 }
             }
-
-            return source;
         }
 
         public static IEnumerable<T> ToSingleton<T>(this T source)
