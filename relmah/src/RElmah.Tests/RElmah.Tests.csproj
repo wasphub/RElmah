@@ -68,6 +68,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Models\ClusterTester.cs" />
     <Compile Include="Services\InMemoryDomainStoreTester.cs" />
     <Compile Include="Services\DomainHolderTester.cs" />
     <Compile Include="Services\ErrorsInboxTester.cs" />

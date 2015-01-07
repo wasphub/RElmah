@@ -35,20 +35,6 @@ namespace RElmah.Models
             Name = name;
         }
 
-        Cluster(string name, IImmutableDictionary<string, Application> applications)
-        {
-            Name = name;
-
-            _applications = applications;
-        }
-
-        Cluster(string name, IImmutableDictionary<string, User> users)
-        {
-            Name = name;
-
-            _users = users;
-        }
-
         Cluster(string name, IImmutableDictionary<string, Application> applications, IImmutableDictionary<string, User> users)
         {
             Name = name;
