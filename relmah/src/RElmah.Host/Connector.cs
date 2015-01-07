@@ -24,9 +24,9 @@ namespace RElmah.Host
 
         public Connector(IErrorsInbox errorsInbox, IDomainReader domainReader, IDomainWriter domainWriter)
         {
-            _errorsInbox = errorsInbox;
+            _errorsInbox  = errorsInbox;
             _domainReader = domainReader;
-            _domainWriter  = domainWriter;
+            _domainWriter = domainWriter;
         }
 
         public void Start()
