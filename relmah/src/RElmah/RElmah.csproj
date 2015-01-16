@@ -73,6 +73,7 @@
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\OwinExtensions.cs" />
     <Compile Include="Extensions\DisposableExtensions.cs" />
+    <Compile Include="Foundation\AtomicImmutableList.cs" />
     <Compile Include="Foundation\LayeredDisposable.cs" />
     <Compile Include="Middleware\DomainMiddleware.cs" />
     <Compile Include="Middleware\ErrorsMiddleware.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Middleware\Router.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Cluster.cs" />
+    <Compile Include="Models\Recap.cs" />
     <Compile Include="Models\Settings\BootstrapperSettings.cs" />
     <Compile Include="Models\Settings\DomainSettings.cs" />
     <Compile Include="Models\Settings\ErrorsSettings.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Services\DomainHolder.cs" />
     <Compile Include="Services\ErrorsInbox.cs" />
     <Compile Include="Services\InMemoryDomainStore.cs" />
+    <Compile Include="Services\InMemoryErrorsBacklog.cs" />
     <Compile Include="Services\Nulls\NullDomainStore.cs" />
     <Compile Include="Services\Nulls\NullErrorsBacklog.cs" />
   </ItemGroup>

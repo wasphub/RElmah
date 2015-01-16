@@ -1,4 +1,4 @@
-﻿namespace RElmah.Grounding
+﻿namespace RElmah.Foundation
 {
     public static class Relationship
     {

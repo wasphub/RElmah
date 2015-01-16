@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using RElmah.Common;
 using RElmah.Extensions;
 using RElmah.Foundation;
-using RElmah.Grounding;
 using RElmah.Host.Hubs;
 using RElmah.Models;
 
@@ -109,12 +109,12 @@ namespace RElmah.Host
 
         public async void Connect(string user, string token, Action<string> connector)
         {
-            var u = await _domainWriter.AddUserToken(user, token);
+            var ut = await _domainWriter.AddUserToken(user, token);
 
             Func<Task<IObservable<Application>>> getUserApps = async () => (await  _domainWriter.GetUserApplications(user)).ToObservable();
 
             //errors
-            if (u.HasValue && u.Value.Tokens.Count() == 1)
+            if (ut.HasValue && ut.Value.Tokens.Count() == 1)
             {
                 var errors =
                     from e in _errorsInbox.GetErrorsStream()
@@ -122,9 +122,24 @@ namespace RElmah.Host
                     where e.SourceId == app.Name
                     select e;
 
-                var d = errors
-                    .Subscribe(payload => _context.Clients.User(user).error(payload))
-                    .ToLayeredDisposable();
+                var userApps =
+                    from p in _domainReader.ObserveClusterApplications()
+                    where p.Type == DeltaType.Added
+                    let target = p.Target.Secondary.Name
+                    from u in p.Target.Primary.Users
+                    where u.Name == user
+                    select p.Target.Primary.Applications;
+
+                var d = new CompositeDisposable(
+                    errors
+                        .Subscribe(payload => _context.Clients.User(user).error(payload)), 
+                    userApps
+                        .Subscribe(async payload =>
+                        {
+                            var recap = await _errorsInbox.GetApplicationsRecap(payload);
+                            if (recap.HasValue)
+                                _context.Clients.User(user).recap(recap.Value);
+                        })).ToLayeredDisposable();
 
                 _subscriptions.SetItem(user, d);
             }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using RElmah.Common;
-using RElmah.Grounding;
+using RElmah.Foundation;
 using RElmah.Models;
 
 namespace RElmah
@@ -18,6 +18,7 @@ namespace RElmah
     {
         Task Post(ErrorPayload payload);
         IObservable<ErrorPayload> GetErrorsStream();
+        Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps);
     }
 
     /// <summary>
@@ -29,6 +30,7 @@ namespace RElmah
     public interface IErrorsBacklog
     {
         Task Store(ErrorPayload payload);
+        Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> processor);
     }
 
     public interface IIdentityProvider

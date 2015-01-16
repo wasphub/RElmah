@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using RElmah.Common;
+using RElmah.Foundation;
+using RElmah.Models;
 using RElmah.Services.Nulls;
 
 namespace RElmah.Services
@@ -34,6 +38,11 @@ namespace RElmah.Services
         public IObservable<ErrorPayload> GetErrorsStream()
         {
             return _publishedErrors;
+        }
+
+        public Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps)
+        {
+            return _errorsBacklog.GetApplicationsRecap(apps, xs => xs.Count());
         }
     }
 }

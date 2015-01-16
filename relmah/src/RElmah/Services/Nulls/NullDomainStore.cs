@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RElmah.Grounding;
+using RElmah.Foundation;
 using RElmah.Models;
 
 namespace RElmah.Services.Nulls
@@ -101,6 +101,11 @@ namespace RElmah.Services.Nulls
         public Task<ValueOrError<User>> RemoveUserToken(string token)
         {
             return Task.FromResult(new ValueOrError<User>((User)null));
+        }
+
+        public Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps)
+        {
+            return Task.FromResult(new ValueOrError<Recap>((Recap)null));
         }
     }
 }

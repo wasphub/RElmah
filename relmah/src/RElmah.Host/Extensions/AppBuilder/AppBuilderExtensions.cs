@@ -19,7 +19,7 @@ namespace RElmah.Host.Extensions.AppBuilder
                              () => new WindowsPrincipalIdentityProvider(),
                              s => s != null && s.Bootstrap != null && s.Bootstrap.IdentityProviderBuilder != null);
 
-            var ei       = new ErrorsInbox();
+            var ei       = new ErrorsInbox(new InMemoryErrorsBacklog());
             var cs       = settings.SafeCall(
                              s  => s.Domain.DomainStoreBuilder(), 
                              () => new InMemoryDomainStore(),

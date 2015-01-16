@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RElmah.Grounding
+namespace RElmah.Foundation
 {
     public class ValueOrError<T>
     {
