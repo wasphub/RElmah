@@ -53,6 +53,9 @@
                         apps[k] = false;
                     }
                 });
+                proxy.on('recap', function (recap) {
+                    console.log(recap);
+                });
 
                 starting && starting();
 
