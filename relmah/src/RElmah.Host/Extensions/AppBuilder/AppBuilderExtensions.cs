@@ -49,7 +49,9 @@ namespace RElmah.Host.Extensions.AppBuilder
                 settings.Bootstrap.Domain(ch);
 
             if (settings != null && settings.Errors != null)
-                builder = builder.UseRElmahMiddleware<ErrorsMiddleware>(registry, settings.Errors);
+                builder = settings.Errors.UseRandomizer
+                        ? builder.UseRElmahMiddleware<RandomSourceErrorsMiddleware>(registry, settings.Errors)
+                        : builder.UseRElmahMiddleware<ErrorsMiddleware>(registry, settings.Errors);
             if (settings != null && settings.Domain != null && settings.Domain.Exposed)
                 builder = builder.UseRElmahMiddleware<DomainMiddleware>(registry, settings.Domain);
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Owin;
@@ -29,7 +30,7 @@ namespace RElmah.Middleware
                     .Post(async (environment, keys, form) =>
                     {
                         var errorText = Encoding.UTF8.GetString(Convert.FromBase64String(form.Get("error")));
-                        var sourceId  = form.Get("sourceId");
+                        var sourceId  = RetrieveSourceId(form);
                         var errorId   = form.Get("errorId");
                         var infoUrl   = form.Get("infoUrl");
 
@@ -41,6 +42,11 @@ namespace RElmah.Middleware
                     })
                 )
             );
+        }
+
+        protected virtual string RetrieveSourceId(IDictionary<string, string> form)
+        {
+            return form.Get("sourceId");
         }
     }
 }

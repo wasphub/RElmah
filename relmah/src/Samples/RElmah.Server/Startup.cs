@@ -27,6 +27,7 @@ namespace RElmah.Server
                 {
                     Errors = new ErrorsSettings
                     {
+                        UseRandomizer = true,
                         Prefix = "relmah-errors"
                     },
 

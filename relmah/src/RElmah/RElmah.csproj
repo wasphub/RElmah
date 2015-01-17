@@ -79,6 +79,7 @@
     <Compile Include="Middleware\ErrorsMiddleware.cs" />
     <Compile Include="Foundation\AtomicImmutableDictionary.cs" />
     <Compile Include="Foundation\ConcurrentReference.cs" />
+    <Compile Include="Middleware\RandomSourceErrorsMiddleware.cs" />
     <Compile Include="Middleware\Router.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Cluster.cs" />
