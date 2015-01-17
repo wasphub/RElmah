@@ -34,7 +34,7 @@ namespace RElmah.Services
                     group t by t.Error.Type into x
                     select new Recap.Type(x.Key, processor(x)));
 
-            return Task.FromResult(new ValueOrError<Recap>(new Recap(grouped)));
+            return Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, grouped)));
         }
     }
 }

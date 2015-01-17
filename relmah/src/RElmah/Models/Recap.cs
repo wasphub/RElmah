@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace RElmah.Models
@@ -5,9 +6,11 @@ namespace RElmah.Models
     public class Recap
     {
         public IEnumerable<Application> Apps { get; private set; }
+        public DateTime When { get; private set; }
 
-        public Recap(IEnumerable<Application> apps)
+        public Recap(DateTime when, IEnumerable<Application> apps)
         {
+            When = when;
             Apps = apps;
         }
 
