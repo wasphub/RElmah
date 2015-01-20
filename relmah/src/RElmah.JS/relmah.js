@@ -23,8 +23,16 @@
         var conn,
             errors,
             applications,
+            recaps,
             apps = {},
-            starting;
+            starting,
+            valueOf = function () { return JSON.stringify(this); },
+            getErrorTypes = function () {
+                return errors.filtered.groupBy(
+                    function (e) { return { app: e.SourceId, type: e.Error.Type, valueOf: valueOf }; },
+                    function (e) { return e; },
+                    function (a, b) { return a.app === b.app && a.type === b.type; });
+            };
 
         subs = subs || {};
 
@@ -36,25 +44,50 @@
 
                 errors       = new FilteredSubject(subs.errors, errors);
                 applications = new FilteredSubject(subs.applications, applications);
+                recaps       = new Rx.Subject();
 
                 proxy.on('error', function (p) {
                     errors.onNext(p);
                 });
                 proxy.on('applications', function (existingApps, removedApps) {
-                    var i, k;
-                    for (i = 0; i < existingApps.length; i++) {
-                        k = existingApps[i];
+                    existingApps.forEach(function(k) {
                         !apps[k] && applications.onNext({ name: k, action: 'added' });
                         apps[k] = true;
-                    }
-                    for (i = 0; removedApps && i < removedApps.length; i++) {
-                        k = removedApps[i];
+                    });
+                    removedApps && removedApps.forEach(function (k) {
                         apps[k] && applications.onNext({ name: k, action: 'removed' });
                         apps[k] = false;
-                    }
+                    });
                 });
+
+                var groups = {};
+
                 proxy.on('recap', function (recap) {
                     console.log(recap);
+                    groups['*'] && groups['*'].dispose();
+
+                    groups['*'] = getErrorTypes()
+                        .subscribe(function (et) {
+                            var key = et.key.app + '-' + et.key.type;
+                            groups[key] && groups[key].dispose();
+
+                            var w = [].concat.apply([], recap.Apps
+                                .filter(function (a) { return a.Name === et.key.app; })
+                                .map(function(a) {
+                                    return a.Types
+                                        .filter(function (b) { return b.Name === et.key.type; })
+                                        .map(function (b) {
+                                            return b.Measure;
+                                        });
+                                })).reduce(function (a, c) { return a + c; }, 0);
+
+                            groups[key] = et
+                                .scan(0, function (a) { return a + 1; })
+                                .subscribe(function (e) {
+                                    var t = e + w;
+                                    recaps.onNext({ app: et.key.app, type: et.key.type, measure: t });
+                                });
+                        });
                 });
 
                 starting && starting();
@@ -65,8 +98,15 @@
             getErrors: function () {
                 return errors.filtered;
             },
+            getErrorTypes: getErrorTypes,
             getApplications: function () {
                 return applications.filtered;
+            },
+            getRecaps: function () {
+                return recaps.groupBy(
+                    function (e) { return { app: e.app, type: e.type, valueOf: valueOf }; },
+                    function (e) { return e; },
+                    function (a, b) { return a.app === b.app && a.type === b.type; });
             },
             stop: function () {
                 apps = {};

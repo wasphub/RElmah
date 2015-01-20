@@ -17,17 +17,16 @@
 
             var r = relmah("http://localhost:9474/signalr"),
                 $apps = $('#apps'),
-                $groups = $('#groups');
+                $groups = $('#groups'),
+                $recaps = $('#recaps');
 
             //streams
 
             r.starting(function() {
-                var
-                    errors     = r.getErrors(),
+                var errors     = r.getErrors(),
                     apps       = r.getApplications(),
-                    errorTypes = errors.groupBy(function (e) {
-                        return e.Error.Type;
-                    });
+                    errorTypes = r.getErrorTypes(),
+                    recaps     = r.getRecaps();
 
                 //subscriptions
 
@@ -58,13 +57,23 @@
                     });
 
                 errorTypes
-                    .subscribe(function (type) {
+                    .subscribe(function (et) {
                         var g = $('<li/>');
                         $groups.append(g);
 
-                        type
+                        et
                             .scan(0, function (a) { return a + 1; })
-                            .subscribe(function (e) { g.text(type.key + ': ' + e); });
+                            .subscribe(function (e) { g.text(et.key.app + '-' + et.key.type + ': ' + e); });
+                    });
+
+                recaps
+                    .subscribe(function (et) {
+                        var g = $('<li/>');
+                        $recaps.append(g);
+
+                        et
+                            .scan(0, function (a) { return a + 1; })
+                            .subscribe(function (e) { g.text(et.key.app + '-' + et.key.type + ': ' + e); });
                     });
             });
 
@@ -88,6 +97,7 @@
                 r.start(opts).done(function () {
                     r.disconnected(function () {
                         $('#groups').empty();
+                        $('#recaps').empty();
                         $('#apps').empty();
                     });
                 });
@@ -114,6 +124,10 @@
         <div>
             Error groups:
             <ul id="groups"></ul>
+        </div>
+        <div>
+            Error recaps:
+            <ul id="recaps"></ul>
         </div>
         <div>
             Errors by source:
