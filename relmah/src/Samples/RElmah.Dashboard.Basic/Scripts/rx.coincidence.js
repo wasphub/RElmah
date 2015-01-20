@@ -57,7 +57,7 @@
       duplicatekey = "duplicate key";
 
     function isPrime(candidate) {
-      if (candidate & 1 === 0) { return candidate === 2; }
+      if ((candidate & 1) === 0) { return candidate === 2; }
       var num1 = Math.sqrt(candidate),
         num2 = 3;
       while (num2 <= num1) {
@@ -120,10 +120,10 @@
           if (typeof valueOf === 'number') { return numberHashFn(valueOf); }
           if (typeof obj === 'string') { return stringHashFn(valueOf); }
         }
-        if (obj.getHashCode) { return obj.getHashCode(); }
+        if (obj.hashCode) { return obj.hashCode(); }
 
         var id = 17 * uniqueIdCounter++;
-        obj.getHashCode = function () { return id; };
+        obj.hashCode = function () { return id; };
         return id;
       };
     }());
@@ -156,7 +156,7 @@
     };
 
     dictionaryProto.add = function (key, value) {
-      return this._insert(key, value, true);
+      this._insert(key, value, true);
     };
 
     dictionaryProto._insert = function (key, value, add) {
@@ -399,7 +399,7 @@
         })
       );
       return group;
-    });
+    }, left);
   };
 
   /**
@@ -511,7 +511,7 @@
       );
 
       return r;
-    });
+    }, left);
   };
 
     /**
@@ -534,7 +534,7 @@
    */
   observableProto.window = function (windowOpeningsOrClosingSelector, windowClosingSelector) {
     if (arguments.length === 1 && typeof arguments[0] !== 'function') {
-      return observableWindowWithBounaries.call(this, windowOpeningsOrClosingSelector);
+      return observableWindowWithBoundaries.call(this, windowOpeningsOrClosingSelector);
     }
     return typeof windowOpeningsOrClosingSelector === 'function' ?
       observableWindowWithClosingSelector.call(this, windowOpeningsOrClosingSelector) :
@@ -547,7 +547,7 @@
     });
   }
 
-  function observableWindowWithBounaries(windowBoundaries) {
+  function observableWindowWithBoundaries(windowBoundaries) {
     var source = this;
     return new AnonymousObservable(function (observer) {
       var win = new Subject(),
@@ -581,7 +581,7 @@
       }));
 
       return r;
-    });
+    }, source);
   }
 
   function observableWindowWithClosingSelector(windowClosingSelector) {
@@ -628,7 +628,7 @@
 
       createWindowClose();
       return r;
-    });
+    }, source);
   }
 
   /**
@@ -652,7 +652,7 @@
         },
         observer.onError.bind(observer),
         observer.onCompleted.bind(observer));
-    });
+    }, source);
   };
 
   /**
@@ -669,10 +669,9 @@
    *    and the second triggers when the predicate returns false.
   */
   observableProto.partition = function(predicate, thisArg) {
-    var published = this.publish().refCount();
     return [
-      published.filter(predicate, thisArg),
-      published.filter(function (x, i, o) { return !predicate.call(thisArg, x, i, o); })
+      this.filter(predicate, thisArg),
+      this.filter(function (x, i, o) { return !predicate.call(thisArg, x, i, o); })
     ];
   };
 
@@ -787,7 +786,7 @@
       }));
 
       return refCountDisposable;
-    });
+    }, source);
   };
 
   var GroupedObservable = (function (__super__) {

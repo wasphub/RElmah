@@ -41,14 +41,15 @@
     AnonymousObservable = Rx.AnonymousObservable,
     AsyncSubject = Rx.AsyncSubject,
     disposableCreate = Rx.Disposable.create,
-    CompositeDisposable= Rx.CompositeDisposable,
+    CompositeDisposable = Rx.CompositeDisposable,
     immediateScheduler = Rx.Scheduler.immediate,
     timeoutScheduler = Rx.Scheduler.timeout,
     isScheduler = Rx.helpers.isScheduler,
     slice = Array.prototype.slice;
 
   var fnString = 'function',
-      throwString = 'throw';
+      throwString = 'throw',
+      isObject = Rx.internals.isObject;
 
   function toThunk(obj, ctx) {
     if (Array.isArray(obj)) {  return objectToThunk.call(ctx, obj); }
@@ -90,7 +91,7 @@
             return --pending || done(null, results);
           }
 
-          fn.call(ctx, function(err, res){
+          fn.call(ctx, function(err, res) {
             if (finished) { return; }
 
             if (err) {
@@ -125,7 +126,7 @@
   }
 
   function promiseToThunk(promise) {
-    return function(fn){
+    return function(fn) {
       promise.then(function(res) {
         fn(null, res);
       }, fn);
@@ -142,10 +143,6 @@
 
   function isGenerator(obj) {
     return obj && typeof obj.next === fnString && typeof obj[throwString] === fnString;
-  }
-
-  function isObject(val) {
-    return val && val.constructor === Object;
   }
 
   /*
@@ -165,10 +162,10 @@
           len = args.length,
           hasCallback = len && typeof args[len - 1] === fnString;
 
-        done = hasCallback ? args.pop() : error;
+        done = hasCallback ? args.pop() : handleError;
         gen = fn.apply(this, args);
       } else {
-        done = done || error;
+        done = done || handleError;
       }
 
       next();
@@ -181,7 +178,9 @@
         var ret;
 
         // multiple args
-        if (arguments.length > 2) res = slice.call(arguments, 1);
+        if (arguments.length > 2) {
+          res = slice.call(arguments, 1);
+        }
 
         if (err) {
           try {
@@ -208,7 +207,7 @@
         if (typeof ret.value === fnString) {
           var called = false;
           try {
-            ret.value.call(ctx, function(){
+            ret.value.call(ctx, function() {
               if (called) {
                 return;
               }
@@ -235,43 +234,9 @@
     }
   };
 
-  /**
-   * Takes a function with a callback and turns it into a thunk.
-   * @param {Function} A function with a callback such as fs.readFile
-   * @returns {Function} A function, when executed will continue the state machine.
-   */
-  Rx.denodify = function (fn) {
-    return function (){
-      var args = slice.call(arguments),
-        results,
-        called,
-        callback;
-
-      args.push(function(){
-        results = arguments;
-
-        if (callback && !called) {
-          called = true;
-          cb.apply(this, results);
-        }
-      });
-
-      fn.apply(this, args);
-
-      return function (fn){
-        callback = fn;
-
-        if (results && !called) {
-          called = true;
-          fn.apply(this, results);
-        }
-      }
-    }
-  };
-
-  function error(err) {
+  function handleError(err) {
     if (!err) { return; }
-    timeoutScheduler.schedule(function(){
+    timeoutScheduler.schedule(function() {
       throw err;
     });
   }
@@ -299,12 +264,6 @@
 
   /**
    * Converts the function into an asynchronous function. Each invocation of the resulting asynchronous function causes an invocation of the original synchronous function on the specified scheduler.
-   *
-   * @example
-   * var res = Rx.Observable.toAsync(function (x, y) { return x + y; })(4, 3);
-   * var res = Rx.Observable.toAsync(function (x, y) { return x + y; }, Rx.Scheduler.timeout)(4, 3);
-   * var res = Rx.Observable.toAsync(function (x) { this.log(x); }, Rx.Scheduler.timeout, console)('hello');
-   *
    * @param {Function} function Function to convert to an asynchronous function.
    * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
    * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
@@ -344,12 +303,12 @@
       var args = slice.call(arguments, 0);
 
       return new AnonymousObservable(function (observer) {
-        function handler(e) {
-          var results = e;
+        function handler() {
+          var results = arguments;
 
           if (selector) {
             try {
-              results = selector(arguments);
+              results = selector(results);
             } catch (err) {
               observer.onError(err);
               return;
@@ -448,19 +407,6 @@
    */
   Rx.config.useNativeEvents = false;
 
-  // Check for Angular/jQuery/Zepto support
-  var jq =
-   !!root.angular && !!angular.element ? angular.element :
-   (!!root.jQuery ? root.jQuery : (
-     !!root.Zepto ? root.Zepto : null));
-
-  // Check for ember
-  var ember = !!root.Ember && typeof root.Ember.addListener === 'function';
-
-  // Check for Backbone.Marionette. Note if using AMD add Marionette as a dependency of rxjs
-  // for proper loading order!
-  var marionette = !!root.Backbone && !!root.Backbone.Marionette;
-
   /**
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
    *
@@ -483,23 +429,17 @@
 
     // Use only if non-native events are allowed
     if (!Rx.config.useNativeEvents) {
-      if (marionette) {
+      // Handles jq, Angular.js, Zepto, Marionette
+      if (typeof element.on === 'function' && typeof element.off === 'function') {
         return fromEventPattern(
           function (h) { element.on(eventName, h); },
           function (h) { element.off(eventName, h); },
           selector);
       }
-      if (ember) {
+      if (!!root.Ember && typeof root.Ember.addListener === 'function') {
         return fromEventPattern(
           function (h) { Ember.addListener(element, eventName, h); },
           function (h) { Ember.removeListener(element, eventName, h); },
-          selector);
-      }
-      if (jq) {
-        var $elem = jq(element);
-        return fromEventPattern(
-          function (h) { $elem.on(eventName, h); },
-          function (h) { $elem.off(eventName, h); },
           selector);
       }
     }
