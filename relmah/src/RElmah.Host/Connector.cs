@@ -130,6 +130,11 @@ namespace RElmah.Host
                     where u.Name == user
                     select p.Target.Primary.Applications;
 
+                //SOTW
+                var initialRecap = await _errorsInbox.GetApplicationsRecap(await _domainWriter.GetUserApplications(user));
+                if (initialRecap.HasValue)
+                    _context.Clients.User(user).recap(initialRecap.Value);
+
                 var d = new CompositeDisposable(
                     errors
                         .Subscribe(payload => _context.Clients.User(user).error(payload)), 

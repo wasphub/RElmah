@@ -66,26 +66,36 @@
                     console.log(recap);
                     groups['*'] && groups['*'].dispose();
 
-                    groups['*'] = getErrorTypes()
-                        .subscribe(function (et) {
-                            var key = et.key.app + '-' + et.key.type;
-                            groups[key] && groups[key].dispose();
+                    var irs = recap.Apps
+                        .map(function(a) {
+                            return a.Types
+                                .map(function(b) { return { app: a.Name, type: b.Name, measure: b.Measure }; });
+                        });
+                    [].concat.apply([], irs)
+                        .forEach(function(ir) {
+                            recaps.onNext({ app: ir.app, type: ir.type, measure: ir.measure });
+                        });
 
-                            var w = [].concat.apply([], recap.Apps
-                                .filter(function (a) { return a.Name === et.key.app; })
+                    groups['*'] = getErrorTypes()
+                        .subscribe(function(et) {
+                                var key = et.key.app + '-' + et.key.type;
+                                groups[key] && groups[key].dispose();
+
+                            var rs = recap.Apps
+                                .filter(function(a) { return a.Name === et.key.app; })
                                 .map(function(a) {
                                     return a.Types
-                                        .filter(function (b) { return b.Name === et.key.type; })
-                                        .map(function (b) {
-                                            return b.Measure;
-                                        });
-                                })).reduce(function (a, c) { return a + c; }, 0);
+                                        .filter(function(b) { return b.Name === et.key.type; })
+                                        .map(function(b) { return b.Measure; });
+                                });
+                        
+                            var r = [].concat.apply([], rs)
+                                .reduce(function (a, c) { return a + c; }, 0);
 
                             groups[key] = et
                                 .scan(0, function (a) { return a + 1; })
                                 .subscribe(function (e) {
-                                    var t = e + w;
-                                    recaps.onNext({ app: et.key.app, type: et.key.type, measure: t });
+                                    recaps.onNext({ app: et.key.app, type: et.key.type, measure: e + r });
                                 });
                         });
                 });
@@ -105,7 +115,9 @@
             getRecaps: function () {
                 return recaps.groupBy(
                     function (e) { return { app: e.app, type: e.type, valueOf: valueOf }; },
-                    function (e) { return e; },
+                    function(e) {
+                        return e;
+                    },
                     function (a, b) { return a.app === b.app && a.type === b.type; });
             },
             stop: function () {

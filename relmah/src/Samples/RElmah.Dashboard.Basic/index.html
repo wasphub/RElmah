@@ -63,7 +63,9 @@
 
                         et
                             .scan(0, function (a) { return a + 1; })
-                            .subscribe(function (e) { g.text(et.key.app + '-' + et.key.type + ': ' + e); });
+                            .subscribe(function(e) {
+                                g.text(et.key.app + '-' + et.key.type + ': ' + e);
+                            });
                     });
 
                 recaps
@@ -72,8 +74,9 @@
                         $recaps.append(g);
 
                         et
-                            .scan(0, function (a) { return a + 1; })
-                            .subscribe(function (e) { g.text(et.key.app + '-' + et.key.type + ': ' + e); });
+                            .subscribe(function(e) {
+                                g.text(et.key.app + '-' + et.key.type + ': ' + e.measure);
+                            });
                     });
             });
 
