@@ -29,8 +29,8 @@
             valueOf = function () { return JSON.stringify(this); },
             getErrorTypes = function () {
                 return errors.filtered.groupBy(
-                    function (e) { return { app: e.SourceId, type: e.Error.Type, valueOf: valueOf }; },
-                    function (e) { return e; },
+                    function (e)    { return { app: e.SourceId, type: e.Error.Type, valueOf: valueOf }; },
+                    function (e)    { return e; },
                     function (a, b) { return a.app === b.app && a.type === b.type; });
             };
 
@@ -71,7 +71,8 @@
                             return a.Types
                                 .map(function(b) { return { app: a.Name, type: b.Name, measure: b.Measure }; });
                         });
-                    [].concat.apply([], irs)
+
+                    [].concat.apply([], irs)    //flatMap!
                         .forEach(function(ir) {
                             recaps.onNext({ app: ir.app, type: ir.type, measure: ir.measure });
                         });
@@ -89,7 +90,8 @@
                                         .map(function(b) { return b.Measure; });
                                 });
                         
-                            var r = [].concat.apply([], rs)
+                            //flatMap!
+                            var r = [].concat.apply([], rs) //flatMap!
                                 .reduce(function (a, c) { return a + c; }, 0);
 
                             groups[key] = et
@@ -114,10 +116,8 @@
             },
             getRecaps: function () {
                 return recaps.groupBy(
-                    function (e) { return { app: e.app, type: e.type, valueOf: valueOf }; },
-                    function(e) {
-                        return e;
-                    },
+                    function (e)    { return { app: e.app, type: e.type, valueOf: valueOf }; },
+                    function (e)    { return e; },
                     function (a, b) { return a.app === b.app && a.type === b.type; });
             },
             stop: function () {
