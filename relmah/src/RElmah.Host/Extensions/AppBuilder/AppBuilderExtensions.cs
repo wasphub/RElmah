@@ -27,7 +27,9 @@ namespace RElmah.Host.Extensions.AppBuilder
                          
             var ch       = new DomainHolder(cs);
 
-            var c        = new SubscriptionFactory(ei, ch, ch, 
+            var n        = new Notifier();
+
+            var c        = new SubscriptionFactory(ei, ch, ch, n,
                             () => new ErrorsSubscription(),
                             () => new RecapsSubscription());
 

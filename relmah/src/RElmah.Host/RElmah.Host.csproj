@@ -77,9 +77,10 @@
     <Compile Include="..\Common\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="Connector.cs" />
+    <Compile Include="SubscriptionFactory.cs" />
     <Compile Include="Extensions\AppBuilder\AppBuilderExtensions.cs" />
     <Compile Include="Extensions\GeneralExtensions.cs" />
+    <Compile Include="Hubs\Notifier.cs" />
     <Compile Include="Services\ClientTokenIdentityProvider.cs" />
     <Compile Include="Services\DelegatingUserIdProvider.cs" />
     <Compile Include="Hubs\ErrorsHub.cs" />

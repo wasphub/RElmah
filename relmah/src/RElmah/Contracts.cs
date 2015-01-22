@@ -94,4 +94,17 @@ namespace RElmah
         void Register<T>(Func<T> supplier);
         void Register(Type type, Func<object> supplier);
     }
+
+    public interface INotifier
+    {
+        void Recap(string user, Models.Recap recap);
+
+        void Error(string user, ErrorPayload payload);
+
+        void UserApplications(string user, IEnumerable<string> added, IEnumerable<string> removed);
+
+        void AddGroup(string token, string group);
+
+        void RemoveGroup(string token, string group);
+    }
 }
