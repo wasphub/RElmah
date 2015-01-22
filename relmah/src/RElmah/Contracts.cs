@@ -44,40 +44,44 @@ namespace RElmah
         void Disconnect(string token);
     }
 
-    public interface IDomainWriter
+    public interface IDomainReader
+    {
+        Task<IEnumerable<Cluster>> GetClusters();
+        Task<ValueOrError<Cluster>> GetCluster(string name);
+        Task<IEnumerable<Application>> GetApplications();
+        Task<ValueOrError<Application>> GetApplication(string name);
+        Task<IEnumerable<User>> GetUsers();
+        Task<ValueOrError<User>> GetUser(string name);
+        Task<IEnumerable<Application>> GetUserApplications(string user);
+    }
+
+    public interface IDomainPersistor : IDomainReader
     {
         Task<ValueOrError<Cluster>> AddCluster(string name);
         Task<ValueOrError<bool>> RemoveCluster(string name);
-        Task<IEnumerable<Cluster>> GetClusters();
-        Task<ValueOrError<Cluster>> GetCluster(string name);
         Task<ValueOrError<Application>> AddApplication(string name);
         Task<ValueOrError<bool>> RemoveApplication(string name);
-        Task<IEnumerable<Application>> GetApplications();
-        Task<ValueOrError<Application>> GetApplication(string name);
         Task<ValueOrError<User>> AddUser(string name);
         Task<ValueOrError<bool>> RemoveUser(string name);
-        Task<IEnumerable<User>> GetUsers();
-        Task<ValueOrError<User>> GetUser(string name);
         Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user);
         Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user);
         Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application);
         Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application);
-        Task<IEnumerable<Application>> GetUserApplications(string user);
         Task<ValueOrError<User>> AddUserToken(string user, string token);
         Task<ValueOrError<User>> RemoveUserToken(string token);
     }
 
-    public interface IDomainStore : IDomainWriter
+    public interface IDomainStore : IDomainPersistor
     {
     }
 
-    public interface IDomainReader
+    public interface IDomainPublisher
     {
-        IObservable<Delta<Cluster>> ObserveClusters();
-        IObservable<Delta<Application>> ObserveApplications();
-        IObservable<Delta<User>> ObserveUsers();
-        IObservable<Delta<Relationship<Cluster, User>>> ObserveClusterUsers();
-        IObservable<Delta<Relationship<Cluster, Application>>> ObserveClusterApplications();
+        IObservable<Delta<Cluster>> GetClustersSequence();
+        IObservable<Delta<Application>> GetApplicationsSequence();
+        IObservable<Delta<User>> GetUsersSequence();
+        IObservable<Delta<Relationship<Cluster, User>>> GetClusterUsersSequence();
+        IObservable<Delta<Relationship<Cluster, Application>>> GetClusterApplicationsSequence();
     }
 
     public interface IResolver 

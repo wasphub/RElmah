@@ -13,7 +13,7 @@ using RElmah.Services.Nulls;
 
 namespace RElmah.Services
 {
-    public class DomainHolder : IDomainReader, IDomainWriter
+    public class DomainHolder : IDomainPublisher, IDomainPersistor
     {
         delegate ImmutableHashSet<T> HashsetJunction<T>(ImmutableHashSet<T> set, IEnumerable<T> apps);
 
@@ -65,7 +65,7 @@ namespace RElmah.Services
 
         public DomainHolder() : this(new NullDomainStore()) { }
 
-        public IObservable<Delta<Cluster>> ObserveClusters()
+        public IObservable<Delta<Cluster>> GetClustersSequence()
         {
             return _clusterDeltas;
         }
@@ -98,7 +98,7 @@ namespace RElmah.Services
             return _domainStore.GetCluster(name);
         }
 
-        public IObservable<Delta<Application>> ObserveApplications()
+        public IObservable<Delta<Application>> GetApplicationsSequence()
         {
             return _applicationDeltas;
         }
@@ -131,7 +131,7 @@ namespace RElmah.Services
             return _domainStore.GetApplication(name);
         }
 
-        public IObservable<Delta<User>> ObserveUsers()
+        public IObservable<Delta<User>> GetUsersSequence()
         {
             return _userDeltas;
         }
@@ -200,12 +200,12 @@ namespace RElmah.Services
             return s;
         }
 
-        public IObservable<Delta<Relationship<Cluster, User>>> ObserveClusterUsers()
+        public IObservable<Delta<Relationship<Cluster, User>>> GetClusterUsersSequence()
         {
             return _clusterUserOperations;
         }
 
-        public IObservable<Delta<Relationship<Cluster, Application>>> ObserveClusterApplications()
+        public IObservable<Delta<Relationship<Cluster, Application>>> GetClusterApplicationsSequence()
         {
             return _clusterApplicationOperations;
         }

@@ -15,18 +15,18 @@ namespace RElmah.Host
     public class Connector : IConnector
     {
         private readonly IErrorsInbox  _errorsInbox;
-        private readonly IDomainReader _domainReader;
-        private readonly IDomainWriter _domainWriter;
+        private readonly IDomainPublisher _domainPublisher;
+        private readonly IDomainPersistor _domainPersistor;
 
         private readonly AtomicImmutableDictionary<string, LayeredDisposable> _subscriptions = new AtomicImmutableDictionary<string, LayeredDisposable>(); 
 
         readonly IHubContext _context = GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>();
 
-        public Connector(IErrorsInbox errorsInbox, IDomainReader domainReader, IDomainWriter domainWriter)
+        public Connector(IErrorsInbox errorsInbox, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor)
         {
             _errorsInbox  = errorsInbox;
-            _domainReader = domainReader;
-            _domainWriter = domainWriter;
+            _domainPublisher = domainPublisher;
+            _domainPersistor = domainPersistor;
         }
 
         public void Start()
@@ -34,7 +34,7 @@ namespace RElmah.Host
             //user additions
 
             var userAdditions =
-                from p in _domainReader.ObserveClusterUsers()
+                from p in _domainPublisher.GetClusterUsersSequence()
                 where p.Type == DeltaType.Added
                 select p;
 
@@ -56,7 +56,7 @@ namespace RElmah.Host
             //User removals
 
             var userRemovals =
-                from p in _domainReader.ObserveClusterUsers()
+                from p in _domainPublisher.GetClusterUsersSequence()
                 where p.Type == DeltaType.Removed
                 select p;
 
@@ -78,7 +78,7 @@ namespace RElmah.Host
             //apps deltas
 
             var appDeltas =
-                from p in _domainReader.ObserveClusterApplications()
+                from p in _domainPublisher.GetClusterApplicationsSequence()
                 let action = p.Type == DeltaType.Added
                              ? new Action<string, string>((t, g) => _context.Groups.Add(t, g))
                              : (t, g) => _context.Groups.Remove(t, g)
@@ -109,9 +109,9 @@ namespace RElmah.Host
 
         public async void Connect(string user, string token, Action<string> connector)
         {
-            var ut = await _domainWriter.AddUserToken(user, token);
+            var ut = await _domainPersistor.AddUserToken(user, token);
 
-            Func<Task<IObservable<Application>>> getUserApps = async () => (await  _domainWriter.GetUserApplications(user)).ToObservable();
+            Func<Task<IObservable<Application>>> getUserApps = async () => (await  _domainPersistor.GetUserApplications(user)).ToObservable();
 
             //errors
             if (ut.HasValue && ut.Value.Tokens.Count() == 1)
@@ -123,7 +123,7 @@ namespace RElmah.Host
                     select e;
 
                 var userApps =
-                    from p in _domainReader.ObserveClusterApplications()
+                    from p in _domainPublisher.GetClusterApplicationsSequence()
                     where p.Type == DeltaType.Added
                     let target = p.Target.Secondary.Name
                     from u in p.Target.Primary.Users
@@ -131,7 +131,7 @@ namespace RElmah.Host
                     select p.Target.Primary.Applications;
 
                 //SOTW
-                var initialRecap = await _errorsInbox.GetApplicationsRecap(await _domainWriter.GetUserApplications(user));
+                var initialRecap = await _errorsInbox.GetApplicationsRecap(await _domainPersistor.GetUserApplications(user));
                 if (initialRecap.HasValue)
                     _context.Clients.User(user).recap(initialRecap.Value);
 
@@ -159,7 +159,7 @@ namespace RElmah.Host
 
         public async void Disconnect(string token)
         {
-            var u = await _domainWriter.RemoveUserToken(token);
+            var u = await _domainPersistor.RemoveUserToken(token);
             if (!u.HasValue) return;
 
             var name         = u.Value.Name;

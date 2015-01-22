@@ -34,7 +34,7 @@ namespace RElmah.Tests.Services
             });
 
             Delta<Cluster> observed = null;
-            sut.ObserveClusters().Subscribe(p =>
+            sut.GetClustersSequence().Subscribe(p =>
             {
                 observed = p;
             });
@@ -81,7 +81,7 @@ namespace RElmah.Tests.Services
             });
 
             Delta<Cluster> observed = null;
-            sut.ObserveClusters().Subscribe(p =>
+            sut.GetClustersSequence().Subscribe(p =>
             {
                 observed = p;
             });
@@ -134,7 +134,7 @@ namespace RElmah.Tests.Services
             });
 
             Delta<Application> observed = null;
-            sut.ObserveApplications().Subscribe(p =>
+            sut.GetApplicationsSequence().Subscribe(p =>
             {
                 observed = p;
             });
@@ -181,7 +181,7 @@ namespace RElmah.Tests.Services
             });
 
             Delta<Application> observed = null;
-            sut.ObserveApplications().Subscribe(p =>
+            sut.GetApplicationsSequence().Subscribe(p =>
             {
                 observed = p;
             });
@@ -234,7 +234,7 @@ namespace RElmah.Tests.Services
             });
 
             Delta<User> observed = null;
-            sut.ObserveUsers().Subscribe(p =>
+            sut.GetUsersSequence().Subscribe(p =>
             {
                 observed = p;
             });
@@ -281,7 +281,7 @@ namespace RElmah.Tests.Services
             });
 
             Delta<User> observed = null;
-            sut.ObserveUsers().Subscribe(p =>
+            sut.GetUsersSequence().Subscribe(p =>
             {
                 observed = p;
             });
@@ -350,7 +350,7 @@ namespace RElmah.Tests.Services
             });
 
             Delta<Relationship<Cluster, User>> observed = null;
-            sut.ObserveClusterUsers().Subscribe(p =>
+            sut.GetClusterUsersSequence().Subscribe(p =>
             {
                 observed = p;
             });
@@ -420,7 +420,7 @@ namespace RElmah.Tests.Services
             });
 
             Delta<Relationship<Cluster, User>> observed = null;
-            sut.ObserveClusterUsers().Subscribe(p =>
+            sut.GetClusterUsersSequence().Subscribe(p =>
             {
                 observed = p;
             });
@@ -503,7 +503,7 @@ namespace RElmah.Tests.Services
             });
 
             Delta<Relationship<Cluster, Application>> observed = null;
-            sut.ObserveClusterApplications().Subscribe(p =>
+            sut.GetClusterApplicationsSequence().Subscribe(p =>
             {
                 observed = p;
             });
@@ -606,7 +606,7 @@ namespace RElmah.Tests.Services
             });
 
             Delta<Relationship<Cluster, Application>> observed = null;
-            sut.ObserveClusterApplications().Subscribe(p =>
+            sut.GetClusterApplicationsSequence().Subscribe(p =>
             {
                 observed = p;
             });

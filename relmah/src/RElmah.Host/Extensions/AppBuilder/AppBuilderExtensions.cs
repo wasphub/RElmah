@@ -34,8 +34,8 @@ namespace RElmah.Host.Extensions.AppBuilder
             //Infrastructure
             registry.Register(typeof(IErrorsInbox),    () => ei);
             registry.Register(typeof(IConnection),     () => c);
-            registry.Register(typeof(IDomainReader),   () => ch);
-            registry.Register(typeof(IDomainWriter),   () => ch);
+            registry.Register(typeof(IDomainPublisher),   () => ch);
+            registry.Register(typeof(IDomainPersistor),   () => ch);
             registry.Register(typeof(IDomainStore),    () => cs);
             registry.Register(typeof(IUserIdProvider), () => dp);
 
