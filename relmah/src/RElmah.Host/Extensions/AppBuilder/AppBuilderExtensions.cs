@@ -27,7 +27,7 @@ namespace RElmah.Host.Extensions.AppBuilder
                          
             var ch       = new DomainHolder(cs);
 
-            var c        = new Connector(ei, ch, ch);
+            var c        = new SubscriptionFactory(ei, ch, ch);
 
             var dp       = new DelegatingUserIdProvider(ip);
 

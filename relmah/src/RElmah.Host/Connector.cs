@@ -12,7 +12,7 @@ using RElmah.Models;
 
 namespace RElmah.Host
 {
-    public class Connector : IConnector
+    public class SubscriptionFactory : ISubscriptionFactory
     {
         private readonly IErrorsInbox  _errorsInbox;
         private readonly IDomainPublisher _domainPublisher;
@@ -22,7 +22,7 @@ namespace RElmah.Host
 
         readonly IHubContext _context = GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>();
 
-        public Connector(IErrorsInbox errorsInbox, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor)
+        public SubscriptionFactory(IErrorsInbox errorsInbox, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor)
         {
             _errorsInbox  = errorsInbox;
             _domainPublisher = domainPublisher;
@@ -107,7 +107,7 @@ namespace RElmah.Host
                     .applications(p.Additions, p.Removals));
         }
 
-        public async void Connect(string user, string token, Action<string> connector)
+        public async void Subscribe(string user, string token, Action<string> connector)
         {
             var ut = await _domainPersistor.AddUserToken(user, token);
 

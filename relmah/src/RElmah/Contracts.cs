@@ -38,9 +38,9 @@ namespace RElmah
         IIdentity GetIdentity(object request);
     }
 
-    public interface IConnector
+    public interface ISubscriptionFactory
     {
-        void Connect(string user, string token, Action<string> connector);
+        void Subscribe(string user, string token, Action<string> connector);
         void Disconnect(string token);
     }
 
