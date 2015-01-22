@@ -19,6 +19,12 @@ namespace RElmah.Extensions
             }
         }
 
+        public static void Do<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            foreach (var e in source)
+                action(e);
+        }
+
         public static IEnumerable<T> ToSingleton<T>(this T source)
         {
             return new[] {source};
