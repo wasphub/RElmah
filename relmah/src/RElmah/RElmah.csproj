@@ -98,6 +98,9 @@
     <Compile Include="Services\InMemoryErrorsBacklog.cs" />
     <Compile Include="Services\Nulls\NullDomainStore.cs" />
     <Compile Include="Services\Nulls\NullErrorsBacklog.cs" />
+    <Compile Include="Subscriptions\ErrorsSubscription.cs" />
+    <Compile Include="Subscriptions\RecapsSubscription.cs" />
+    <Compile Include="Subscriptions\SubscriptionFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -108,9 +111,7 @@
       <Name>RElmah.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Subscriptions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

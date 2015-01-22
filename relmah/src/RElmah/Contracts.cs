@@ -107,4 +107,9 @@ namespace RElmah
 
         void RemoveGroup(string token, string group);
     }
+
+    public interface ISubscription
+    {
+        IDisposable Subscribe(string user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher);
+    }
 }

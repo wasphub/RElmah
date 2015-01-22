@@ -5,6 +5,7 @@ using RElmah.Host.Services;
 using RElmah.Middleware;
 using RElmah.Models.Settings;
 using RElmah.Services;
+using RElmah.Subscriptions;
 
 namespace RElmah.Host.Extensions.AppBuilder
 {
