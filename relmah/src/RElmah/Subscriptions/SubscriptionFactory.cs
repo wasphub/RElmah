@@ -41,7 +41,6 @@ namespace RElmah.Subscriptions
                 from p in _domainPublisher.GetClusterUsersSequence()
                 where p.Type == DeltaType.Added
                 select p;
-
             userAdditions.Subscribe(
                 u => _notifier.UserApplications(
                     u.Target.Secondary.Name, 
@@ -63,7 +62,6 @@ namespace RElmah.Subscriptions
                 from p in _domainPublisher.GetClusterUsersSequence()
                 where p.Type == DeltaType.Removed
                 select p;
-
             userRemovals.Subscribe(
                 u => _notifier.UserApplications(
                     u.Target.Secondary.Name, 
@@ -85,7 +83,7 @@ namespace RElmah.Subscriptions
                 let action   = p.Type == DeltaType.Added
                              ? Adder
                              : Remover
-                let target = p.Target.Secondary.Name
+                let target   = p.Target.Secondary.Name
                 let removals = p.Type == DeltaType.Added
                              ? Enumerable.Empty<string>()
                              : new[] { target }
