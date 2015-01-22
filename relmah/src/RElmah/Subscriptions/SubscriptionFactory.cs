@@ -18,7 +18,9 @@ namespace RElmah.Subscriptions
         private readonly INotifier _notifier;
         private readonly Func<ISubscription>[] _subscriptors;
 
-        private readonly AtomicImmutableDictionary<string, LayeredDisposable> _subscriptions = new AtomicImmutableDictionary<string, LayeredDisposable>(); 
+        private readonly AtomicImmutableDictionary<string, LayeredDisposable> _subscriptions = new AtomicImmutableDictionary<string, LayeredDisposable>();
+        private static readonly Action<INotifier, string, string> Adder   = (n, t, g) => n.AddGroup(t, g);
+        private static readonly Action<INotifier, string, string> Remover = (n, t, g) => n.RemoveGroup(t, g);
 
         public SubscriptionFactory(IErrorsInbox errorsInbox, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor,  
             INotifier notifier,
@@ -78,12 +80,11 @@ namespace RElmah.Subscriptions
 
 
             //apps deltas
-
             var appDeltas =
                 from p in _domainPublisher.GetClusterApplicationsSequence()
-                let action = p.Type == DeltaType.Added
-                             ? new Action<string, string>((t, g) => _notifier.AddGroup(t, g))
-                             : (t, g) => _notifier.RemoveGroup(t, g)
+                let action   = p.Type == DeltaType.Added
+                             ? Adder
+                             : Remover
                 let target = p.Target.Secondary.Name
                 let removals = p.Type == DeltaType.Added
                              ? Enumerable.Empty<string>()
@@ -102,7 +103,7 @@ namespace RElmah.Subscriptions
 
             appDeltas.Subscribe(p =>
                 p.User.Tokens
-                    .Each(t => p.Action(t, p.Target)));
+                    .Each(t => p.Action(_notifier, t, p.Target)));
 
             appDeltas.Subscribe(p =>
                 _notifier.UserApplications(p.User.Name, p.Additions, p.Removals));
