@@ -29,10 +29,7 @@ namespace RElmah.Subscriptions
             _subscriptors = subscriptors;
         }
 
-        public void Start()
-        {
-
-        }
+        public void Start() { }
 
         public async void Subscribe(string user, string token, Action<string> connector)
         {
