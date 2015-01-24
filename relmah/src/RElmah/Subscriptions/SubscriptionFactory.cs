@@ -36,7 +36,6 @@ namespace RElmah.Subscriptions
         public void Start()
         {
             //user additions
-
             var userAdditions =
                 from p in _domainPublisher.GetClusterUsersSequence()
                 where p.Type == DeltaType.Added
@@ -48,16 +47,7 @@ namespace RElmah.Subscriptions
                     select a.Name,
                     Enumerable.Empty<string>()));
 
-            var groupAdditions =
-                from p in userAdditions
-                from app in p.Target.Primary.Applications
-                from token in p.Target.Secondary.Tokens
-                select new { token, app = app.Name };
-            groupAdditions.Subscribe(p => _notifier.AddGroup(p.token, p.app));
-
-
             //User removals
-
             var userRemovals =
                 from p in _domainPublisher.GetClusterUsersSequence()
                 where p.Type == DeltaType.Removed
@@ -68,14 +58,6 @@ namespace RElmah.Subscriptions
                     Enumerable.Empty<string>(),
                     from a in u.Target.Primary.Applications
                     select a.Name));
-
-            var groupRemovals =
-                from p in userRemovals
-                from app in p.Target.Primary.Applications
-                from token in p.Target.Secondary.Tokens
-                select new { token, app = app.Name };
-            groupRemovals.Subscribe(p => _notifier.RemoveGroup(p.token, p.app));
-
 
             //apps deltas
             var appDeltas =
