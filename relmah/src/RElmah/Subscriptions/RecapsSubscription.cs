@@ -20,23 +20,25 @@ namespace RElmah.Subscriptions
 
             var clusterApps =
                 from p in domainPublisher.GetClusterApplicationsSequence()
+                let deltas = p.Target.Secondary.ToSingleton()
                 let target = p.Target.Secondary.Name
                 from u in p.Target.Primary.Users
                 where u.Name == name
                 select new
                 {
                     p.Target.Primary.Applications,
-                    Additions = p.Type == DeltaType.Added   ? p.Target.Secondary.ToSingleton() : Enumerable.Empty<Application>(),
-                    Removals  = p.Type == DeltaType.Removed ? p.Target.Secondary.ToSingleton() : Enumerable.Empty<Application>()
+                    Additions = p.Type == DeltaType.Added   ? deltas : Enumerable.Empty<Application>(),
+                    Removals  = p.Type == DeltaType.Removed ? deltas : Enumerable.Empty<Application>()
                 };
             var userApps =
                 from p in domainPublisher.GetClusterUsersSequence()
+                let deltas = p.Target.Primary.Applications
                 where p.Target.Secondary.Name == name
                 select new
                 {
-                    p.Target.Primary.Applications,
-                    Additions = p.Type == DeltaType.Added   ? p.Target.Primary.Applications : Enumerable.Empty<Application>(),
-                    Removals  = p.Type == DeltaType.Removed ? p.Target.Primary.Applications : Enumerable.Empty<Application>()
+                    Applications = deltas,
+                    Additions    = p.Type == DeltaType.Added   ? deltas : Enumerable.Empty<Application>(),
+                    Removals     = p.Type == DeltaType.Removed ? deltas : Enumerable.Empty<Application>()
                 };
             var apps = clusterApps.Merge(userApps);
 
@@ -50,11 +52,10 @@ namespace RElmah.Subscriptions
                 .Subscribe(async payload =>
                 {
                     var recap = await errorsInbox.GetApplicationsRecap(payload.Applications);
-                    if (recap.HasValue)
-                    {
-                        notifier.Recap(name, result.Value);
-                        notifier.UserApplications(name, payload.Additions.Select(a => a.Name), payload.Removals.Select(a => a.Name));
-                    }
+                    if (!recap.HasValue) return;
+
+                    notifier.Recap(name, result.Value);
+                    notifier.UserApplications(name, payload.Additions.Select(a => a.Name), payload.Removals.Select(a => a.Name));
                 });
         }
     }
