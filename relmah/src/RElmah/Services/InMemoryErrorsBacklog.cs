@@ -29,10 +29,11 @@ namespace RElmah.Services
             var grouped =
                 from e in errors
                 group e by e.SourceId into g
-                select new Recap.Application(g.Key,
+                let types = 
                     from t in g
                     group t by t.Error.Type into x
-                    select new Recap.Type(x.Key, processor(x)));
+                    select new Recap.Type(x.Key, processor(x))
+                select new Recap.Application(g.Key, types);
 
             return Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, grouped)));
         }
