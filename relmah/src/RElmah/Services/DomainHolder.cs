@@ -67,7 +67,7 @@ namespace RElmah.Services
 
         public IObservable<Delta<Cluster>> GetClustersSequence()
         {
-            return _clusterDeltas;
+            return _clusterDeltas.Publish().RefCount();
         }
 
         public async Task<ValueOrError<Cluster>> AddCluster(string name)
@@ -100,7 +100,7 @@ namespace RElmah.Services
 
         public IObservable<Delta<Application>> GetApplicationsSequence()
         {
-            return _applicationDeltas;
+            return _applicationDeltas.Publish().RefCount();
         }
 
         public async Task<ValueOrError<Application>> AddApplication(string name)
@@ -133,7 +133,7 @@ namespace RElmah.Services
 
         public IObservable<Delta<User>> GetUsersSequence()
         {
-            return _userDeltas;
+            return _userDeltas.Publish().RefCount();
         }
 
         public async Task<ValueOrError<User>> AddUser(string name)
@@ -202,12 +202,12 @@ namespace RElmah.Services
 
         public IObservable<Delta<Relationship<Cluster, User>>> GetClusterUsersSequence()
         {
-            return _clusterUserOperations;
+            return _clusterUserOperations.Publish().RefCount();
         }
 
         public IObservable<Delta<Relationship<Cluster, Application>>> GetClusterApplicationsSequence()
         {
-            return _clusterApplicationOperations;
+            return _clusterApplicationOperations.Publish().RefCount();
         }
 
         public Task<IEnumerable<Application>> GetUserApplications(string user)
