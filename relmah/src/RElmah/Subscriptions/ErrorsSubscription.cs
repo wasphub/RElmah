@@ -1,15 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using RElmah.Foundation;
 using RElmah.Models;
 
 namespace RElmah.Subscriptions
 {
     public class ErrorsSubscription : ISubscription
     {
-        public IDisposable Subscribe(string user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
+        public IDisposable Subscribe(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
         {
-            Func<IEnumerable<Application>> getUserApps = () => domainPersistor.GetUserApplications(user).Result;
+            if (!user.HasValue || user.Value.Tokens.Count() > 1) return Disposable.Empty;
+
+            var name = user.Value.Name;
+            Func<IEnumerable<Application>> getUserApps = () => domainPersistor.GetUserApplications(name).Result;
 
             var errors =
                 from e in errorsInbox.GetErrorsStream()
@@ -18,7 +24,10 @@ namespace RElmah.Subscriptions
                 select e;
 
             return errors
-                .Subscribe(payload => notifier.Error(user, payload));
+                .Subscribe(payload =>
+                {
+                    notifier.Error(name, payload);
+                });
         }
     }
 }

@@ -110,6 +110,6 @@ namespace RElmah
 
     public interface ISubscription
     {
-        IDisposable Subscribe(string user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher);
+        IDisposable Subscribe(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher);
     }
 }

@@ -56,6 +56,7 @@ namespace RElmah.Server
                             //For client token testing
                             var u2 = await cu.AddUser(@"wasp");
                             var u3 = await cu.AddUser(@"cuki");
+                            var u4 = await cu.AddUser(@"all");
 
                             Task.WaitAll(
                                 cu.AddApplicationToCluster(c1.Value.Name, a1.Value.Name),
@@ -63,8 +64,10 @@ namespace RElmah.Server
 
                                 cu.AddUserToCluster(c1.Value.Name, u1.Value.Name),
                                 cu.AddUserToCluster(c1.Value.Name, u2.Value.Name),
+                                cu.AddUserToCluster(c1.Value.Name, u4.Value.Name),
 
-                                cu.AddUserToCluster(c2.Value.Name, u3.Value.Name));
+                                cu.AddUserToCluster(c2.Value.Name, u3.Value.Name),
+                                cu.AddUserToCluster(c2.Value.Name, u4.Value.Name));
                         }
                     }
                 });

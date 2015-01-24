@@ -113,19 +113,13 @@ namespace RElmah.Subscriptions
 
             var ut = await _domainPersistor.AddUserToken(user, token);
 
-            //errors
-            if (ut.HasValue && ut.Value.Tokens.Count() == 1)
-            {
-                var subscriptions =
-                    from subscriptor in _subscriptors
-                    select subscriptor().Subscribe(user, _notifier, _errorsInbox, _domainPersistor, _domainPublisher);
+            var subscriptions =
+                from subscriptor in _subscriptors
+                select subscriptor().Subscribe(ut, _notifier, _errorsInbox, _domainPersistor, _domainPublisher);
 
-                var d = new CompositeDisposable(subscriptions.ToArray()).ToLayeredDisposable();
+            var d = new CompositeDisposable(subscriptions.ToArray()).ToLayeredDisposable();
 
-                _subscriptions.SetItem(user, d);
-            }
-            else
-                _subscriptions.Get(user).Wrap();
+            _subscriptions.SetItem(user, d);
 
             //apps
             getUserApps().Do(app => connector(app.Name));
