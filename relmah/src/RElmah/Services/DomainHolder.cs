@@ -22,15 +22,26 @@ namespace RElmah.Services
         private readonly Subject<Delta<Cluster>>                            _clusterDeltas                = new Subject<Delta<Cluster>>();
         private readonly Subject<Delta<Application>>                        _applicationDeltas            = new Subject<Delta<Application>>();
         private readonly Subject<Delta<User>>                               _userDeltas                   = new Subject<Delta<User>>();
-
         private readonly Subject<Delta<Relationship<Cluster, User>>>        _clusterUserOperations        = new Subject<Delta<Relationship<Cluster, User>>>();
         private readonly Subject<Delta<Relationship<Cluster, Application>>> _clusterApplicationOperations = new Subject<Delta<Relationship<Cluster, Application>>>();
+
+        private readonly IObservable<Delta<Cluster>> _clusterDeltasStream;
+        private readonly IObservable<Delta<Application>> _applicationDeltasStream;
+        private readonly IObservable<Delta<User>> _userDeltasStream;
+        private readonly IObservable<Delta<Relationship<Cluster, User>>> _clusterUserOperationsStream;
+        private readonly IObservable<Delta<Relationship<Cluster, Application>>> _clusterApplicationOperationsStream;
 
         private readonly AtomicImmutableDictionary<string, ImmutableHashSet<Application>> _usersApplications   = new AtomicImmutableDictionary<string, ImmutableHashSet<Application>>();
  
         public DomainHolder(IDomainStore domainStore)
         {
             _domainStore = domainStore;
+
+            _clusterDeltasStream                = _clusterDeltas.Publish().RefCount();
+            _applicationDeltasStream            = _applicationDeltas.Publish().RefCount();
+            _userDeltasStream                   = _userDeltas.Publish().RefCount();
+            _clusterUserOperationsStream        = _clusterUserOperations.Publish().RefCount();
+            _clusterApplicationOperationsStream = _clusterApplicationOperations.Publish().RefCount();
 
             HashsetJunction<Application> except = (c, apps) => c.Except(apps);
             HashsetJunction<Application> union  = (c, apps) => c.Union(apps);
@@ -67,7 +78,7 @@ namespace RElmah.Services
 
         public IObservable<Delta<Cluster>> GetClustersSequence()
         {
-            return _clusterDeltas.Publish().RefCount();
+            return _clusterDeltasStream;
         }
 
         public async Task<ValueOrError<Cluster>> AddCluster(string name)
@@ -100,7 +111,7 @@ namespace RElmah.Services
 
         public IObservable<Delta<Application>> GetApplicationsSequence()
         {
-            return _applicationDeltas.Publish().RefCount();
+            return _applicationDeltasStream;
         }
 
         public async Task<ValueOrError<Application>> AddApplication(string name)
@@ -133,7 +144,7 @@ namespace RElmah.Services
 
         public IObservable<Delta<User>> GetUsersSequence()
         {
-            return _userDeltas.Publish().RefCount();
+            return _userDeltasStream;
         }
 
         public async Task<ValueOrError<User>> AddUser(string name)
@@ -202,12 +213,12 @@ namespace RElmah.Services
 
         public IObservable<Delta<Relationship<Cluster, User>>> GetClusterUsersSequence()
         {
-            return _clusterUserOperations.Publish().RefCount();
+            return _clusterUserOperationsStream;
         }
 
         public IObservable<Delta<Relationship<Cluster, Application>>> GetClusterApplicationsSequence()
         {
-            return _clusterApplicationOperations.Publish().RefCount();
+            return _clusterApplicationOperationsStream;
         }
 
         public Task<IEnumerable<Application>> GetUserApplications(string user)
