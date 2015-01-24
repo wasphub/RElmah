@@ -97,7 +97,7 @@ namespace RElmah
 
     public interface INotifier
     {
-        void Recap(string user, Models.Recap recap);
+        void Recap(string user, Recap recap);
 
         void Error(string user, ErrorPayload payload);
 
