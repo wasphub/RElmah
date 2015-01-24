@@ -48,14 +48,17 @@ namespace RElmah.Subscriptions
             if (result.HasValue)
                 notifier.Recap(name, result.Value);
 
+            //Deltas recap
             return apps
                 .Subscribe(async payload =>
                 {
                     var recap = await errorsInbox.GetApplicationsRecap(payload.Applications);
                     if (!recap.HasValue) return;
 
-                    notifier.Recap(name, result.Value);
-                    notifier.UserApplications(name, payload.Additions.Select(a => a.Name), payload.Removals.Select(a => a.Name));
+                    notifier.Recap(name, recap.Value);
+                    notifier.UserApplications(name, 
+                        payload.Additions.Select(a => a.Name), 
+                        payload.Removals.Select(a => a.Name));
                 });
         }
     }
