@@ -15,16 +15,14 @@ namespace RElmah.Host.Extensions.AppBuilder
         {
             var registry = new Registry();
 
-            var ip       = settings.SafeCall(
-                             s => s.Bootstrap.IdentityProviderBuilder(),
-                             () => new WindowsPrincipalIdentityProvider(),
-                             s => s != null && s.Bootstrap != null && s.Bootstrap.IdentityProviderBuilder != null);
+            var ip       = settings != null && settings.Bootstrap != null && settings.Bootstrap.IdentityProviderBuilder != null
+                         ? settings.Bootstrap.IdentityProviderBuilder()
+                         : new WindowsPrincipalIdentityProvider();
 
             var ei       = new ErrorsInbox(new InMemoryErrorsBacklog());
-            var cs       = settings.SafeCall(
-                             s  => s.Domain.DomainStoreBuilder(), 
-                             () => new InMemoryDomainStore(),
-                             s => s != null && s.Domain != null && s.Domain.DomainStoreBuilder != null);
+            var cs       = settings != null && settings.Domain != null && settings.Domain.DomainStoreBuilder != null
+                         ? settings.Domain.DomainStoreBuilder()
+                         : new InMemoryDomainStore();
                          
             var ch       = new DomainHolder(cs);
 
@@ -47,10 +45,10 @@ namespace RElmah.Host.Extensions.AppBuilder
             //Hubs
             registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, dp));
 
-            if (settings != null && settings.Bootstrap.Registry != null)
+            if (settings != null && settings.Bootstrap != null && settings.Bootstrap.Registry != null)
                 settings.Bootstrap.Registry(registry);
 
-            if (settings != null && settings.Bootstrap.Domain != null)
+            if (settings != null && settings.Bootstrap != null && settings.Bootstrap.Domain != null)
                 settings.Bootstrap.Domain(ch);
 
             if (settings != null && settings.Errors != null)
