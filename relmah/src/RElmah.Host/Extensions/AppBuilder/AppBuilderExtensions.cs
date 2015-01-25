@@ -37,15 +37,15 @@ namespace RElmah.Host.Extensions.AppBuilder
             var dp       = new DelegatingUserIdProvider(ip);
 
             //Infrastructure
-            registry.Register(typeof(IErrorsInbox),    () => ei);
-            registry.Register(typeof(IConnection),     () => c);
-            registry.Register(typeof(IDomainPublisher),   () => ch);
-            registry.Register(typeof(IDomainPersistor),   () => ch);
-            registry.Register(typeof(IDomainStore),    () => cs);
-            registry.Register(typeof(IUserIdProvider), () => dp);
+            registry.Register(typeof(IErrorsInbox),     () => ei);
+            registry.Register(typeof(IConnection),      () => c);
+            registry.Register(typeof(IDomainPublisher), () => ch);
+            registry.Register(typeof(IDomainPersistor), () => ch);
+            registry.Register(typeof(IDomainStore),     () => cs);
+            registry.Register(typeof(IUserIdProvider),  () => dp);
 
             //Hubs
-            registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, registry.Resolve<IUserIdProvider>()));
+            registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, dp));
 
             if (settings != null && settings.Bootstrap.Registry != null)
                 settings.Bootstrap.Registry(registry);
@@ -55,12 +55,11 @@ namespace RElmah.Host.Extensions.AppBuilder
 
             if (settings != null && settings.Errors != null)
                 builder = settings.Errors.UseRandomizer
-                        ? builder.UseRElmahMiddleware<RandomSourceErrorsMiddleware>(registry, settings.Errors)
-                        : builder.UseRElmahMiddleware<ErrorsMiddleware>(registry, settings.Errors);
+                        ? builder.UseRElmahMiddleware<RandomSourceErrorsMiddleware>(ei, ch, settings.Errors)
+                        : builder.UseRElmahMiddleware<ErrorsMiddleware>(ei, settings.Errors);
             if (settings != null && settings.Domain != null && settings.Domain.Exposed)
-                builder = builder.UseRElmahMiddleware<DomainMiddleware>(registry, settings.Domain);
+                builder = builder.UseRElmahMiddleware<DomainMiddleware>(ch, settings.Domain);
 
-            //Init streams
             c.Start();
 
             return builder;

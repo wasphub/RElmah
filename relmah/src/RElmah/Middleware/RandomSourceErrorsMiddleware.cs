@@ -11,9 +11,10 @@ namespace RElmah.Middleware
         private readonly IDomainPersistor _domainPersistor;
         private readonly Random _random = new Random();
 
-        public RandomSourceErrorsMiddleware(OwinMiddleware next, IResolver resolver, ErrorsSettings settings) : base(next, resolver, settings)
+        public RandomSourceErrorsMiddleware(OwinMiddleware next, IErrorsInbox inbox, IDomainPersistor domainPersistor, ErrorsSettings settings)
+            : base(next, inbox, settings)
         {
-            _domainPersistor = resolver.Resolve<IDomainPersistor>();
+            _domainPersistor = domainPersistor;
         }
 
         protected override string RetrieveSourceId(IDictionary<string, string> form)

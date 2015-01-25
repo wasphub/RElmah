@@ -16,7 +16,7 @@ namespace RElmah.Host.Hubs
         public ErrorsHub(ISubscriptionFactory subscriptionFactory, IUserIdProvider userIdProvider)
         {
             _subscriptionFactory = subscriptionFactory;
-            _userIdProvider = userIdProvider;
+            _userIdProvider      = userIdProvider;
         }
 
         public override Task OnConnected()

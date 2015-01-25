@@ -17,11 +17,9 @@ namespace RElmah.Middleware
             return Router.Invoke(context, Next.Invoke);
         }
 
-        public ErrorsMiddleware(OwinMiddleware next, IResolver resolver, ErrorsSettings settings)
+        public ErrorsMiddleware(OwinMiddleware next, IErrorsInbox inbox, ErrorsSettings settings)
             : base(next)
         {
-            var inbox = new Lazy<IErrorsInbox>(resolver.Resolve<IErrorsInbox>);
-
             Router.Build(builder => builder
 
                 .WithPrefix(settings.Prefix)
@@ -36,7 +34,7 @@ namespace RElmah.Middleware
 
                         var payload   = new ErrorPayload(sourceId, JsonConvert.DeserializeObject<Error>(errorText), errorId, infoUrl);
 
-                        await inbox.Value.Post(payload);
+                        await inbox.Post(payload);
 
                         return payload;
                     })
