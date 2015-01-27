@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using RElmah.Common;
@@ -14,8 +13,6 @@ namespace RElmah.Subscriptions
     {
         public IDisposable Subscribe(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
         {
-            if (!user.HasValue) return Disposable.Empty;
-
             var name = user.Value.Name;
 
             var clusterApps =

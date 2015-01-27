@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Threading;
 
 namespace RElmah.Foundation
@@ -19,6 +20,8 @@ namespace RElmah.Foundation
 
         public T Mutate(Func<T, T> mutator)
         {
+            Contract.Requires(mutator != null);
+
             var original = _value;
             while (true)
             {

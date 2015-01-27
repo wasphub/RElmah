@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using RElmah.Common;
@@ -108,8 +109,26 @@ namespace RElmah
         void RemoveGroup(string token, string group);
     }
 
+    [ContractClass(typeof(ISubscriptionContract))]
     public interface ISubscription
     {
         IDisposable Subscribe(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher);
+    }
+
+    [ContractClassFor(typeof(ISubscription))]
+    public class ISubscriptionContract : ISubscription
+    {
+        public IDisposable Subscribe(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
+        {
+            Contract.Requires(user != null);
+            Contract.Requires(user.HasValue);
+
+            Contract.Requires(notifier != null);
+            Contract.Requires(errorsInbox != null);
+            Contract.Requires(domainPersistor != null);
+            Contract.Requires(domainPublisher != null);
+
+            return null;
+        }
     }
 }

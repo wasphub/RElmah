@@ -12,7 +12,7 @@ namespace RElmah.Subscriptions
     {
         public IDisposable Subscribe(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
         {
-            if (!user.HasValue || user.Value.Tokens.Count() > 1) return Disposable.Empty;
+            if (user.Value.Tokens.Count() > 1) return Disposable.Empty;
 
             var name = user.Value.Name;
             Func<IEnumerable<Application>> getUserApps = () => domainPersistor.GetUserApplications(name).Result;
