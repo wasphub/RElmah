@@ -19,7 +19,7 @@ namespace RElmah.Host.Extensions.AppBuilder
                          ? settings.Bootstrap.IdentityProviderBuilder()
                          : new WindowsPrincipalIdentityProvider();
 
-            var ei       = new ErrorsInbox(new InMemoryErrorsBacklog());
+            var ei       = new SerializedErrorsInbox(new InMemoryErrorsBacklog());
             var cs       = settings != null && settings.Domain != null && settings.Domain.DomainStoreBuilder != null
                          ? settings.Domain.DomainStoreBuilder()
                          : new InMemoryDomainStore();

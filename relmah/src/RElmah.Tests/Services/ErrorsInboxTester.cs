@@ -19,7 +19,7 @@ namespace RElmah.Tests.Services
         {
             //Arrange
             ErrorPayload pushed = null;
-            var inbox = new ErrorsInbox();
+            var inbox = new SerializedErrorsInbox();
 
             inbox.GetErrorsStream().Subscribe(p =>
             {
