@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Microsoft.Reactive.Testing;
 using RElmah.Common;
 using RElmah.Fakes;
 using RElmah.Foundation;
@@ -12,6 +14,14 @@ using Xunit;
 
 namespace RElmah.Tests.Subscriptions
 {
+    public static class RecordedExtensions
+    {
+        public static Recorded<T> RecordAt<T>(this T source, long t)
+        {
+            return new Recorded<T>(t, source);
+        }
+    }
+
     public class RecapsSubscriptionTester
     {
         class NamedRecap
@@ -59,14 +69,32 @@ namespace RElmah.Tests.Subscriptions
         [Fact]
         public void OneDeltaEachSourcePlusStartupRecap()
         {
-            //Arrange
-            var sut = new RecapsSubscription();
+            var scheduler     = new TestScheduler();
+                              
+            //Arrange         
+            var sut           = new RecapsSubscription();
             var notifications = new List<NamedRecap>();
 
             //Act
-            var user        = User.Create("u1");
-            var application = Application.Create("a1");
-            var cluster     = Cluster.Create("c1", new[] {user});
+            var user          = User.Create("u1");
+            var application   = Application.Create("a1");
+            var cluster       = Cluster.Create("c1", new[] {user});
+
+            var rca = Relationship.Create(cluster, application);
+            var rcu = Relationship.Create(cluster, user);
+
+            var clusterApplicationsStream = scheduler.CreateColdObservable(
+                Notification.CreateOnNext(Delta.Create(rca, DeltaType.Added)).RecordAt(1)    
+            );
+
+            var clusterUsersStream = scheduler.CreateColdObservable(
+                Notification.CreateOnNext(Delta.Create(rcu, DeltaType.Added)).RecordAt(2)    
+            );
+
+            var errorsStream = scheduler.CreateColdObservable(
+                Notification.CreateOnNext(new ErrorPayload(application.Name, new Error(), "e1", "")).RecordAt(5)
+            );
+
 
             sut.Subscribe(
                 new ValueOrError<User>(user),
@@ -79,12 +107,7 @@ namespace RElmah.Tests.Subscriptions
                 },
                 new StubIErrorsInbox
                 {
-                    GetErrorsStream = () => (
-                        new[]
-                        {
-                            new ErrorPayload(application.Name, new Error(), "e1", "")
-                        }
-                        ).ToObservable(),
+                    GetErrorsStream = () => errorsStream,
                     GetApplicationsRecapIEnumerableOfApplication = apps => Task.FromResult(
                         new ValueOrError<Recap>(
                             new Recap(
@@ -93,32 +116,27 @@ namespace RElmah.Tests.Subscriptions
                 },
                 new StubIDomainPersistor
                 {
-                    GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { application })
+                    GetUserApplicationsString      = _ => Task.FromResult((IEnumerable<Application>)new[] { application })
                 },
                 new StubIDomainPublisher
                 {
-                    GetClusterApplicationsSequence = () => (
-                        new [] 
-                        { 
-                            new Delta<Relationship<Cluster, Application>>(
-                                new Relationship<Cluster, Application>(
-                                    cluster, 
-                                    application), 
-                                DeltaType.Added) 
-                        }).ToObservable(),
-                    GetClusterUsersSequence = () => (
-                        new[] 
-                        { 
-                            new Delta<Relationship<Cluster, User>>(
-                                new Relationship<Cluster, User>(
-                                    cluster, 
-                                    user), 
-                                DeltaType.Added) 
-                        }).ToObservable()
+                    GetClusterApplicationsSequence = () => clusterApplicationsStream,
+                    GetClusterUsersSequence        = () => clusterUsersStream
                 });
 
-            //Assert
+
+            //Asserts
+            
+            Assert.Equal(1, notifications.Count()); //first recap is received during the subscription
+
+            scheduler.AdvanceBy(1);
+            Assert.Equal(2, notifications.Count()); //1 for initial recap, 1 for adding app, 1 for adding user
+
+            scheduler.AdvanceBy(1);
             Assert.Equal(3, notifications.Count()); //1 for initial recap, 1 for adding app, 1 for adding user
+
+            scheduler.AdvanceBy(1);
+            
         }
 
     }
