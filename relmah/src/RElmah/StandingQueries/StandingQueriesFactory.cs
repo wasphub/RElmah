@@ -6,21 +6,21 @@ using RElmah.Extensions;
 using RElmah.Foundation;
 using RElmah.Models;
 
-namespace RElmah.Subscriptions
+namespace RElmah.StandingQueries
 {
-    public class SubscriptionFactory : ISubscriptionFactory
+    public class StandingQueriesFactory : IStandingQueriesFactory
     {
         private readonly IErrorsInbox  _errorsInbox;
         private readonly IDomainPublisher _domainPublisher;
         private readonly IDomainPersistor _domainPersistor;
         private readonly INotifier _notifier;
-        private readonly Func<ISubscription>[] _subscriptors;
+        private readonly Func<IStandingQuery>[] _subscriptors;
 
         private readonly AtomicImmutableDictionary<string, LayeredDisposable> _subscriptions = new AtomicImmutableDictionary<string, LayeredDisposable>();
 
-        public SubscriptionFactory(IErrorsInbox errorsInbox, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor,  
+        public StandingQueriesFactory(IErrorsInbox errorsInbox, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor,  
             INotifier notifier,
-            params Func<ISubscription>[] subscriptors)
+            params Func<IStandingQuery>[] subscriptors)
         {
             _errorsInbox  = errorsInbox;
             _domainPublisher = domainPublisher;
@@ -31,7 +31,7 @@ namespace RElmah.Subscriptions
 
         public void Start() { }
 
-        public async void Subscribe(string user, string token, Action<string> connector)
+        public async void Setup(string user, string token, Action<string> connector)
         {
             Func<IEnumerable<Application>> getUserApps = () => _domainPersistor.GetUserApplications(user).Result;
 
@@ -39,7 +39,7 @@ namespace RElmah.Subscriptions
 
             var subscriptions =
                 from subscriptor in _subscriptors
-                select subscriptor().Subscribe(ut, _notifier, _errorsInbox, _domainPersistor, _domainPublisher);
+                select subscriptor().Run(ut, _notifier, _errorsInbox, _domainPersistor, _domainPublisher);
 
             var d = new CompositeDisposable(subscriptions.ToArray()).ToLayeredDisposable();
 
@@ -49,7 +49,7 @@ namespace RElmah.Subscriptions
             getUserApps().Do(app => connector(app.Name));
         }
 
-        public async void Disconnect(string token)
+        public async void Teardown(string token)
         {
             var u = await _domainPersistor.RemoveUserToken(token);
             if (!u.HasValue) return;

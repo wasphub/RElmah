@@ -6,11 +6,11 @@ using System.Reactive.Linq;
 using RElmah.Foundation;
 using RElmah.Models;
 
-namespace RElmah.Subscriptions
+namespace RElmah.StandingQueries
 {
-    public class ErrorsSubscription : ISubscription
+    public class ErrorsStandingQuery : IStandingQuery
     {
-        public IDisposable Subscribe(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
+        public IDisposable Run(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
         {
             if (user.Value.Tokens.Count() > 1) return Disposable.Empty;
 

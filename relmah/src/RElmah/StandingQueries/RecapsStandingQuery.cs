@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -7,14 +8,26 @@ using RElmah.Extensions;
 using RElmah.Foundation;
 using RElmah.Models;
 
-namespace RElmah.Subscriptions
+namespace RElmah.StandingQueries
 {
-    public class RecapsSubscription : ISubscription
+    public class RecapsStandingQuery : IStandingQuery
     {
-        public IDisposable Subscribe(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
+        public IDisposable Run(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
         {
             var name = user.Value.Name;
 
+            //Initial recap
+            var initialRecap = InitialRecap(name, domainPersistor, errorsInbox, (a, r) => new { Applications = a, Recap = r });
+            var rs =
+                from i in initialRecap.Result.ToSingleton().ToObservable()
+                select new
+                {
+                    i.Applications,
+                    Additions = i.Applications,
+                    Removals = Enumerable.Empty<Application>()
+                };
+
+            //Deltas
             var clusterApps =
                 from p in domainPublisher.GetClusterApplicationsSequence()
                 let deltas = p.Target.Secondary.ToSingleton()
@@ -39,14 +52,8 @@ namespace RElmah.Subscriptions
                 };
             var apps = clusterApps.Merge(userApps);
 
-            //Initial recap
-            Func<Task<ValueOrError<Recap>>> initialRecap = async () => await errorsInbox.GetApplicationsRecap(await domainPersistor.GetUserApplications(name));
-            var result = initialRecap().Result;
-            if (result.HasValue)
-                notifier.Recap(name, result.Value);
-
-            //Deltas recap
-            return apps
+            //Stream
+            return rs.Concat(apps)
                 .Subscribe(async payload =>
                 {
                     var recap = await errorsInbox.GetApplicationsRecap(payload.Applications);
@@ -57,6 +64,18 @@ namespace RElmah.Subscriptions
                         payload.Additions.Select(a => a.Name), 
                         payload.Removals.Select(a => a.Name));
                 });
+        }
+
+        static async Task<T> InitialRecap<T>(
+            string name, 
+            IDomainReader domainPersistor, 
+            IErrorsInbox errorsInbox, 
+            Func<IEnumerable<Application>, ValueOrError<Recap>, T> resultor)
+        {
+            var applications = await domainPersistor.GetUserApplications(name);
+            applications = applications.ToArray();
+            var recap = await errorsInbox.GetApplicationsRecap(applications);
+            return resultor(applications, recap);
         }
     }
 }

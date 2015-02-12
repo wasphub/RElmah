@@ -9,10 +9,10 @@ using RElmah.Common;
 using RElmah.Fakes;
 using RElmah.Foundation;
 using RElmah.Models;
-using RElmah.Subscriptions;
+using RElmah.StandingQueries;
 using Xunit;
 
-namespace RElmah.Tests.Subscriptions
+namespace RElmah.Tests.StandingQueries
 {
     public static class RecordedExtensions
     {
@@ -22,7 +22,7 @@ namespace RElmah.Tests.Subscriptions
         }
     }
 
-    public class RecapsSubscriptionTester
+    public class RecapsStandingQueryTester
     {
         class NamedRecap
         {
@@ -34,11 +34,11 @@ namespace RElmah.Tests.Subscriptions
         public void NoDeltasPlusStartupRecap()
         {
             //Arrange
-            var sut = new RecapsSubscription();
+            var sut = new RecapsStandingQuery();
             var notifications = new List<NamedRecap>();
 
             //Act
-            sut.Subscribe(
+            sut.Run(
                 new ValueOrError<User>(User.Create("u1")),
                 new StubINotifier
                 {
@@ -72,7 +72,7 @@ namespace RElmah.Tests.Subscriptions
             var scheduler     = new TestScheduler();
                               
             //Arrange         
-            var sut           = new RecapsSubscription();
+            var sut           = new RecapsStandingQuery();
             var notifications = new List<NamedRecap>();
 
             //Act
@@ -96,7 +96,7 @@ namespace RElmah.Tests.Subscriptions
             );
 
 
-            sut.Subscribe(
+            sut.Run(
                 new ValueOrError<User>(user),
                 new StubINotifier
                 {

@@ -77,8 +77,8 @@
     <Compile Include="Services\DomainHolderTester.cs" />
     <Compile Include="Services\ErrorsInboxTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Subscriptions\ErrorsSubscriptionTester.cs" />
-    <Compile Include="Subscriptions\RecapsSubscriptionTester.cs" />
+    <Compile Include="StandingQueries\ErrorsStandingQueryTester.cs" />
+    <Compile Include="StandingQueries\RecapsStandingQueryTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <Fakes Include="Fakes\RElmah.fakes" />

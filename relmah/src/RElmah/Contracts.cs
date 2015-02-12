@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using RElmah.Common;
@@ -37,12 +36,6 @@ namespace RElmah
     public interface IIdentityProvider
     {
         IIdentity GetIdentity(object request);
-    }
-
-    public interface ISubscriptionFactory
-    {
-        void Subscribe(string user, string token, Action<string> connector);
-        void Disconnect(string token);
     }
 
     public interface IDomainReader
@@ -109,26 +102,14 @@ namespace RElmah
         void RemoveGroup(string token, string group);
     }
 
-    [ContractClass(typeof(ISubscriptionContract))]
-    public interface ISubscription
+    public interface IStandingQueriesFactory
     {
-        IDisposable Subscribe(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher);
+        void Setup(string user, string token, Action<string> connector);
+        void Teardown(string token);
     }
 
-    [ContractClassFor(typeof(ISubscription))]
-    public class ISubscriptionContract : ISubscription
+    public interface IStandingQuery
     {
-        public IDisposable Subscribe(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
-        {
-            Contract.Requires(user != null);
-            Contract.Requires(user.HasValue);
-
-            Contract.Requires(notifier != null);
-            Contract.Requires(errorsInbox != null);
-            Contract.Requires(domainPersistor != null);
-            Contract.Requires(domainPublisher != null);
-
-            return null;
-        }
+        IDisposable Run(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher);
     }
 }

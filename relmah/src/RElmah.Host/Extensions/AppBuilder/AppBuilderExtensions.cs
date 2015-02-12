@@ -5,7 +5,7 @@ using RElmah.Host.Services;
 using RElmah.Middleware;
 using RElmah.Models.Settings;
 using RElmah.Services;
-using RElmah.Subscriptions;
+using RElmah.StandingQueries;
 
 namespace RElmah.Host.Extensions.AppBuilder
 {
@@ -28,9 +28,9 @@ namespace RElmah.Host.Extensions.AppBuilder
 
             var n        = new Notifier();
 
-            var c        = new SubscriptionFactory(ei, ch, ch, n,
-                            () => new ErrorsSubscription(),
-                            () => new RecapsSubscription());
+            var c        = new StandingQueriesFactory(ei, ch, ch, n,
+                            () => new ErrorsStandingQuery(),
+                            () => new RecapsStandingQuery());
 
             var dp       = new DelegatingUserIdProvider(ip);
 

@@ -22,12 +22,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
     <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
     <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
     <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
     <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>True</CodeContractsRunCodeAnalysis>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
     <CodeContractsNonNullObligations>True</CodeContractsNonNullObligations>
     <CodeContractsBoundsObligations>True</CodeContractsBoundsObligations>
     <CodeContractsArithmeticObligations>True</CodeContractsArithmeticObligations>
@@ -143,9 +143,9 @@
     <Compile Include="Services\InMemoryErrorsBacklog.cs" />
     <Compile Include="Services\Nulls\NullDomainStore.cs" />
     <Compile Include="Services\Nulls\NullErrorsBacklog.cs" />
-    <Compile Include="Subscriptions\ErrorsSubscription.cs" />
-    <Compile Include="Subscriptions\RecapsSubscription.cs" />
-    <Compile Include="Subscriptions\SubscriptionFactory.cs" />
+    <Compile Include="StandingQueries\ErrorsStandingQuery.cs" />
+    <Compile Include="StandingQueries\RecapsStandingQuery.cs" />
+    <Compile Include="StandingQueries\StandingQueriesFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

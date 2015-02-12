@@ -6,12 +6,12 @@ using RElmah.Common;
 using RElmah.Fakes;
 using RElmah.Foundation;
 using RElmah.Models;
-using RElmah.Subscriptions;
+using RElmah.StandingQueries;
 using Xunit;
 
-namespace RElmah.Tests.Subscriptions
+namespace RElmah.Tests.StandingQueries
 {
-    public class ErrorsSubscriptionTester
+    public class ErrorsStandingQueryTester
     {
         class NamedPayload
         {
@@ -23,11 +23,11 @@ namespace RElmah.Tests.Subscriptions
         public void NoErrors()
         {
             //Arrange
-            var sut = new ErrorsSubscription();
+            var sut = new ErrorsStandingQuery();
             var notifications = new List<NamedPayload>();
 
             //Act
-            sut.Subscribe(
+            sut.Run(
                 new ValueOrError<User>(User.Create("wasp")), 
                 new StubINotifier 
                 { 
@@ -54,11 +54,11 @@ namespace RElmah.Tests.Subscriptions
         public void OneError()
         {
             //Arrange
-            var sut = new ErrorsSubscription();
+            var sut = new ErrorsStandingQuery();
             var notifications = new List<NamedPayload>();
 
             //Act
-            sut.Subscribe(
+            sut.Run(
                 new ValueOrError<User>(User.Create("wasp")),
                 new StubINotifier
                 {
@@ -90,11 +90,11 @@ namespace RElmah.Tests.Subscriptions
         public void MultipleErrors()
         {
             //Arrange
-            var sut = new ErrorsSubscription();
+            var sut = new ErrorsStandingQuery();
             var notifications = new List<NamedPayload>();
 
             //Act
-            sut.Subscribe(
+            sut.Run(
                 new ValueOrError<User>(User.Create("wasp")),
                 new StubINotifier
                 {
