@@ -19,12 +19,12 @@ namespace RElmah.StandingQueries
             //Initial recap
             var initialRecap = InitialRecap(name, domainPersistor, errorsInbox, (a, r) => new { Applications = a, Recap = r });
             var rs =
-                from i in initialRecap.Result.ToSingleton().ToObservable()
+                from r in initialRecap.Result.ToSingleton().ToObservable()
                 select new
                 {
-                    i.Applications,
-                    Additions = i.Applications,
-                    Removals = Enumerable.Empty<Application>()
+                    r.Applications,
+                    Additions = r.Applications,
+                    Removals  = Enumerable.Empty<Application>()
                 };
 
             //Deltas
