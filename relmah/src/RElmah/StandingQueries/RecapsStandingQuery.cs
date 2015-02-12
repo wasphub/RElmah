@@ -72,9 +72,8 @@ namespace RElmah.StandingQueries
             IErrorsInbox errorsInbox, 
             Func<IEnumerable<Application>, ValueOrError<Recap>, T> resultor)
         {
-            var applications = await domainPersistor.GetUserApplications(name);
-            applications = applications.ToArray();
-            var recap = await errorsInbox.GetApplicationsRecap(applications);
+            var applications = (await domainPersistor.GetUserApplications(name)).ToArray();
+            var recap        = await errorsInbox.GetApplicationsRecap(applications);
             return resultor(applications, recap);
         }
     }
