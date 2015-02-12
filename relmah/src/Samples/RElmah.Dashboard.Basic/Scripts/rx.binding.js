@@ -49,9 +49,8 @@
 
   // Utilities
   var objectDisposed = 'Object has been disposed';
-  function checkDisposed() {
-    if (this.isDisposed) { throw new Error(objectDisposed); }
-  }
+  function checkDisposed(self) { if (self.isDisposed) { throw new Error(objectDisposed); } }
+  function cloneArray(arr) { for(var a = [], i = 0, len = arr.length; i < len; i++) { a.push(arr[i]); } return a;}
 
   /**
    * Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
@@ -213,7 +212,7 @@
    */
   var BehaviorSubject = Rx.BehaviorSubject = (function (__super__) {
     function subscribe(observer) {
-      checkDisposed.call(this);
+      checkDisposed(this);
       if (!this.isStopped) {
         this.observers.push(observer);
         observer.onNext(this.value);
@@ -252,10 +251,10 @@
        * Notifies all subscribed observers about the end of the sequence.
        */
       onCompleted: function () {
-        checkDisposed.call(this);
+        checkDisposed(this);
         if (this.isStopped) { return; }
         this.isStopped = true;
-        for (var i = 0, os = this.observers.slice(0), len = os.length; i < len; i++) {
+        for (var i = 0, os = cloneArray(this.observers), len = os.length; i < len; i++) {
           os[i].onCompleted();
         }
 
@@ -266,13 +265,13 @@
        * @param {Mixed} error The exception to send to all observers.
        */
       onError: function (error) {
-        checkDisposed.call(this);
+        checkDisposed(this);
         if (this.isStopped) { return; }
         this.isStopped = true;
         this.hasError = true;
         this.error = error;
 
-        for (var i = 0, os = this.observers.slice(0), len = os.length; i < len; i++) {
+        for (var i = 0, os = cloneArray(this.observers), len = os.length; i < len; i++) {
           os[i].onError(error);
         }
 
@@ -283,10 +282,10 @@
        * @param {Mixed} value The value to send to all observers.
        */
       onNext: function (value) {
-        checkDisposed.call(this);
+        checkDisposed(this);
         if (this.isStopped) { return; }
         this.value = value;
-        for (var i = 0, os = this.observers.slice(0), len = os.length; i < len; i++) {
+        for (var i = 0, os = cloneArray(this.observers), len = os.length; i < len; i++) {
           os[i].onNext(value);
         }
       },
@@ -320,7 +319,7 @@
     function subscribe(observer) {
       var so = new ScheduledObserver(this.scheduler, observer),
         subscription = createRemovableDisposable(this, so);
-      checkDisposed.call(this);
+      checkDisposed(this);
       this._trim(this.scheduler.now());
       this.observers.push(so);
 
@@ -380,15 +379,14 @@
        * @param {Mixed} value The value to send to all observers.
        */
       onNext: function (value) {
-        checkDisposed.call(this);
+        checkDisposed(this);
         if (this.isStopped) { return; }
         var now = this.scheduler.now();
         this.q.push({ interval: now, value: value });
         this._trim(now);
 
-        var o = this.observers.slice(0);
-        for (var i = 0, len = o.length; i < len; i++) {
-          var observer = o[i];
+        for (var i = 0, os = cloneArray(this.observers), len = os.length; i < len; i++) {
+          var observer = os[i];
           observer.onNext(value);
           observer.ensureActive();
         }
@@ -398,37 +396,35 @@
        * @param {Mixed} error The exception to send to all observers.
        */
       onError: function (error) {
-        checkDisposed.call(this);
+        checkDisposed(this);
         if (this.isStopped) { return; }
         this.isStopped = true;
         this.error = error;
         this.hasError = true;
         var now = this.scheduler.now();
         this._trim(now);
-        var o = this.observers.slice(0);
-        for (var i = 0, len = o.length; i < len; i++) {
-          var observer = o[i];
+        for (var i = 0, os = cloneArray(this.observers), len = os.length; i < len; i++) {
+          var observer = os[i];
           observer.onError(error);
           observer.ensureActive();
         }
-        this.observers = [];
+        this.observers.length = 0;
       },
       /**
        * Notifies all subscribed observers about the end of the sequence.
        */
       onCompleted: function () {
-        checkDisposed.call(this);
+        checkDisposed(this);
         if (this.isStopped) { return; }
         this.isStopped = true;
         var now = this.scheduler.now();
         this._trim(now);
-        var o = this.observers.slice(0);
-        for (var i = 0, len = o.length; i < len; i++) {
-          var observer = o[i];
+        for (var i = 0, os = cloneArray(this.observers), len = os.length; i < len; i++) {
+          var observer = os[i];
           observer.onCompleted();
           observer.ensureActive();
         }
-        this.observers = [];
+        this.observers.length = 0;
       },
       /**
        * Unsubscribe all observers and release resources.
