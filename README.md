@@ -32,7 +32,7 @@ You might want to have a look and see if you like what's happening, and maybe co
 Yeah, but... what's your goal here?
 ------
 
-This is a disclaimer: *RElmah*, as it was for ElmahR at the beginning, is for me a playground where I try to experiment with new stuff. This does not mean I don't aim to get, at some point, to something as complete and reliable as possible. But time and energy are not on my side, so it will grow quite slowly, and it might always stay at a basic stage. Unless anybody out there wants to join :)
+This is a disclaimer: **RElmah**, as it was for ElmahR at the beginning, is for me a playground where I try to experiment with new stuff. This does not mean I don't aim to get, at some point, to something as complete and reliable as possible. But time and energy are not on my side, so it will grow quite slowly, and it might always stay at a basic stage. Unless anybody out there wants to join :)
 
 
 [ElmahR]:http://elmahr.apphb.com/
