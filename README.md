@@ -21,9 +21,13 @@ q.DumpLive();
 ```
 You get the idea :)
 
-Current version is 0.2, which means some foundations are there, but it's not really ready to be used yet. You might want to have a look and see if you like what's happening, and maybe contribute with ideas or coding.
+Current version is 0.4, which means some foundations are there, but it's not really ready to be used yet. We have:
 
+* Some more reactive structure have been added to the server side logic
+* Cleaner JS client
+* More unit tests, with a decent, although not optimal, coverage
 
+You might want to have a look and see if you like what's happening, and maybe contribute with ideas or coding.
 
 [ElmahR]:http://elmahr.apphb.com/
 [Rx]:http://msdn.microsoft.com/en-us/data/gg577609.aspx
