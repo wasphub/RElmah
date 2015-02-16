@@ -29,5 +29,11 @@ Current version is 0.4, which means some foundations are there, but it's not rea
 
 You might want to have a look and see if you like what's happening, and maybe contribute with ideas or coding.
 
+Yeah, but... what's your goal here?
+------
+
+This is a disclaimer: *RElmah*, as it was for ElmahR at the beginning, is for me a playground where I try to experiment with new stuff. This does not mean I don't aim to get, at some point, to something as complete and reliable as possible. But time and energy are not on my side, so it will grow quite slowly, and it might always stay at a basic stage. Unless anybody out there wants to join :)
+
+
 [ElmahR]:http://elmahr.apphb.com/
 [Rx]:http://msdn.microsoft.com/en-us/data/gg577609.aspx
