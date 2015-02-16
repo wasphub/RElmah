@@ -5,6 +5,7 @@ using RElmah.Host.Services;
 using RElmah.Middleware;
 using RElmah.Models.Settings;
 using RElmah.Services;
+using RElmah.Services.Inbox;
 using RElmah.StandingQueries;
 
 namespace RElmah.Host.Extensions.AppBuilder

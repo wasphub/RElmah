@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +10,20 @@ using RElmah.Foundation;
 using RElmah.Models;
 using RElmah.Services.Nulls;
 
-namespace RElmah.Services
+namespace RElmah.Services.Inbox
 {
-    public class SerializedErrorsInbox : IErrorsInbox
+    public class QueuedErrorsInbox : IErrorsInbox
     {
         private readonly IErrorsBacklog _errorsBacklog;
 
         private readonly BlockingCollection<ErrorPayload> _queue = new BlockingCollection<ErrorPayload>(new ConcurrentQueue<ErrorPayload>());
- 
+
         private readonly Subject<ErrorPayload> _errors;
         private readonly IObservable<ErrorPayload> _publishedErrors;
 
-        public SerializedErrorsInbox() : this(new NullErrorsBacklog()) { }
+        public QueuedErrorsInbox() : this(new NullErrorsBacklog()) { }
 
-        public SerializedErrorsInbox(IErrorsBacklog errorsBacklog)
+        public QueuedErrorsInbox(IErrorsBacklog errorsBacklog)
         {
             _errorsBacklog = errorsBacklog;
 
@@ -32,7 +32,7 @@ namespace RElmah.Services
                 //it will block here automatically waiting from new items to be added and it will not take cpu down 
                 foreach (var data in _queue.GetConsumingEnumerable())
                 {
-                    _errors.OnNext(data);
+                    _errors.OnNext(data); 
                 }
             });
 

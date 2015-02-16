@@ -12,14 +12,14 @@ namespace RElmah.StandingQueries
 {
     public class RecapsStandingQuery : IStandingQuery
     {
-        public IDisposable Run(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
+        public async Task<IDisposable> Run(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
         {
             var name = user.Value.Name;
 
             //Initial recap
-            var initialRecap = InitialRecap(name, domainPersistor, errorsInbox, (a, r) => new { Applications = a, Recap = r });
+            var initialRecap = await InitialRecap(name, domainPersistor, errorsInbox, (a, r) => new { Applications = a, Recap = r });
             var rs =
-                from r in initialRecap.Result.ToSingleton().ToObservable()
+                from r in initialRecap.ToSingleton().ToObservable()
                 select new
                 {
                     r.Applications,

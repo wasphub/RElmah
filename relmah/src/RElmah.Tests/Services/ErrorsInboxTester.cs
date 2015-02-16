@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using RElmah.Common;
 using RElmah.Services;
+using RElmah.Services.Inbox;
 using Xunit;
 
 namespace RElmah.Tests.Services

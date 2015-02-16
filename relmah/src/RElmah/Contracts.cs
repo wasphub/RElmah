@@ -110,6 +110,6 @@ namespace RElmah
 
     public interface IStandingQuery
     {
-        IDisposable Run(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher);
+        Task<IDisposable> Run(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher);
     }
 }
