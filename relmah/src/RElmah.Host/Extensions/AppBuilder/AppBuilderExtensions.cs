@@ -4,9 +4,6 @@ using RElmah.Host.Hubs;
 using RElmah.Host.Services;
 using RElmah.Middleware;
 using RElmah.Models.Settings;
-using RElmah.Services;
-using RElmah.Services.Inbox;
-using RElmah.StandingQueries;
 
 namespace RElmah.Host.Extensions.AppBuilder
 {
@@ -15,51 +12,31 @@ namespace RElmah.Host.Extensions.AppBuilder
         public static IAppBuilder UseRElmah(this IAppBuilder builder, Settings settings = null)
         {
             var registry = new Registry();
-
+            var notifier = new Notifier();
             var ip       = settings != null && settings.Bootstrap != null && settings.Bootstrap.IdentityProviderBuilder != null
                          ? settings.Bootstrap.IdentityProviderBuilder()
                          : new WindowsPrincipalIdentityProvider();
 
-            var ei       = new QueuedErrorsInbox(new InMemoryErrorsBacklog());
-            var cs       = settings != null && settings.Domain != null && settings.Domain.DomainStoreBuilder != null
-                         ? settings.Domain.DomainStoreBuilder()
-                         : new InMemoryDomainStore();
-                         
-            var ch       = new DomainHolder(cs);
-
-            var n        = new Notifier();
-
-            var c        = new StandingQueriesFactory(ei, ch, ch, n,
-                            () => new ErrorsStandingQuery(),
-                            () => new RecapsStandingQuery());
+            var bp       = registry.Prepare(notifier, ip, (qf, ei, dh) => new { qf, ei, dh }, settings);
 
             var dp       = new DelegatingUserIdProvider(ip);
 
-            //Infrastructure
-            registry.Register(typeof(IErrorsInbox),     () => ei);
-            registry.Register(typeof(IConnection),      () => c);
-            registry.Register(typeof(IDomainPublisher), () => ch);
-            registry.Register(typeof(IDomainPersistor), () => ch);
-            registry.Register(typeof(IDomainStore),     () => cs);
-            registry.Register(typeof(IUserIdProvider),  () => dp);
-
-            //Hubs
-            registry.Register(typeof(ErrorsHub), () => new ErrorsHub(c, dp));
+            registry.Register(typeof(IUserIdProvider), () => dp);
+            registry.Register(typeof(ErrorsHub), () => new ErrorsHub(bp.qf, dp));
 
             if (settings != null && settings.Bootstrap != null && settings.Bootstrap.Registry != null)
                 settings.Bootstrap.Registry(registry);
 
             if (settings != null && settings.Bootstrap != null && settings.Bootstrap.Domain != null)
-                settings.Bootstrap.Domain(ch);
+                settings.Bootstrap.Domain(bp.dh);
 
             if (settings != null && settings.Errors != null)
                 builder = settings.Errors.UseRandomizer
-                        ? builder.UseRElmahMiddleware<RandomSourceErrorsMiddleware>(ei, ch, settings.Errors)
-                        : builder.UseRElmahMiddleware<ErrorsMiddleware>(ei, settings.Errors);
-            if (settings != null && settings.Domain != null && settings.Domain.Exposed)
-                builder = builder.UseRElmahMiddleware<DomainMiddleware>(ch, settings.Domain);
+                        ? builder.UseRElmahMiddleware<RandomSourceErrorsMiddleware>(bp.ei, bp.dh, settings.Errors)
+                        : builder.UseRElmahMiddleware<ErrorsMiddleware>(bp.ei, settings.Errors);
 
-            c.Start();
+            if (settings != null && settings.Domain != null && settings.Domain.Exposed)
+                builder = builder.UseRElmahMiddleware<DomainMiddleware>(bp.dh, settings.Domain);
 
             return builder;
         }

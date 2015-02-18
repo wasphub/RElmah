@@ -29,8 +29,6 @@ namespace RElmah.StandingQueries
             _subscriptors = subscriptors;
         }
 
-        public void Start() { }
-
         public async void Setup(string user, string token, Action<string> connector)
         {
             Func<IEnumerable<Application>> getUserApps = () => _domainPersistor.GetUserApplications(user).Result;
