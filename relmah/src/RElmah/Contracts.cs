@@ -18,7 +18,6 @@ namespace RElmah
     {
         Task Post(ErrorPayload payload);
         IObservable<ErrorPayload> GetErrorsStream();
-        Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps);
     }
 
     /// <summary>
@@ -30,7 +29,7 @@ namespace RElmah
     public interface IErrorsBacklog
     {
         Task Store(ErrorPayload payload);
-        Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> processor);
+        Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> reducer);
     }
 
     public interface IIdentityProvider
@@ -89,7 +88,7 @@ namespace RElmah
         void Register(Type type, Func<object> supplier);
     }
 
-    public interface INotifier
+    public interface IFrontendNotifier
     {
         void Recap(string user, Recap recap);
 
@@ -102,6 +101,10 @@ namespace RElmah
         void RemoveGroup(string token, string group);
     }
 
+    public interface IBackendNotifier
+    {
+    }
+
     public interface IStandingQueriesFactory
     {
         void Setup(string user, string token, Action<string> connector);
@@ -110,6 +113,6 @@ namespace RElmah
 
     public interface IStandingQuery
     {
-        Task<IDisposable> Run(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher);
+        Task<IDisposable> Run(ValueOrError<User> user, IFrontendNotifier frontendNotifier, IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher);
     }
 }

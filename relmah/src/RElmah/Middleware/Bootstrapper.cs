@@ -10,12 +10,13 @@ namespace RElmah.Middleware
     {
         public static T Prepare<T>(
             this IRegistry registry, 
-            INotifier notifier, 
+            IFrontendNotifier frontendNotifier, 
             IIdentityProvider identityProvider,
             Func<IStandingQueriesFactory, IErrorsInbox, IDomainPersistor, T> resultor,
             Settings settings = null)
         {
-            var ei = new QueuedErrorsInbox(new InMemoryErrorsBacklog());
+            var bl = new InMemoryErrorsBacklog();
+            var ei = new QueuedErrorsInbox(bl);
 
             var ds = settings != null && settings.Domain != null && settings.Domain.DomainStoreBuilder != null
                    ? settings.Domain.DomainStoreBuilder()
@@ -23,11 +24,12 @@ namespace RElmah.Middleware
 
             var dh = new DomainHolder(ds);
 
-            var qf = new StandingQueriesFactory(ei, dh, dh, notifier,
+            var qf = new StandingQueriesFactory(ei, bl, dh, dh, frontendNotifier,
                      () => new ErrorsStandingQuery(),
                      () => new RecapsStandingQuery());
 
             //Infrastructure
+            registry.Register(typeof(IErrorsBacklog),          () => bl);
             registry.Register(typeof(IErrorsInbox),            () => ei);
             registry.Register(typeof(IDomainPublisher),        () => dh);
             registry.Register(typeof(IDomainPersistor),        () => dh);

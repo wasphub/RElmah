@@ -40,7 +40,7 @@ namespace RElmah.Services.Inbox
             return _publishedErrors;
         }
 
-        public Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps)
+        public Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> reducer)
         {
             return _errorsBacklog.GetApplicationsRecap(apps, xs => xs.Count());
         }

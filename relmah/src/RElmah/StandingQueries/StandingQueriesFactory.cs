@@ -11,21 +11,23 @@ namespace RElmah.StandingQueries
     public class StandingQueriesFactory : IStandingQueriesFactory
     {
         private readonly IErrorsInbox  _errorsInbox;
+        private readonly IErrorsBacklog _errorsBacklog;
         private readonly IDomainPublisher _domainPublisher;
         private readonly IDomainPersistor _domainPersistor;
-        private readonly INotifier _notifier;
+        private readonly IFrontendNotifier _frontendNotifier;
         private readonly Func<IStandingQuery>[] _subscriptors;
 
         private readonly AtomicImmutableDictionary<string, LayeredDisposable> _subscriptions = new AtomicImmutableDictionary<string, LayeredDisposable>();
 
-        public StandingQueriesFactory(IErrorsInbox errorsInbox, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor,  
-            INotifier notifier,
+        public StandingQueriesFactory(IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor,  
+            IFrontendNotifier frontendNotifier,
             params Func<IStandingQuery>[] subscriptors)
         {
             _errorsInbox  = errorsInbox;
+            _errorsBacklog = errorsBacklog;
             _domainPublisher = domainPublisher;
             _domainPersistor = domainPersistor;
-            _notifier = notifier;
+            _frontendNotifier = frontendNotifier;
             _subscriptors = subscriptors;
         }
 
@@ -37,7 +39,7 @@ namespace RElmah.StandingQueries
 
             var subscriptions =
                 from subscriptor in _subscriptors
-                select subscriptor().Run(ut, _notifier, _errorsInbox, _domainPersistor, _domainPublisher);
+                select subscriptor().Run(ut, _frontendNotifier, _errorsInbox, _errorsBacklog, _domainPersistor, _domainPublisher);
 
             var d = new CompositeDisposable(subscriptions.ToArray()).ToLayeredDisposable();
 

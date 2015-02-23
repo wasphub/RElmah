@@ -4,7 +4,7 @@ using RElmah.Models;
 
 namespace RElmah.Host.Hubs
 {
-    public class Notifier : INotifier
+    public class FrontendNotifier : IFrontendNotifier
     {
         public void Recap(string user, Recap recap)
         {

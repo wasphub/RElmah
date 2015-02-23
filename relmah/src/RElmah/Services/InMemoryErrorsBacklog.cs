@@ -18,7 +18,7 @@ namespace RElmah.Services
             return Task.Factory.StartNew(() => _errors.Add(payload));
         }
 
-        public Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> processor)
+        public Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> reducer)
         {
             var errors =
                 from e in _errors
@@ -31,7 +31,7 @@ namespace RElmah.Services
                 let types = 
                     from t in g
                     group t by t.Error.Type into x
-                    select new Recap.Type(x.Key, processor(x))
+                    select new Recap.Type(x.Key, reducer(x))
                 select new Recap.Application(g.Key, types);
 
             return Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, grouped)));

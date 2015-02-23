@@ -9,6 +9,7 @@ using RElmah.Common;
 using RElmah.Fakes;
 using RElmah.Foundation;
 using RElmah.Models;
+using RElmah.Services;
 using RElmah.StandingQueries;
 using Xunit;
 
@@ -40,7 +41,7 @@ namespace RElmah.Tests.StandingQueries
             //Act
             sut.Run(
                 new ValueOrError<User>(User.Create("u1")),
-                new StubINotifier
+                new StubIFrontendNotifier
                 {
                     RecapStringRecap = (n, r) =>
                     {
@@ -49,9 +50,12 @@ namespace RElmah.Tests.StandingQueries
                 },
                 new StubIErrorsInbox
                 {
-                    GetErrorsStream = () => Observable.Empty<ErrorPayload>(),
-                    GetApplicationsRecapIEnumerableOfApplication = apps => Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, Enumerable.Empty<Recap.Application>())))
+                    GetErrorsStream = () => Observable.Empty<ErrorPayload>()
                 },
+                new StubIErrorsBacklog
+                {
+                    GetApplicationsRecapIEnumerableOfApplicationFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, Enumerable.Empty<Recap.Application>())))                    
+                }, 
                 new StubIDomainPersistor
                 {
                     GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
@@ -98,7 +102,7 @@ namespace RElmah.Tests.StandingQueries
 
             sut.Run(
                 new ValueOrError<User>(user),
-                new StubINotifier
+                new StubIFrontendNotifier
                 {
                     RecapStringRecap = (n, r) =>
                     {
@@ -107,11 +111,14 @@ namespace RElmah.Tests.StandingQueries
                 },
                 new StubIErrorsInbox
                 {
-                    GetErrorsStream = () => errorsStream,
-                    GetApplicationsRecapIEnumerableOfApplication = apps => Task.FromResult(
+                    GetErrorsStream = () => errorsStream
+                },
+                new StubIErrorsBacklog
+                {
+                    GetApplicationsRecapIEnumerableOfApplicationFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(
                         new ValueOrError<Recap>(
                             new Recap(
-                                DateTime.UtcNow, 
+                                DateTime.UtcNow,
                                 Enumerable.Empty<Recap.Application>())))
                 },
                 new StubIDomainPersistor

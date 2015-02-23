@@ -12,12 +12,12 @@ namespace RElmah.StandingQueries
 {
     public class RecapsStandingQuery : IStandingQuery
     {
-        public async Task<IDisposable> Run(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
+        public async Task<IDisposable> Run(ValueOrError<User> user, IFrontendNotifier frontendNotifier, IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog,  IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
         {
             var name = user.Value.Name;
 
             //Initial recap
-            var initialRecap = await InitialRecap(name, domainPersistor, errorsInbox, (a, r) => new { Applications = a, Recap = r });
+            var initialRecap = await InitialRecap(name, domainPersistor, errorsBacklog, (a, r) => new { Applications = a, Recap = r });
             var rs =
                 from r in initialRecap.ToSingleton().ToObservable()
                 select new
@@ -56,11 +56,11 @@ namespace RElmah.StandingQueries
             return rs.Concat(apps)
                 .Subscribe(async payload =>
                 {
-                    var recap = await errorsInbox.GetApplicationsRecap(payload.Applications);
+                    var recap = await errorsBacklog.GetApplicationsRecap(payload.Applications, xs => xs.Count());
                     if (!recap.HasValue) return;
 
-                    notifier.Recap(name, recap.Value);
-                    notifier.UserApplications(name, 
+                    frontendNotifier.Recap(name, recap.Value);
+                    frontendNotifier.UserApplications(name, 
                         payload.Additions.Select(a => a.Name), 
                         payload.Removals.Select(a => a.Name));
                 });
@@ -69,11 +69,13 @@ namespace RElmah.StandingQueries
         static async Task<T> InitialRecap<T>(
             string name, 
             IDomainReader domainPersistor, 
-            IErrorsInbox errorsInbox, 
+            IErrorsBacklog errorsBacklog,
             Func<IEnumerable<Application>, ValueOrError<Recap>, T> resultor)
         {
             var applications = (await domainPersistor.GetUserApplications(name)).ToArray();
-            var recap        = await errorsInbox.GetApplicationsRecap(applications);
+
+            var recap        = await errorsBacklog.GetApplicationsRecap(applications, xs => xs.Count());
+
             return resultor(applications, recap);
         }
     }

@@ -14,7 +14,7 @@ namespace RElmah.Services.Nulls
             return Task.FromResult((object)null);
         }
 
-        public Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> processor)
+        public Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> reducer)
         {
             return Task.FromResult((ValueOrError<Recap>)null);
         }

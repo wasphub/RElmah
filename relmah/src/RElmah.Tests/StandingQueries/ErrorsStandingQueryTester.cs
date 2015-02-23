@@ -29,7 +29,7 @@ namespace RElmah.Tests.StandingQueries
             //Act
             sut.Run(
                 new ValueOrError<User>(User.Create("wasp")), 
-                new StubINotifier 
+                new StubIFrontendNotifier 
                 { 
                     ErrorStringErrorPayload = (n, p) =>
                     {
@@ -40,6 +40,7 @@ namespace RElmah.Tests.StandingQueries
                 {
                     GetErrorsStream = () => Observable.Empty<ErrorPayload>()
                 },
+                new StubIErrorsBacklog(),
                 new StubIDomainPersistor
                 {
                     GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new [] { Application.Create("a1")})
@@ -60,7 +61,7 @@ namespace RElmah.Tests.StandingQueries
             //Act
             sut.Run(
                 new ValueOrError<User>(User.Create("wasp")),
-                new StubINotifier
+                new StubIFrontendNotifier
                 {
                     ErrorStringErrorPayload = (n, p) =>
                     {
@@ -76,6 +77,7 @@ namespace RElmah.Tests.StandingQueries
                         }
                     ).ToObservable()
                 },
+                new StubIErrorsBacklog(),
                 new StubIDomainPersistor
                 {
                     GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
@@ -96,7 +98,7 @@ namespace RElmah.Tests.StandingQueries
             //Act
             sut.Run(
                 new ValueOrError<User>(User.Create("wasp")),
-                new StubINotifier
+                new StubIFrontendNotifier
                 {
                     ErrorStringErrorPayload = (n, p) =>
                     {
@@ -114,6 +116,7 @@ namespace RElmah.Tests.StandingQueries
                         }
                     ).ToObservable()
                 },
+                new StubIErrorsBacklog(),
                 new StubIDomainPersistor
                 {
                     GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })

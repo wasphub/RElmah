@@ -12,7 +12,7 @@ namespace RElmah.Host.Extensions.AppBuilder
         public static IAppBuilder UseRElmah(this IAppBuilder builder, Settings settings = null)
         {
             var registry = new Registry();
-            var notifier = new Notifier();
+            var notifier = new FrontendNotifier();
             var ip       = settings != null && settings.Bootstrap != null && settings.Bootstrap.IdentityProviderBuilder != null
                          ? settings.Bootstrap.IdentityProviderBuilder()
                          : new WindowsPrincipalIdentityProvider();

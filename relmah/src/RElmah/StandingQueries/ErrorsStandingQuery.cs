@@ -11,7 +11,7 @@ namespace RElmah.StandingQueries
 {
     public class ErrorsStandingQuery : IStandingQuery
     {
-        public async Task<IDisposable> Run(ValueOrError<User> user, INotifier notifier, IErrorsInbox errorsInbox, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
+        public async Task<IDisposable> Run(ValueOrError<User> user, IFrontendNotifier frontendNotifier, IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
         {
             if (user.Value.Tokens.Count() > 1) return Disposable.Empty;
 
@@ -28,7 +28,7 @@ namespace RElmah.StandingQueries
             return errors
                 .Subscribe(payload =>
                 {
-                    notifier.Error(name, payload);
+                    frontendNotifier.Error(name, payload);
                 });
         }
     }
