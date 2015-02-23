@@ -8,9 +8,9 @@ using RElmah.Extensions;
 using RElmah.Foundation;
 using RElmah.Models;
 
-namespace RElmah.StandingQueries
+namespace RElmah.Queries.Frontend
 {
-    public class RecapsStandingQuery : IStandingQuery
+    public class RecapsFrontendQuery : IFrontendQuery
     {
         public async Task<IDisposable> Run(ValueOrError<User> user, IFrontendNotifier frontendNotifier, IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog,  IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
         {

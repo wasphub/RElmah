@@ -73,12 +73,13 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Models\ClusterTester.cs" />
+    <Compile Include="Queries\Frontend\ErrorsFrontendQueryTester.cs" />
+    <Compile Include="Queries\Frontend\RecapsFrontendQueryTester.cs" />
+    <Compile Include="RecordedExtensions.cs" />
     <Compile Include="Services\InMemoryDomainStoreTester.cs" />
     <Compile Include="Services\DomainHolderTester.cs" />
     <Compile Include="Services\ErrorsInboxTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StandingQueries\ErrorsStandingQueryTester.cs" />
-    <Compile Include="StandingQueries\RecapsStandingQueryTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <Fakes Include="Fakes\RElmah.fakes" />

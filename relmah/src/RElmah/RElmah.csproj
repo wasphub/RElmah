@@ -138,6 +138,9 @@
     <Compile Include="Foundation\Relationship.cs" />
     <Compile Include="Foundation\ValueOrError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\Frontend\ErrorsFrontendQuery.cs" />
+    <Compile Include="Queries\Frontend\FrontendQueriesFactory.cs" />
+    <Compile Include="Queries\Frontend\RecapsFrontendQuery.cs" />
     <Compile Include="Services\DomainHolder.cs" />
     <Compile Include="Services\Inbox\QueuedErrorsInbox.cs" />
     <Compile Include="Services\Inbox\SerializedErrorsInbox.cs" />
@@ -145,9 +148,6 @@
     <Compile Include="Services\InMemoryErrorsBacklog.cs" />
     <Compile Include="Services\Nulls\NullDomainStore.cs" />
     <Compile Include="Services\Nulls\NullErrorsBacklog.cs" />
-    <Compile Include="StandingQueries\ErrorsStandingQuery.cs" />
-    <Compile Include="StandingQueries\RecapsStandingQuery.cs" />
-    <Compile Include="StandingQueries\StandingQueriesFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

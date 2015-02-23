@@ -10,12 +10,12 @@ namespace RElmah.Host.Hubs
     [HubName("relmah-errors")]
     public class ErrorsHub : Hub
     {
-        private readonly IStandingQueriesFactory _standingQueriesFactory;
+        private readonly IFrontendQueriesFactory _frontendQueriesFactory;
         private readonly IUserIdProvider _userIdProvider;
 
-        public ErrorsHub(IStandingQueriesFactory standingQueriesFactory, IUserIdProvider userIdProvider)
+        public ErrorsHub(IFrontendQueriesFactory frontendQueriesFactory, IUserIdProvider userIdProvider)
         {
-            _standingQueriesFactory = standingQueriesFactory;
+            _frontendQueriesFactory = frontendQueriesFactory;
             _userIdProvider      = userIdProvider;
         }
 
@@ -23,7 +23,7 @@ namespace RElmah.Host.Hubs
         {
             var apps = Enumerable.Empty<string>();
 
-            _standingQueriesFactory.Setup(_userIdProvider.GetUserId(Context.Request), Context.ConnectionId, a =>
+            _frontendQueriesFactory.Setup(_userIdProvider.GetUserId(Context.Request), Context.ConnectionId, a =>
             {
                 apps = apps.Concat(new[] { a });
                 Groups.Add(Context.ConnectionId, a);
@@ -37,7 +37,7 @@ namespace RElmah.Host.Hubs
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            _standingQueriesFactory.Teardown(Context.ConnectionId);
+            _frontendQueriesFactory.Teardown(Context.ConnectionId);
 
             return base.OnDisconnected(stopCalled);
         }

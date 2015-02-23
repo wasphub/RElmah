@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using RElmah.Foundation;
 using RElmah.Models;
 
-namespace RElmah.StandingQueries
+namespace RElmah.Queries.Frontend
 {
-    public class ErrorsStandingQuery : IStandingQuery
+    public class ErrorsFrontendQuery : IFrontendQuery
     {
         public async Task<IDisposable> Run(ValueOrError<User> user, IFrontendNotifier frontendNotifier, IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
         {

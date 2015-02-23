@@ -105,13 +105,13 @@ namespace RElmah
     {
     }
 
-    public interface IStandingQueriesFactory
+    public interface IFrontendQueriesFactory
     {
         void Setup(string user, string token, Action<string> connector);
         void Teardown(string token);
     }
 
-    public interface IStandingQuery
+    public interface IFrontendQuery
     {
         Task<IDisposable> Run(ValueOrError<User> user, IFrontendNotifier frontendNotifier, IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher);
     }

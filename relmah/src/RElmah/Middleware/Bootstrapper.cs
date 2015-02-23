@@ -2,7 +2,8 @@
 using RElmah.Models.Settings;
 using RElmah.Services;
 using RElmah.Services.Inbox;
-using RElmah.StandingQueries;
+using RElmah.Queries;
+using RElmah.Queries.Frontend;
 
 namespace RElmah.Middleware
 {
@@ -12,7 +13,7 @@ namespace RElmah.Middleware
             this IRegistry registry, 
             IFrontendNotifier frontendNotifier, 
             IIdentityProvider identityProvider,
-            Func<IStandingQueriesFactory, IErrorsInbox, IDomainPersistor, T> resultor,
+            Func<IFrontendQueriesFactory, IErrorsInbox, IDomainPersistor, T> resultor,
             Settings settings = null)
         {
             var bl = new InMemoryErrorsBacklog();
@@ -24,9 +25,9 @@ namespace RElmah.Middleware
 
             var dh = new DomainHolder(ds);
 
-            var qf = new StandingQueriesFactory(ei, bl, dh, dh, frontendNotifier,
-                     () => new ErrorsStandingQuery(),
-                     () => new RecapsStandingQuery());
+            var qf = new FrontendQueriesFactory(ei, bl, dh, dh, frontendNotifier,
+                     () => new ErrorsFrontendQuery(),
+                     () => new RecapsFrontendQuery());
 
             //Infrastructure
             registry.Register(typeof(IErrorsBacklog),          () => bl);
@@ -34,7 +35,7 @@ namespace RElmah.Middleware
             registry.Register(typeof(IDomainPublisher),        () => dh);
             registry.Register(typeof(IDomainPersistor),        () => dh);
             registry.Register(typeof(IDomainStore),            () => ds);
-            registry.Register(typeof(IStandingQueriesFactory), () => qf);
+            registry.Register(typeof(IFrontendQueriesFactory), () => qf);
 
             return resultor(qf, ei, dh);
         }

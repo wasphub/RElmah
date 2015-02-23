@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -6,22 +6,22 @@ using RElmah.Extensions;
 using RElmah.Foundation;
 using RElmah.Models;
 
-namespace RElmah.StandingQueries
+namespace RElmah.Queries.Frontend
 {
-    public class StandingQueriesFactory : IStandingQueriesFactory
+    public class FrontendQueriesFactory : IFrontendQueriesFactory
     {
         private readonly IErrorsInbox  _errorsInbox;
         private readonly IErrorsBacklog _errorsBacklog;
         private readonly IDomainPublisher _domainPublisher;
         private readonly IDomainPersistor _domainPersistor;
         private readonly IFrontendNotifier _frontendNotifier;
-        private readonly Func<IStandingQuery>[] _subscriptors;
+        private readonly Func<IFrontendQuery>[] _subscriptors;
 
         private readonly AtomicImmutableDictionary<string, LayeredDisposable> _subscriptions = new AtomicImmutableDictionary<string, LayeredDisposable>();
 
-        public StandingQueriesFactory(IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor,  
+        public FrontendQueriesFactory(IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor,  
             IFrontendNotifier frontendNotifier,
-            params Func<IStandingQuery>[] subscriptors)
+            params Func<IFrontendQuery>[] subscriptors)
         {
             _errorsInbox  = errorsInbox;
             _errorsBacklog = errorsBacklog;

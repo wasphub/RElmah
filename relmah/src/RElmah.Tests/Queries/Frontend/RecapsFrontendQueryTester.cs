@@ -9,21 +9,12 @@ using RElmah.Common;
 using RElmah.Fakes;
 using RElmah.Foundation;
 using RElmah.Models;
-using RElmah.Services;
-using RElmah.StandingQueries;
+using RElmah.Queries.Frontend;
 using Xunit;
 
-namespace RElmah.Tests.StandingQueries
+namespace RElmah.Tests.Queries.Frontend
 {
-    public static class RecordedExtensions
-    {
-        public static Recorded<T> RecordAt<T>(this T source, long t)
-        {
-            return new Recorded<T>(t, source);
-        }
-    }
-
-    public class RecapsStandingQueryTester
+    public class RecapsFrontendQueryTester
     {
         class NamedRecap
         {
@@ -35,7 +26,7 @@ namespace RElmah.Tests.StandingQueries
         public void NoDeltasPlusStartupRecap()
         {
             //Arrange
-            var sut = new RecapsStandingQuery();
+            var sut = new RecapsFrontendQuery();
             var notifications = new List<NamedRecap>();
 
             //Act
@@ -76,7 +67,7 @@ namespace RElmah.Tests.StandingQueries
             var scheduler     = new TestScheduler();
                               
             //Arrange         
-            var sut           = new RecapsStandingQuery();
+            var sut           = new RecapsFrontendQuery();
             var notifications = new List<NamedRecap>();
 
             //Act

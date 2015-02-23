@@ -6,12 +6,12 @@ using RElmah.Common;
 using RElmah.Fakes;
 using RElmah.Foundation;
 using RElmah.Models;
-using RElmah.StandingQueries;
+using RElmah.Queries.Frontend;
 using Xunit;
 
-namespace RElmah.Tests.StandingQueries
+namespace RElmah.Tests.Queries.Frontend
 {
-    public class ErrorsStandingQueryTester
+    public class ErrorsFrontendQueryTester
     {
         class NamedPayload
         {
@@ -23,7 +23,7 @@ namespace RElmah.Tests.StandingQueries
         public void NoErrors()
         {
             //Arrange
-            var sut = new ErrorsStandingQuery();
+            var sut = new ErrorsFrontendQuery();
             var notifications = new List<NamedPayload>();
 
             //Act
@@ -55,7 +55,7 @@ namespace RElmah.Tests.StandingQueries
         public void OneError()
         {
             //Arrange
-            var sut = new ErrorsStandingQuery();
+            var sut = new ErrorsFrontendQuery();
             var notifications = new List<NamedPayload>();
 
             //Act
@@ -92,7 +92,7 @@ namespace RElmah.Tests.StandingQueries
         public void MultipleErrors()
         {
             //Arrange
-            var sut = new ErrorsStandingQuery();
+            var sut = new ErrorsFrontendQuery();
             var notifications = new List<NamedPayload>();
 
             //Act
