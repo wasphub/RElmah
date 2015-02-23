@@ -39,7 +39,14 @@ namespace RElmah.Queries.Frontend
 
             var subscriptions =
                 from subscriptor in _subscriptors
-                select subscriptor().Run(ut, _frontendNotifier, _errorsInbox, _errorsBacklog, _domainPersistor, _domainPublisher);
+                select subscriptor().Run(ut, new RunTargets
+                {
+                    FrontendNotifier = _frontendNotifier,
+                    ErrorsInbox = _errorsInbox,
+                    ErrorsBacklog = _errorsBacklog,
+                    DomainPersistor = _domainPersistor,
+                    DomainPublisher = _domainPublisher
+                });
 
             var d = new CompositeDisposable(subscriptions.ToArray()).ToLayeredDisposable();
 

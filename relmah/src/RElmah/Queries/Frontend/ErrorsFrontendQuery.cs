@@ -11,15 +11,15 @@ namespace RElmah.Queries.Frontend
 {
     public class ErrorsFrontendQuery : IFrontendQuery
     {
-        public async Task<IDisposable> Run(ValueOrError<User> user, IFrontendNotifier frontendNotifier, IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
+        public async Task<IDisposable> Run(ValueOrError<User> user, RunTargets targets)
         {
             if (user.Value.Tokens.Count() > 1) return Disposable.Empty;
 
             var name = user.Value.Name;
-            Func<Task<IEnumerable<Application>>> getUserApps = async () => await domainPersistor.GetUserApplications(name);
+            Func<Task<IEnumerable<Application>>> getUserApps = async () => await targets.DomainPersistor.GetUserApplications(name);
 
             var errors =
-                from e in errorsInbox.GetErrorsStream()
+                from e in targets.ErrorsInbox.GetErrorsStream()
                 from apps in getUserApps()
                 from a in apps
                 where e.SourceId == a.Name
@@ -28,7 +28,7 @@ namespace RElmah.Queries.Frontend
             return errors
                 .Subscribe(payload =>
                 {
-                    frontendNotifier.Error(name, payload);
+                    targets.FrontendNotifier.Error(name, payload);
                 });
         }
     }

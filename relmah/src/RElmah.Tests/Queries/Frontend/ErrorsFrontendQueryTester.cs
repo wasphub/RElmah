@@ -28,24 +28,26 @@ namespace RElmah.Tests.Queries.Frontend
 
             //Act
             sut.Run(
-                new ValueOrError<User>(User.Create("wasp")), 
-                new StubIFrontendNotifier 
-                { 
-                    ErrorStringErrorPayload = (n, p) =>
+                new ValueOrError<User>(User.Create("wasp")), new RunTargets
+                {
+                    FrontendNotifier = new StubIFrontendNotifier
                     {
-                        notifications.Add(new NamedPayload { Name = n, Payload = p });
-                    }
-                },
-                new StubIErrorsInbox
-                {
-                    GetErrorsStream = () => Observable.Empty<ErrorPayload>()
-                },
-                new StubIErrorsBacklog(),
-                new StubIDomainPersistor
-                {
-                    GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new [] { Application.Create("a1")})
-                },
-                new StubIDomainPublisher());
+                        ErrorStringErrorPayload = (n, p) =>
+                        {
+                            notifications.Add(new NamedPayload { Name = n, Payload = p });
+                        }
+                    },
+                    ErrorsInbox = new StubIErrorsInbox
+                    {
+                        GetErrorsStream = () => Observable.Empty<ErrorPayload>()
+                    },
+                    ErrorsBacklog = new StubIErrorsBacklog(),
+                    DomainPersistor = new StubIDomainPersistor
+                    {
+                        GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
+                    },
+                    DomainPublisher = new StubIDomainPublisher()
+                });
 
             //Assert
             Assert.Equal(0, notifications.Count());
@@ -60,29 +62,31 @@ namespace RElmah.Tests.Queries.Frontend
 
             //Act
             sut.Run(
-                new ValueOrError<User>(User.Create("wasp")),
-                new StubIFrontendNotifier
+                new ValueOrError<User>(User.Create("wasp")), new RunTargets
                 {
-                    ErrorStringErrorPayload = (n, p) =>
+                    FrontendNotifier = new StubIFrontendNotifier
                     {
-                        notifications.Add(new NamedPayload { Name = n, Payload = p });
-                    }
-                },
-                new StubIErrorsInbox
-                {
-                    GetErrorsStream = () => (
-                        new[]
+                        ErrorStringErrorPayload = (n, p) =>
+                        {
+                            notifications.Add(new NamedPayload { Name = n, Payload = p });
+                        }
+                    },
+                    ErrorsInbox = new StubIErrorsInbox
+                    {
+                        GetErrorsStream = () => (
+                            new[]
                         {
                             new ErrorPayload("a1", new Error(), "e1", "")
                         }
-                    ).ToObservable()
-                },
-                new StubIErrorsBacklog(),
-                new StubIDomainPersistor
-                {
-                    GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
-                },
-                new StubIDomainPublisher());
+                        ).ToObservable()
+                    },
+                    ErrorsBacklog = new StubIErrorsBacklog(),
+                    DomainPersistor = new StubIDomainPersistor
+                    {
+                        GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
+                    },
+                    DomainPublisher = new StubIDomainPublisher()
+                });
 
             //Assert
             Assert.Equal(1, notifications.Count());
@@ -97,31 +101,33 @@ namespace RElmah.Tests.Queries.Frontend
 
             //Act
             sut.Run(
-                new ValueOrError<User>(User.Create("wasp")),
-                new StubIFrontendNotifier
+                new ValueOrError<User>(User.Create("wasp")), new RunTargets
                 {
-                    ErrorStringErrorPayload = (n, p) =>
+                    FrontendNotifier = new StubIFrontendNotifier
                     {
-                        notifications.Add(new NamedPayload { Name = n, Payload = p });
-                    }
-                },
-                new StubIErrorsInbox
-                {
-                    GetErrorsStream = () => (
-                        new[]
+                        ErrorStringErrorPayload = (n, p) =>
+                        {
+                            notifications.Add(new NamedPayload { Name = n, Payload = p });
+                        }
+                    },
+                    ErrorsInbox = new StubIErrorsInbox
+                    {
+                        GetErrorsStream = () => (
+                            new[]
                         {
                             new ErrorPayload("a1", new Error(), "e1", ""),
                             new ErrorPayload("a1", new Error(), "e2", ""),
                             new ErrorPayload("a2", new Error(), "e3", "")
                         }
-                    ).ToObservable()
-                },
-                new StubIErrorsBacklog(),
-                new StubIDomainPersistor
-                {
-                    GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
-                },
-                new StubIDomainPublisher());
+                        ).ToObservable()
+                    },
+                    ErrorsBacklog = new StubIErrorsBacklog(),
+                    DomainPersistor = new StubIDomainPersistor
+                    {
+                        GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
+                    },
+                    DomainPublisher = new StubIDomainPublisher()
+                });
 
             //Assert
             Assert.Equal(2, notifications.Count());

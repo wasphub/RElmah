@@ -31,30 +31,32 @@ namespace RElmah.Tests.Queries.Frontend
 
             //Act
             sut.Run(
-                new ValueOrError<User>(User.Create("u1")),
-                new StubIFrontendNotifier
+                new ValueOrError<User>(User.Create("u1")), new RunTargets
                 {
-                    RecapStringRecap = (n, r) =>
+                    FrontendNotifier = new StubIFrontendNotifier
                     {
-                        notifications.Add(new NamedRecap { Name = n, Recap = r });
+                        RecapStringRecap = (n, r) =>
+                        {
+                            notifications.Add(new NamedRecap { Name = n, Recap = r });
+                        }
+                    },
+                    ErrorsInbox = new StubIErrorsInbox
+                    {
+                        GetErrorsStream = () => Observable.Empty<ErrorPayload>()
+                    },
+                    ErrorsBacklog = new StubIErrorsBacklog
+                    {
+                        GetApplicationsRecapIEnumerableOfApplicationFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, Enumerable.Empty<Recap.Application>())))
+                    },
+                    DomainPersistor = new StubIDomainPersistor
+                    {
+                        GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
+                    },
+                    DomainPublisher = new StubIDomainPublisher
+                    {
+                        GetClusterApplicationsSequence = () => Observable.Empty<Delta<Relationship<Cluster, Application>>>(),
+                        GetClusterUsersSequence = () => Observable.Empty<Delta<Relationship<Cluster, User>>>()
                     }
-                },
-                new StubIErrorsInbox
-                {
-                    GetErrorsStream = () => Observable.Empty<ErrorPayload>()
-                },
-                new StubIErrorsBacklog
-                {
-                    GetApplicationsRecapIEnumerableOfApplicationFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, Enumerable.Empty<Recap.Application>())))                    
-                }, 
-                new StubIDomainPersistor
-                {
-                    GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
-                },
-                new StubIDomainPublisher
-                {
-                    GetClusterApplicationsSequence = () => Observable.Empty<Delta<Relationship<Cluster, Application>>>(),
-                    GetClusterUsersSequence        = () => Observable.Empty<Delta<Relationship<Cluster, User>>>()
                 });
 
             //Assert
@@ -90,36 +92,37 @@ namespace RElmah.Tests.Queries.Frontend
                 Notification.CreateOnNext(new ErrorPayload(application.Name, new Error(), "e1", "")).RecordAt(5)
             );
 
-
             sut.Run(
-                new ValueOrError<User>(user),
-                new StubIFrontendNotifier
+                new ValueOrError<User>(user), new RunTargets
                 {
-                    RecapStringRecap = (n, r) =>
+                    FrontendNotifier = new StubIFrontendNotifier
                     {
-                        notifications.Add(new NamedRecap { Name = n, Recap = r });
+                        RecapStringRecap = (n, r) =>
+                        {
+                            notifications.Add(new NamedRecap { Name = n, Recap = r });
+                        }
+                    },
+                    ErrorsInbox = new StubIErrorsInbox
+                    {
+                        GetErrorsStream = () => errorsStream
+                    },
+                    ErrorsBacklog = new StubIErrorsBacklog
+                    {
+                        GetApplicationsRecapIEnumerableOfApplicationFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(
+                            new ValueOrError<Recap>(
+                                new Recap(
+                                    DateTime.UtcNow,
+                                    Enumerable.Empty<Recap.Application>())))
+                    },
+                    DomainPersistor = new StubIDomainPersistor
+                    {
+                        GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { application })
+                    },
+                    DomainPublisher = new StubIDomainPublisher
+                    {
+                        GetClusterApplicationsSequence = () => clusterApplicationsStream,
+                        GetClusterUsersSequence = () => clusterUsersStream
                     }
-                },
-                new StubIErrorsInbox
-                {
-                    GetErrorsStream = () => errorsStream
-                },
-                new StubIErrorsBacklog
-                {
-                    GetApplicationsRecapIEnumerableOfApplicationFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(
-                        new ValueOrError<Recap>(
-                            new Recap(
-                                DateTime.UtcNow,
-                                Enumerable.Empty<Recap.Application>())))
-                },
-                new StubIDomainPersistor
-                {
-                    GetUserApplicationsString      = _ => Task.FromResult((IEnumerable<Application>)new[] { application })
-                },
-                new StubIDomainPublisher
-                {
-                    GetClusterApplicationsSequence = () => clusterApplicationsStream,
-                    GetClusterUsersSequence        = () => clusterUsersStream
                 });
 
 

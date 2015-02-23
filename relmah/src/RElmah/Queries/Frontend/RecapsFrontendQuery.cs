@@ -12,12 +12,12 @@ namespace RElmah.Queries.Frontend
 {
     public class RecapsFrontendQuery : IFrontendQuery
     {
-        public async Task<IDisposable> Run(ValueOrError<User> user, IFrontendNotifier frontendNotifier, IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog,  IDomainPersistor domainPersistor, IDomainPublisher domainPublisher)
+        public async Task<IDisposable> Run(ValueOrError<User> user, RunTargets targets)
         {
             var name = user.Value.Name;
 
             //Initial recap
-            var initialRecap = await InitialRecap(name, domainPersistor, errorsBacklog, (a, r) => new { Applications = a, Recap = r });
+            var initialRecap = await InitialRecap(name, targets.DomainPersistor, targets.ErrorsBacklog, (a, r) => new { Applications = a, Recap = r });
             var rs =
                 from r in initialRecap.ToSingleton().ToObservable()
                 select new
@@ -29,7 +29,7 @@ namespace RElmah.Queries.Frontend
 
             //Deltas
             var clusterApps =
-                from p in domainPublisher.GetClusterApplicationsSequence()
+                from p in targets.DomainPublisher.GetClusterApplicationsSequence()
                 let deltas = p.Target.Secondary.ToSingleton()
                 let target = p.Target.Secondary.Name
                 from u in p.Target.Primary.Users
@@ -41,7 +41,7 @@ namespace RElmah.Queries.Frontend
                     Removals  = p.Type == DeltaType.Removed ? deltas : Enumerable.Empty<Application>()
                 };
             var userApps =
-                from p in domainPublisher.GetClusterUsersSequence()
+                from p in targets.DomainPublisher.GetClusterUsersSequence()
                 let deltas = p.Target.Primary.Applications
                 where p.Target.Secondary.Name == name
                 select new
@@ -56,11 +56,11 @@ namespace RElmah.Queries.Frontend
             return rs.Concat(apps)
                 .Subscribe(async payload =>
                 {
-                    var recap = await errorsBacklog.GetApplicationsRecap(payload.Applications, xs => xs.Count());
+                    var recap = await targets.ErrorsBacklog.GetApplicationsRecap(payload.Applications, xs => xs.Count());
                     if (!recap.HasValue) return;
 
-                    frontendNotifier.Recap(name, recap.Value);
-                    frontendNotifier.UserApplications(name, 
+                    targets.FrontendNotifier.Recap(name, recap.Value);
+                    targets.FrontendNotifier.UserApplications(name, 
                         payload.Additions.Select(a => a.Name), 
                         payload.Removals.Select(a => a.Name));
                 });

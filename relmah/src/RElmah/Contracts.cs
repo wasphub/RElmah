@@ -113,6 +113,15 @@ namespace RElmah
 
     public interface IFrontendQuery
     {
-        Task<IDisposable> Run(ValueOrError<User> user, IFrontendNotifier frontendNotifier, IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPersistor domainPersistor, IDomainPublisher domainPublisher);
+        Task<IDisposable> Run(ValueOrError<User> user, RunTargets targets);
+    }
+
+    public class RunTargets
+    {
+        public IFrontendNotifier FrontendNotifier { get; set; }
+        public IErrorsInbox ErrorsInbox { get; set; }
+        public IErrorsBacklog ErrorsBacklog { get; set; }
+        public IDomainPersistor DomainPersistor { get; set; }
+        public IDomainPublisher DomainPublisher { get; set; }
     }
 }
