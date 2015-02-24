@@ -7,6 +7,7 @@ using RElmah.Publishers;
 using RElmah.Services;
 using RElmah.Services.Inbox;
 using RElmah.Queries;
+using RElmah.Queries.Backend;
 using RElmah.Queries.Frontend;
 
 namespace RElmah.Middleware
@@ -15,9 +16,10 @@ namespace RElmah.Middleware
     {
         public static T Prepare<T>(
             this IRegistry registry, 
-            IFrontendNotifier frontendNotifier, 
+            IFrontendNotifier frontendNotifier,
+            IBackendNotifier backendNotifier, 
             IIdentityProvider identityProvider,
-            Func<IFrontendQueriesFactory, IErrorsInbox, IDomainPersistor, T> resultor,
+            Func<IFrontendQueriesFactory, IBackendQueriesFactory, IErrorsInbox, IDomainPersistor, T> resultor,
             Settings settings = null)
         {
             var bl = new InMemoryErrorsBacklog();
@@ -29,9 +31,11 @@ namespace RElmah.Middleware
 
             var dh = new DomainHolder(ds);
 
-            var qf = new FrontendQueriesFactory(ei, bl, dh, dh, frontendNotifier,
+            var fqf = new FrontendQueriesFactory(ei, bl, dh, dh, frontendNotifier,
                      () => new ErrorsFrontendQuery(),
                      () => new RecapsFrontendQuery());
+            var bqf = new BackendQueriesFactory(ei, bl, dh, dh, backendNotifier,
+                     () => new BackendBusQuery());
 
             //Infrastructure
             registry.Register(typeof(IErrorsBacklog),          () => bl);
@@ -39,9 +43,10 @@ namespace RElmah.Middleware
             registry.Register(typeof(IDomainPublisher),        () => dh);
             registry.Register(typeof(IDomainPersistor),        () => dh);
             registry.Register(typeof(IDomainStore),            () => ds);
-            registry.Register(typeof(IFrontendQueriesFactory), () => qf);
+            registry.Register(typeof(IFrontendQueriesFactory), () => fqf);
+            registry.Register(typeof(IBackendQueriesFactory),  () => bqf);
 
-            return resultor(qf, ei, dh);
+            return resultor(fqf, bqf, ei, dh);
         }
     }
 }

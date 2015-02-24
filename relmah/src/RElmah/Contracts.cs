@@ -46,6 +46,7 @@ namespace RElmah.Notifiers
 
     public interface IBackendNotifier
     {
+        void Error(ErrorPayload payload);
     }
 }
 
@@ -62,9 +63,20 @@ namespace RElmah.Queries
         void Teardown(string token);
     }
 
+    public interface IBackendQuery
+    {
+        Task<IDisposable> Run(RunTargets targets);
+    }
+
+    public interface IBackendQueriesFactory
+    {
+        void Setup();
+    }
+
     public class RunTargets
     {
         public IFrontendNotifier FrontendNotifier { get; set; }
+        public IBackendNotifier BackendNotifier { get; set; }
         public IErrorsInbox ErrorsInbox { get; set; }
         public IErrorsBacklog ErrorsBacklog { get; set; }
         public IDomainPersistor DomainPersistor { get; set; }

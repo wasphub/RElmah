@@ -138,6 +138,8 @@
     <Compile Include="Foundation\Relationship.cs" />
     <Compile Include="Foundation\ValueOrError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\Backend\BackendBusQuery.cs" />
+    <Compile Include="Queries\Backend\BackendQueriesFactory.cs" />
     <Compile Include="Queries\Frontend\ErrorsFrontendQuery.cs" />
     <Compile Include="Queries\Frontend\FrontendQueriesFactory.cs" />
     <Compile Include="Queries\Frontend\RecapsFrontendQuery.cs" />

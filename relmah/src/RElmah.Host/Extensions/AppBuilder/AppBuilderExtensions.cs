@@ -12,17 +12,21 @@ namespace RElmah.Host.Extensions.AppBuilder
         public static IAppBuilder UseRElmah(this IAppBuilder builder, Settings settings = null)
         {
             var registry = new Registry();
-            var notifier = new FrontendNotifier();
+
+            var frontend = new FrontendNotifier();
+            var backend  = new BackendNotifier();
+
             var ip       = settings != null && settings.Bootstrap != null && settings.Bootstrap.IdentityProviderBuilder != null
                          ? settings.Bootstrap.IdentityProviderBuilder()
                          : new WindowsPrincipalIdentityProvider();
 
-            var bp       = registry.Prepare(notifier, ip, (qf, ei, dh) => new { qf, ei, dh }, settings);
+            var bp       = registry.Prepare(frontend, backend, ip, (fqf, bqf, ei, dh) => new { fqf, bqf, ei, dh }, settings);
 
             var dp       = new DelegatingUserIdProvider(ip);
 
             registry.Register(typeof(IUserIdProvider), () => dp);
-            registry.Register(typeof(ErrorsHub), () => new ErrorsHub(bp.qf, dp));
+            registry.Register(typeof(ErrorsHub), () => new ErrorsHub(bp.fqf, dp));
+            registry.Register(typeof(BackendHub), () => new BackendHub());
 
             if (settings != null && settings.Bootstrap != null && settings.Bootstrap.Registry != null)
                 settings.Bootstrap.Registry(registry);
@@ -38,6 +42,8 @@ namespace RElmah.Host.Extensions.AppBuilder
             if (settings != null && settings.Domain != null && settings.Domain.Exposed)
                 builder = builder.UseRElmahMiddleware<DomainMiddleware>(bp.dh, settings.Domain);
 
+            bp.bqf.Setup();
+            
             return builder;
         }
 

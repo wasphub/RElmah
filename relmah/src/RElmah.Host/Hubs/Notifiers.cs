@@ -32,4 +32,12 @@ namespace RElmah.Host.Hubs
             ErrorsHub.RemoveGroup(token, @group);
         }
     }
+
+    public class BackendNotifier : IBackendNotifier
+    {
+        public void Error(ErrorPayload payload)
+        {
+            BackendHub.Error(payload);
+        }
+    }
 }
