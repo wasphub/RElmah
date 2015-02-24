@@ -37,22 +37,22 @@ namespace RElmah.Host.Hubs
 
     public class BackendNotifier : IBackendNotifier
     {
+        private readonly IHubProxy _proxy;
+
         public BackendNotifier(string endpoint, IErrorsInbox errorsInbox)
         {
             var connection = new HubConnection(endpoint);
 
-            var proxy = connection.CreateHubProxy("relmah-backend");
+            _proxy = connection.CreateHubProxy("relmah-backend");
 
-            proxy.On<ErrorPayload>(
-                "error",
-                p => errorsInbox.Post(p));
+            _proxy.On<ErrorPayload>("error", p => errorsInbox.Post(p));
 
             connection.Start();
         }
 
         public void Error(ErrorPayload payload)
         {
-            BackendHub.Error(payload);
+            _proxy.Invoke("Error", payload);
         }
     }
 }
