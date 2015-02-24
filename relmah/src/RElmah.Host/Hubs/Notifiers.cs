@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Microsoft.AspNet.SignalR.Client;
 using RElmah.Common;
+using RElmah.Errors;
 using RElmah.Models;
 using RElmah.Notifiers;
 
@@ -35,6 +37,19 @@ namespace RElmah.Host.Hubs
 
     public class BackendNotifier : IBackendNotifier
     {
+        public BackendNotifier(string endpoint, IErrorsInbox errorsInbox)
+        {
+            var connection = new HubConnection(endpoint);
+
+            var proxy = connection.CreateHubProxy("relmah-backend");
+
+            proxy.On<ErrorPayload>(
+                "error",
+                p => errorsInbox.Post(p));
+
+            connection.Start();
+        }
+
         public void Error(ErrorPayload payload)
         {
             BackendHub.Error(payload);

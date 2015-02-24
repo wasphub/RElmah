@@ -9,6 +9,7 @@ using RElmah.Services.Inbox;
 using RElmah.Queries;
 using RElmah.Queries.Backend;
 using RElmah.Queries.Frontend;
+using RElmah.Services.Nulls;
 
 namespace RElmah.Middleware
 {
@@ -17,9 +18,9 @@ namespace RElmah.Middleware
         public static T Prepare<T>(
             this IRegistry registry, 
             IFrontendNotifier frontendNotifier,
-            IBackendNotifier backendNotifier, 
+            Func<string, IErrorsInbox, IBackendNotifier> backendNotifierCreator, 
             IIdentityProvider identityProvider,
-            Func<IFrontendQueriesFactory, IBackendQueriesFactory, IErrorsInbox, IDomainPersistor, T> resultor,
+            Func<IFrontendQueriesFactory, IBackendQueriesFactory, IErrorsInbox, IDomainPersistor, IBackendNotifier, T> resultor,
             Settings settings = null)
         {
             var bl = new InMemoryErrorsBacklog();
@@ -34,8 +35,15 @@ namespace RElmah.Middleware
             var fqf = new FrontendQueriesFactory(ei, bl, dh, dh, frontendNotifier,
                      () => new ErrorsFrontendQuery(),
                      () => new RecapsFrontendQuery());
-            var bqf = new BackendQueriesFactory(ei, bl, dh, dh, backendNotifier,
-                     () => new BackendBusQuery());
+
+            var bqf = NullBackendQueriesFactory.Instance;
+            var bn  = NullBackendNotifier.Instance;
+            if (settings != null && settings.Bootstrap != null &&
+                string.IsNullOrWhiteSpace(settings.Bootstrap.BackendEndpoint))
+            {
+                bn  = backendNotifierCreator(settings.Bootstrap.BackendEndpoint, ei);
+                bqf = new BackendQueriesFactory(ei, bl, dh, dh, bn, () => new BackendBusQuery());
+            }
 
             //Infrastructure
             registry.Register(typeof(IErrorsBacklog),          () => bl);
@@ -46,7 +54,7 @@ namespace RElmah.Middleware
             registry.Register(typeof(IFrontendQueriesFactory), () => fqf);
             registry.Register(typeof(IBackendQueriesFactory),  () => bqf);
 
-            return resultor(fqf, bqf, ei, dh);
+            return resultor(fqf, bqf, ei, dh, bn);
         }
     }
 }

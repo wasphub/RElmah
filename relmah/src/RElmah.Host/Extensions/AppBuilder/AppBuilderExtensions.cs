@@ -4,6 +4,7 @@ using RElmah.Host.Hubs;
 using RElmah.Host.Services;
 using RElmah.Middleware;
 using RElmah.Models.Settings;
+using RElmah.Notifiers;
 
 namespace RElmah.Host.Extensions.AppBuilder
 {
@@ -14,13 +15,12 @@ namespace RElmah.Host.Extensions.AppBuilder
             var registry = new Registry();
 
             var frontend = new FrontendNotifier();
-            var backend  = new BackendNotifier();
 
             var ip       = settings != null && settings.Bootstrap != null && settings.Bootstrap.IdentityProviderBuilder != null
                          ? settings.Bootstrap.IdentityProviderBuilder()
                          : new WindowsPrincipalIdentityProvider();
 
-            var bp       = registry.Prepare(frontend, backend, ip, (fqf, bqf, ei, dh) => new { fqf, bqf, ei, dh }, settings);
+            var bp       = registry.Prepare(frontend, (ep, ei) => new BackendNotifier(ep, ei), ip, (fqf, bqf, ei, dh, bn) => new { fqf, bqf, ei, dh, bn }, settings);
 
             var dp       = new DelegatingUserIdProvider(ip);
 

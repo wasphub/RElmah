@@ -9,5 +9,7 @@ namespace RElmah.Models.Settings
         public Action<IDomainPersistor> Domain { get; set; }
 
         public Func<IIdentityProvider> IdentityProviderBuilder { get; set; }
+
+        public string BackendEndpoint { get; set; }
     }
 }
