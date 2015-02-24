@@ -10,6 +10,10 @@ namespace RElmah.Services.Nulls
 {
     class NullErrorsBacklog : IErrorsBacklog
     {
+        private NullErrorsBacklog() { }
+
+        public static IErrorsBacklog Instance = new NullErrorsBacklog();
+
         public Task Store(ErrorPayload payload)
         {
             return Task.FromResult((object)null);

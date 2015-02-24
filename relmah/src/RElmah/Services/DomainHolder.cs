@@ -76,7 +76,7 @@ namespace RElmah.Services
             clusterApps.Subscribe(p => _usersApplications.SetItem(p.User, p.Op(p.Current, p.Applications)));
         }
 
-        public DomainHolder() : this(new NullDomainStore()) { }
+        public DomainHolder() : this(NullDomainStore.Instance) { }
 
         public IObservable<Delta<Cluster>> GetClustersSequence()
         {

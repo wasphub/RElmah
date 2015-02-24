@@ -19,7 +19,7 @@ namespace RElmah.Services.Inbox
         private readonly Subject<ErrorPayload> _errors;
         private readonly IObservable<ErrorPayload> _publishedErrors;
 
-        public SerializedErrorsInbox() : this(new NullErrorsBacklog()) { }
+        public SerializedErrorsInbox() : this(NullErrorsBacklog.Instance) { }
 
         public SerializedErrorsInbox(IErrorsBacklog errorsBacklog)
         {

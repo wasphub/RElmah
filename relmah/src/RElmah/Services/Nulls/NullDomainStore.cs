@@ -9,6 +9,10 @@ namespace RElmah.Services.Nulls
 {
     class NullDomainStore : IDomainStore
     {
+        private NullDomainStore() { }
+
+        public static IDomainStore Instance = new NullDomainStore();
+
         public Task<ValueOrError<Cluster>> AddCluster(string name)
         {
             return Task.FromResult(new ValueOrError<Cluster>(Cluster.Create(name)));
