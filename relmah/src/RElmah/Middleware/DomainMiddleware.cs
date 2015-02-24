@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Owin;
+using RElmah.Domain;
 using RElmah.Models.Settings;
 
 namespace RElmah.Middleware

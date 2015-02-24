@@ -3,40 +3,108 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using RElmah.Common;
+using RElmah.Domain;
+using RElmah.Errors;
 using RElmah.Foundation;
 using RElmah.Models;
+using RElmah.Notifiers;
+using RElmah.Publishers;
 
 namespace RElmah
 {
-    /// <summary>
-    /// This contract receives errors from the 
-    /// outside world, 'parks' them and makes
-    /// them observable. The 'parking' strategy
-    /// is left to the implementor.
-    /// </summary>
-    public interface IErrorsInbox
-    {
-        Task Post(ErrorPayload payload);
-        IObservable<ErrorPayload> GetErrorsStream();
-    }
-
-    /// <summary>
-    /// This contract represents a persistent
-    /// store where errors are saved. Storing an
-    /// error could be a lenghty operation,
-    /// therefore the action returns a Task.
-    /// </summary>
-    public interface IErrorsBacklog
-    {
-        Task Store(ErrorPayload payload);
-        Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> reducer);
-    }
-
     public interface IIdentityProvider
     {
         IIdentity GetIdentity(object request);
     }
 
+    public interface IResolver
+    {
+        T Resolve<T>();
+    }
+
+    public interface IRegistry : IResolver
+    {
+        void Register<T>(Func<T> supplier);
+        void Register(Type type, Func<object> supplier);
+    }
+}
+
+namespace RElmah.Notifiers
+{
+    public interface IFrontendNotifier
+    {
+        void Recap(string user, Recap recap);
+
+        void Error(string user, ErrorPayload payload);
+
+        void UserApplications(string user, IEnumerable<string> added, IEnumerable<string> removed);
+
+        void AddGroup(string token, string group);
+
+        void RemoveGroup(string token, string group);
+    }
+
+    public interface IBackendNotifier
+    {
+    }
+}
+
+namespace RElmah.Queries
+{
+    public interface IFrontendQuery
+    {
+        Task<IDisposable> Run(ValueOrError<User> user, RunTargets targets);
+    }
+
+    public interface IFrontendQueriesFactory
+    {
+        void Setup(string user, string token, Action<string> connector);
+        void Teardown(string token);
+    }
+
+    public class RunTargets
+    {
+        public IFrontendNotifier FrontendNotifier { get; set; }
+        public IErrorsInbox ErrorsInbox { get; set; }
+        public IErrorsBacklog ErrorsBacklog { get; set; }
+        public IDomainPersistor DomainPersistor { get; set; }
+        public IDomainPublisher DomainPublisher { get; set; }
+    }
+}
+
+namespace RElmah.Publishers
+{
+    public interface IErrorsPublisher
+    {
+        IObservable<ErrorPayload> GetErrorsStream();
+    }
+
+    public interface IDomainPublisher
+    {
+        IObservable<Delta<Cluster>> GetClustersSequence();
+        IObservable<Delta<Application>> GetApplicationsSequence();
+        IObservable<Delta<User>> GetUsersSequence();
+        IObservable<Delta<Relationship<Cluster, User>>> GetClusterUsersSequence();
+        IObservable<Delta<Relationship<Cluster, Application>>> GetClusterApplicationsSequence();
+    }
+}
+
+namespace RElmah.Errors
+{
+    public interface IErrorsInbox : IErrorsPublisher
+    {
+        Task Post(ErrorPayload payload);
+    }
+
+    public interface IErrorsBacklog
+    {
+        Task Store(ErrorPayload payload);
+        Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> reducer);
+    }
+}
+
+namespace RElmah.Domain
+{
     public interface IDomainReader
     {
         Task<IEnumerable<Cluster>> GetClusters();
@@ -67,61 +135,5 @@ namespace RElmah
     public interface IDomainStore : IDomainPersistor
     {
     }
-
-    public interface IDomainPublisher
-    {
-        IObservable<Delta<Cluster>> GetClustersSequence();
-        IObservable<Delta<Application>> GetApplicationsSequence();
-        IObservable<Delta<User>> GetUsersSequence();
-        IObservable<Delta<Relationship<Cluster, User>>> GetClusterUsersSequence();
-        IObservable<Delta<Relationship<Cluster, Application>>> GetClusterApplicationsSequence();
-    }
-
-    public interface IResolver 
-    {
-        T Resolve<T>();
-    }
-
-    public interface IRegistry : IResolver
-    {
-        void Register<T>(Func<T> supplier);
-        void Register(Type type, Func<object> supplier);
-    }
-
-    public interface IFrontendNotifier
-    {
-        void Recap(string user, Recap recap);
-
-        void Error(string user, ErrorPayload payload);
-
-        void UserApplications(string user, IEnumerable<string> added, IEnumerable<string> removed);
-
-        void AddGroup(string token, string group);
-
-        void RemoveGroup(string token, string group);
-    }
-
-    public interface IBackendNotifier
-    {
-    }
-
-    public interface IFrontendQueriesFactory
-    {
-        void Setup(string user, string token, Action<string> connector);
-        void Teardown(string token);
-    }
-
-    public interface IFrontendQuery
-    {
-        Task<IDisposable> Run(ValueOrError<User> user, RunTargets targets);
-    }
-
-    public class RunTargets
-    {
-        public IFrontendNotifier FrontendNotifier { get; set; }
-        public IErrorsInbox ErrorsInbox { get; set; }
-        public IErrorsBacklog ErrorsBacklog { get; set; }
-        public IDomainPersistor DomainPersistor { get; set; }
-        public IDomainPublisher DomainPublisher { get; set; }
-    }
 }
+

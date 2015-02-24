@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Owin;
+using RElmah.Domain;
+using RElmah.Errors;
 using RElmah.Models.Settings;
 
 namespace RElmah.Middleware

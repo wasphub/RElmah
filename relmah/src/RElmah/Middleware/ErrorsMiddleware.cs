@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using RElmah.Common;
+using RElmah.Errors;
 using RElmah.Extensions;
 using RElmah.Models.Settings;
 

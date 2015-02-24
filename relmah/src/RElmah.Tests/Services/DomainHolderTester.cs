@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RElmah.Common;
+using RElmah.Domain.Fakes;
 using RElmah.Foundation;
 using RElmah.Models;
 using RElmah.Services;
@@ -26,10 +27,10 @@ namespace RElmah.Tests.Services
                 store.Add(n, Cluster.Create(n));
                 return store[n];
             });
-            var sut = new DomainHolder(new Fakes.StubIDomainStore
+            var sut = new DomainHolder(new StubIDomainStore
             {
                 AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(adder(n))),
-                GetClusters = () => Task.FromResult((IEnumerable<Cluster>)store.Values),
+                GetClusters      = () => Task.FromResult((IEnumerable<Cluster>)store.Values),
                 GetClusterString = n => Task.FromResult(new ValueOrError<Cluster>(store[n]))
             });
 
@@ -73,7 +74,7 @@ namespace RElmah.Tests.Services
             });
             var remover = new Func<string, bool>(store.Remove);
 
-            var sut = new DomainHolder(new Fakes.StubIDomainStore
+            var sut = new DomainHolder(new StubIDomainStore
             {
                 AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(adder(n))),
                 GetClusters = () => Task.FromResult((IEnumerable<Cluster>)store.Values),
@@ -126,7 +127,7 @@ namespace RElmah.Tests.Services
                 store.Add(n, Application.Create(n));
                 return store[n];
             });
-            var sut = new DomainHolder(new Fakes.StubIDomainStore
+            var sut = new DomainHolder(new StubIDomainStore
             {
                 AddApplicationString = n => Task.FromResult(new ValueOrError<Application>(adder(n))),
                 GetApplications = () => Task.FromResult((IEnumerable<Application>)store.Values),
@@ -173,7 +174,7 @@ namespace RElmah.Tests.Services
             });
             var remover = new Func<string, bool>(store.Remove);
 
-            var sut = new DomainHolder(new Fakes.StubIDomainStore
+            var sut = new DomainHolder(new StubIDomainStore
             {
                 AddApplicationString = n => Task.FromResult(new ValueOrError<Application>(adder(n))),
                 GetApplications = () => Task.FromResult((IEnumerable<Application>)store.Values),
@@ -226,7 +227,7 @@ namespace RElmah.Tests.Services
                 store.Add(n, User.Create(n));
                 return store[n];
             });
-            var sut = new DomainHolder(new Fakes.StubIDomainStore
+            var sut = new DomainHolder(new StubIDomainStore
             {
                 AddUserString = n => Task.FromResult(new ValueOrError<User>(adder(n))),
                 GetUsers = () => Task.FromResult((IEnumerable<User>)store.Values),
@@ -273,7 +274,7 @@ namespace RElmah.Tests.Services
             });
             var remover = new Func<string, bool>(store.Remove);
 
-            var sut = new DomainHolder(new Fakes.StubIDomainStore
+            var sut = new DomainHolder(new StubIDomainStore
             {
                 AddUserString = n => Task.FromResult(new ValueOrError<User>(adder(n))),
                 GetUsers = () => Task.FromResult((IEnumerable<User>)store.Values),
@@ -342,7 +343,7 @@ namespace RElmah.Tests.Services
                 var user = store.Users[store.ClusterUsers[c][0]];
                 return new Relationship<Cluster, User>(Cluster.Create(c).SetUser(user), user);
             });
-            var sut = new DomainHolder(new Fakes.StubIDomainStore
+            var sut = new DomainHolder(new StubIDomainStore
             {
                 AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
                 AddUserString = n => Task.FromResult(new ValueOrError<User>(uAdder(n))),
@@ -411,7 +412,7 @@ namespace RElmah.Tests.Services
                 var user = store.Users[u];
                 return new Relationship<Cluster, User>(Cluster.Create(c), user);
             });
-            var sut = new DomainHolder(new Fakes.StubIDomainStore
+            var sut = new DomainHolder(new StubIDomainStore
             {
                 AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
                 AddUserString = n => Task.FromResult(new ValueOrError<User>(uAdder(n))),
@@ -493,7 +494,7 @@ namespace RElmah.Tests.Services
                 store.Clusters[c] = cluster;
                 return new Relationship<Cluster, Application>(cluster, app);
             });
-            var sut = new DomainHolder(new Fakes.StubIDomainStore
+            var sut = new DomainHolder(new StubIDomainStore
             {
                 AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
                 AddUserString = n => Task.FromResult(new ValueOrError<User>(uAdder(n))),
@@ -595,7 +596,7 @@ namespace RElmah.Tests.Services
                 var user = store.Applications[u];
                 return new Relationship<Cluster, Application>(Cluster.Create(c), user);
             });
-            var sut = new DomainHolder(new Fakes.StubIDomainStore
+            var sut = new DomainHolder(new StubIDomainStore
             {
                 AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
                 AddUserString = n => Task.FromResult(new ValueOrError<User>(uAdder(n))),

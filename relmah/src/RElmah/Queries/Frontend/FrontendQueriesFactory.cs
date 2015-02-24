@@ -2,9 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using RElmah.Domain;
+using RElmah.Errors;
 using RElmah.Extensions;
 using RElmah.Foundation;
 using RElmah.Models;
+using RElmah.Notifiers;
+using RElmah.Publishers;
 
 namespace RElmah.Queries.Frontend
 {

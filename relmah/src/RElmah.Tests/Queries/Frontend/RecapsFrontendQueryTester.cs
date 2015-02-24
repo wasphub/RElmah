@@ -6,9 +6,13 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Microsoft.Reactive.Testing;
 using RElmah.Common;
-using RElmah.Fakes;
+using RElmah.Domain.Fakes;
+using RElmah.Errors.Fakes;
 using RElmah.Foundation;
 using RElmah.Models;
+using RElmah.Notifiers.Fakes;
+using RElmah.Publishers.Fakes;
+using RElmah.Queries;
 using RElmah.Queries.Frontend;
 using Xunit;
 

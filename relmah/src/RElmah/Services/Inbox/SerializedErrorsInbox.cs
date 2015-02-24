@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using RElmah.Common;
+using RElmah.Errors;
 using RElmah.Foundation;
 using RElmah.Models;
 using RElmah.Services.Nulls;

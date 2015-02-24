@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using RElmah.Common;
+using RElmah.Domain;
+using RElmah.Errors;
 using RElmah.Extensions;
 using RElmah.Foundation;
 using RElmah.Models;

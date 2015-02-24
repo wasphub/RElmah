@@ -1,4 +1,5 @@
 using System;
+using RElmah.Domain;
 
 namespace RElmah.Models.Settings
 {
