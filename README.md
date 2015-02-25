@@ -27,7 +27,7 @@ Current version is 0.4, which means some foundations are there, but it's not rea
 * Cleaner JS client
 * More unit tests, with a decent, although not optimal, coverage
 
-You might want to have a look and see if you like what's happening, and maybe contribute with ideas or coding. ANd I just added a [Trello] board where I'll try to keep ideas and progress up to date.
+You might want to have a look and see if you like what's happening, and maybe contribute with ideas or coding. And I just added a [Trello] board where I'll try to keep ideas and progress up to date.
 
 Yeah, but... what's your goal here?
 ------
