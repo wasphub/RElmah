@@ -25,8 +25,13 @@ namespace RElmah.Host.Extensions.AppBuilder
             var dp       = new DelegatingUserIdProvider(ip);
 
             registry.Register(typeof(IUserIdProvider), () => dp);
+
+            //Frontend hub
             registry.Register(typeof(ErrorsHub), () => new ErrorsHub(bp.fqf, dp));
-            registry.Register(typeof(BackendHub), () => new BackendHub());
+
+            //Backend hub, optional
+            if (settings != null && settings.Bootstrap != null && settings.Bootstrap.RunBackend)
+                registry.Register(typeof(BackendHub), () => new BackendHub());
 
             if (settings != null && settings.Bootstrap != null && settings.Bootstrap.Registry != null)
                 settings.Bootstrap.Registry(registry);

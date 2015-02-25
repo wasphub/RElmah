@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Owin;
+using RElmah.Extensions;
 using RElmah.Host.Extensions.AppBuilder;
 using RElmah.Host.Services;
 using RElmah.Models.Settings;
@@ -16,6 +18,8 @@ namespace RElmah.Server
     {
         public void Configuration(IAppBuilder app)
         {
+            var appSettings = ConfigurationManager.AppSettings;
+
             app
                 .Map("/signalr", builder =>
                 {
@@ -41,6 +45,9 @@ namespace RElmah.Server
                     {       
                         //Enable the following line to use the basic client side token for authentication (for test purposes)
                         IdentityProviderBuilder = () => new ClientTokenIdentityProvider(),
+
+                        RunBackend = appSettings["runBackend"].IsTruthy(),
+                        TargetBackendEndpoint = appSettings["targetBackendEndpoint"],
 
                         Domain = async cu =>
                         {              

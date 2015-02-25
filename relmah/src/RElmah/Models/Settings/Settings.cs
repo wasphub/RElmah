@@ -11,6 +11,5 @@ namespace RElmah.Models.Settings
         public BootstrapperSettings Bootstrap { get; set; }
         public ErrorsSettings Errors { get; set; }
         public DomainSettings Domain { get; set; }
-
     }
 }

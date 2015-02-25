@@ -38,9 +38,9 @@ namespace RElmah.Middleware
 
             var bqf = NullBackendQueriesFactory.Instance;
             var bn  = NullBackendNotifier.Instance;
-            if (settings != null && settings.Bootstrap != null && !string.IsNullOrWhiteSpace(settings.Bootstrap.BackendEndpoint))
+            if (settings != null && settings.Bootstrap != null && !string.IsNullOrWhiteSpace(settings.Bootstrap.TargetBackendEndpoint))
             {
-                bn  = backendNotifierCreator(settings.Bootstrap.BackendEndpoint, ei);
+                bn  = backendNotifierCreator(settings.Bootstrap.TargetBackendEndpoint, ei);
                 bqf = new BackendQueriesFactory(ei, bl, dh, dh, bn, () => new BackendBusQuery());
             }
 

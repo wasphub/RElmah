@@ -118,6 +118,7 @@
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\OwinExtensions.cs" />
     <Compile Include="Extensions\DisposableExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Foundation\AtomicImmutableList.cs" />
     <Compile Include="Foundation\LayeredDisposable.cs" />
     <Compile Include="Middleware\DomainMiddleware.cs" />

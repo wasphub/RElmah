@@ -10,6 +10,7 @@ namespace RElmah.Models.Settings
 
         public Func<IIdentityProvider> IdentityProviderBuilder { get; set; }
 
-        public string BackendEndpoint { get; set; }
+        public string TargetBackendEndpoint { get; set; }
+        public bool RunBackend { get; set; }
     }
 }
