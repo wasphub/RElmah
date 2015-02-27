@@ -20,6 +20,10 @@ namespace RElmah.Server
         {
             var appSettings = ConfigurationManager.AppSettings;
 
+            var runBackend = appSettings["runBackend"].IsTruthy();
+            var isTruthy = appSettings["winAuth"].IsTruthy();
+            var targetBackendEndpoint = appSettings["targetBackendEndpoint"];
+
             app
                 .Map("/signalr", builder =>
                 {
@@ -44,18 +48,21 @@ namespace RElmah.Server
                     Bootstrap = new BootstrapperSettings
                     {       
                         //Enable the following line to use the basic client side token for authentication (for test purposes)
-                        IdentityProviderBuilder = () => new ClientTokenIdentityProvider(),
+                        IdentityProviderBuilder = () => isTruthy 
+                                                        ? (IIdentityProvider)new WindowsPrincipalIdentityProvider() 
+                                                        : new ClientTokenIdentityProvider(),
 
-                        RunBackend = appSettings["runBackend"].IsTruthy(),
-                        TargetBackendEndpoint = appSettings["targetBackendEndpoint"],
+                        RunBackend = runBackend,
+                        TargetBackendEndpoint = targetBackendEndpoint,
 
                         Domain = async cu =>
                         {              
                             var c1 = await cu.AddCluster("foo");
                             var c2 = await cu.AddCluster("bar");
 
-                            var a1 = await cu.AddApplication("sample");
-                            var a2 = await cu.AddApplication("x");
+                            var a1 = await cu.AddApplication("e7001");
+                            var a2 = await cu.AddApplication("e7002");
+                            var a3 = await cu.AddApplication("e7003");
 
                             //For Windows Auth testing
                             var u1 = await cu.AddUser(string.Format(@"{0}\{1}", Environment.UserDomainName, Environment.UserName));
@@ -68,6 +75,7 @@ namespace RElmah.Server
                             Task.WaitAll(
                                 cu.AddApplicationToCluster(c1.Value.Name, a1.Value.Name),
                                 cu.AddApplicationToCluster(c2.Value.Name, a2.Value.Name),
+                                cu.AddApplicationToCluster(c2.Value.Name, a3.Value.Name),
 
                                 cu.AddUserToCluster(c1.Value.Name, u1.Value.Name),
                                 cu.AddUserToCluster(c1.Value.Name, u2.Value.Name),

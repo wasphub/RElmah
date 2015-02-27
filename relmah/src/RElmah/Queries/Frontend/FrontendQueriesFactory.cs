@@ -15,6 +15,7 @@ namespace RElmah.Queries.Frontend
     public class FrontendQueriesFactory : IFrontendQueriesFactory
     {
         private readonly IErrorsInbox  _errorsInbox;
+        private readonly IErrorsInbox _backendErrorsInbox;
         private readonly IErrorsBacklog _errorsBacklog;
         private readonly IDomainPublisher _domainPublisher;
         private readonly IDomainPersistor _domainPersistor;
@@ -23,11 +24,12 @@ namespace RElmah.Queries.Frontend
 
         private readonly AtomicImmutableDictionary<string, LayeredDisposable> _subscriptions = new AtomicImmutableDictionary<string, LayeredDisposable>();
 
-        public FrontendQueriesFactory(IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor,  
+        public FrontendQueriesFactory(IErrorsInbox errorsInbox, IErrorsInbox backendErrorsInbox, IErrorsBacklog errorsBacklog, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor,  
             IFrontendNotifier frontendNotifier,
             params Func<IFrontendQuery>[] subscriptors)
         {
             _errorsInbox  = errorsInbox;
+            _backendErrorsInbox = backendErrorsInbox;
             _errorsBacklog = errorsBacklog;
             _domainPublisher = domainPublisher;
             _domainPersistor = domainPersistor;
@@ -47,6 +49,7 @@ namespace RElmah.Queries.Frontend
                 {
                     FrontendNotifier = _frontendNotifier,
                     ErrorsInbox = _errorsInbox,
+                    BackendErrorsInbox = _backendErrorsInbox,
                     ErrorsBacklog = _errorsBacklog,
                     DomainPersistor = _domainPersistor,
                     DomainPublisher = _domainPublisher

@@ -26,13 +26,15 @@ namespace RElmah.Middleware
             var bl = new InMemoryErrorsBacklog();
             var ei = new QueuedErrorsInbox(bl);
 
+            var bi = new QueuedErrorsInbox();   //for backend only
+
             var ds = settings != null && settings.Domain != null && settings.Domain.DomainStoreBuilder != null
                    ? settings.Domain.DomainStoreBuilder()
                    : new InMemoryDomainStore();
 
             var dh = new DomainHolder(ds);
 
-            var fqf = new FrontendQueriesFactory(ei, bl, dh, dh, frontendNotifier,
+            var fqf = new FrontendQueriesFactory(ei, bi, bl, dh, dh, frontendNotifier,
                      () => new ErrorsFrontendQuery(),
                      () => new RecapsFrontendQuery());
 
@@ -40,7 +42,7 @@ namespace RElmah.Middleware
             var bn  = NullBackendNotifier.Instance;
             if (settings != null && settings.Bootstrap != null && !string.IsNullOrWhiteSpace(settings.Bootstrap.TargetBackendEndpoint))
             {
-                bn  = backendNotifierCreator(settings.Bootstrap.TargetBackendEndpoint, ei);
+                bn  = backendNotifierCreator(settings.Bootstrap.TargetBackendEndpoint, bi);
                 bqf = new BackendQueriesFactory(ei, bl, dh, dh, bn, () => new BackendBusQuery());
             }
 

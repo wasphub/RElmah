@@ -7,9 +7,9 @@ namespace RElmah.Host.Hubs
     [HubName("relmah-backend")]
     public class BackendHub : Hub
     {
-        public static void Error(ErrorPayload payload)
+        public void Error(ErrorPayload payload)
         {
-            GlobalHost.ConnectionManager.GetHubContext<BackendHub>().Clients.All.error(payload);
+            Clients.Others.error(payload);
         }
     }
 }

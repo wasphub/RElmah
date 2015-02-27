@@ -19,7 +19,7 @@ namespace RElmah.Queries.Frontend
             Func<Task<IEnumerable<Application>>> getUserApps = async () => await targets.DomainPersistor.GetUserApplications(name);
 
             var errors =
-                from e in targets.ErrorsInbox.GetErrorsStream()
+                from e in targets.ErrorsInbox.GetErrorsStream().Merge(targets.BackendErrorsInbox.GetErrorsStream())
                 from apps in getUserApps()
                 from a in apps
                 where e.SourceId == a.Name

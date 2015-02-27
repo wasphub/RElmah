@@ -78,6 +78,7 @@ namespace RElmah.Queries
         public IFrontendNotifier FrontendNotifier { get; set; }
         public IBackendNotifier BackendNotifier { get; set; }
         public IErrorsInbox ErrorsInbox { get; set; }
+        public IErrorsInbox BackendErrorsInbox { get; set; }
         public IErrorsBacklog ErrorsBacklog { get; set; }
         public IDomainPersistor DomainPersistor { get; set; }
         public IDomainPublisher DomainPublisher { get; set; }

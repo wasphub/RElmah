@@ -15,7 +15,7 @@
     <script>
         $(function () {
 
-            var r = relmah("http://localhost:9474/signalr"),
+            var r = relmah("http://localhost:@System.Configuration.ConfigurationManager.AppSettings["port"]/signalr"),
                 $apps = $('#apps'),
                 $groups = $('#groups'),
                 $recaps = $('#recaps');
