@@ -23,7 +23,8 @@ You get the idea :)
 
 Current version is 0.4, which means some foundations are there, but it's not really ready to be used yet. We have:
 
-* Some more reactive structure have been added to the server side logic
+* Much more reactive structure have been added to the server side logic
+* Introduction of *backend* errors notification to allow scalability (same will happen for configuration)
 * Cleaner JS client
 * More unit tests, with a decent, although not optimal, coverage
 
