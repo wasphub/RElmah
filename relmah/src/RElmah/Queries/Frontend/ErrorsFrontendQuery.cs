@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using RElmah.Common;
 using RElmah.Foundation;
 using RElmah.Models;
 
@@ -18,8 +19,14 @@ namespace RElmah.Queries.Frontend
             var name = user.Value.Name;
             Func<Task<IEnumerable<Application>>> getUserApps = async () => await targets.DomainPersistor.GetUserApplications(name);
 
+            var frontend = targets.ErrorsInbox != null 
+                         ? targets.ErrorsInbox.GetErrorsStream() 
+                         : Observable.Empty<ErrorPayload>();
+            var backend  = targets.BackendErrorsInbox != null 
+                         ? targets.BackendErrorsInbox.GetErrorsStream() 
+                         : Observable.Empty<ErrorPayload>();
             var errors =
-                from e in targets.ErrorsInbox.GetErrorsStream().Merge(targets.BackendErrorsInbox.GetErrorsStream())
+                from e in frontend.Merge(backend)
                 from apps in getUserApps()
                 from a in apps
                 where e.SourceId == a.Name
