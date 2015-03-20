@@ -3,8 +3,8 @@
 :: generate test apps
 ::
 :: usage:
-::			gen				creates/syncs all the folders, skipping web.config
-::			gen	config		creates/syncs all the folders, including web.config
+::      gen           creates/syncs all the folders, skipping web.config
+::      gen config    creates/syncs all the folders, including web.config
 ::
 ::===================================
 
