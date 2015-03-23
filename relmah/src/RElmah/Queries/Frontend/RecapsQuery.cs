@@ -12,7 +12,7 @@ using RElmah.Models;
 
 namespace RElmah.Queries.Frontend
 {
-    public class RecapsFrontendQuery : IFrontendQuery
+    public class RecapsQuery : IFrontendQuery
     {
         public async Task<IDisposable> Run(ValueOrError<User> user, RunTargets targets)
         {

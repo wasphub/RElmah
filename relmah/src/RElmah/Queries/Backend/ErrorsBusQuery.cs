@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace RElmah.Queries.Backend
 {
-    public class BackendBusQuery : IBackendQuery
+    public class ErrorsBusQuery : IBackendQuery
     {
         public async Task<IDisposable> Run(RunTargets targets)
         {

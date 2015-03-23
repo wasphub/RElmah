@@ -8,8 +8,10 @@ using RElmah.Services;
 using RElmah.Services.Inbox;
 using RElmah.Queries;
 using RElmah.Queries.Backend;
+using RElmah.Queries.Backend.Nulls;
 using RElmah.Queries.Frontend;
 using RElmah.Services.Nulls;
+using QueriesFactory = RElmah.Queries.Backend.QueriesFactory;
 
 namespace RElmah.Middleware
 {
@@ -34,16 +36,16 @@ namespace RElmah.Middleware
 
             var dh = new DomainHolder(ds);
 
-            var fqf = new FrontendQueriesFactory(ei, bi, bl, dh, dh, frontendNotifier,
-                     () => new ErrorsFrontendQuery(),
-                     () => new RecapsFrontendQuery());
+            var fqf = new Queries.Frontend.QueriesFactory(ei, bi, bl, dh, dh, frontendNotifier,
+                     () => new ErrorsQuery(),
+                     () => new RecapsQuery());
 
-            var bqf = NullBackendQueriesFactory.Instance;
+            var bqf = Queries.Backend.Nulls.QueriesFactory.Instance;
             var bn  = NullBackendNotifier.Instance;
             if (settings != null && settings.Bootstrap != null && !string.IsNullOrWhiteSpace(settings.Bootstrap.TargetBackendEndpoint))
             {
                 bn  = backendNotifierCreator(settings.Bootstrap.TargetBackendEndpoint, bi);
-                bqf = new BackendQueriesFactory(ei, bl, dh, dh, bn, () => new BackendBusQuery());
+                bqf = new QueriesFactory(ei, bl, dh, dh, bn, () => new ErrorsBusQuery());
             }
 
             //Infrastructure

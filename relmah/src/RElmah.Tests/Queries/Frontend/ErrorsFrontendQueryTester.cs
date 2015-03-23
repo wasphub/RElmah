@@ -27,7 +27,7 @@ namespace RElmah.Tests.Queries.Frontend
         public void NoErrors()
         {
             //Arrange
-            var sut = new ErrorsFrontendQuery();
+            var sut = new ErrorsQuery();
             var notifications = new List<NamedPayload>();
 
             //Act
@@ -61,7 +61,7 @@ namespace RElmah.Tests.Queries.Frontend
         public void OneError()
         {
             //Arrange
-            var sut = new ErrorsFrontendQuery();
+            var sut = new ErrorsQuery();
             var notifications = new List<NamedPayload>();
 
             //Act
@@ -100,7 +100,7 @@ namespace RElmah.Tests.Queries.Frontend
         public void MultipleErrors()
         {
             //Arrange
-            var sut = new ErrorsFrontendQuery();
+            var sut = new ErrorsQuery();
             var notifications = new List<NamedPayload>();
 
             //Act

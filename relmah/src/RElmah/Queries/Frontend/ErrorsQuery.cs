@@ -10,7 +10,7 @@ using RElmah.Models;
 
 namespace RElmah.Queries.Frontend
 {
-    public class ErrorsFrontendQuery : IFrontendQuery
+    public class ErrorsQuery : IFrontendQuery
     {
         public async Task<IDisposable> Run(ValueOrError<User> user, RunTargets targets)
         {

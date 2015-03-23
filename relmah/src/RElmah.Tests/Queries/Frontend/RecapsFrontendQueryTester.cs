@@ -30,7 +30,7 @@ namespace RElmah.Tests.Queries.Frontend
         public void NoDeltasPlusStartupRecap()
         {
             //Arrange
-            var sut = new RecapsFrontendQuery();
+            var sut = new RecapsQuery();
             var notifications = new List<NamedRecap>();
 
             //Act
@@ -73,7 +73,7 @@ namespace RElmah.Tests.Queries.Frontend
             var scheduler     = new TestScheduler();
                               
             //Arrange         
-            var sut           = new RecapsFrontendQuery();
+            var sut           = new RecapsQuery();
             var notifications = new List<NamedRecap>();
 
             //Act

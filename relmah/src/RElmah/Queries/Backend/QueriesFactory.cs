@@ -7,7 +7,7 @@ using RElmah.Publishers;
 
 namespace RElmah.Queries.Backend
 {
-    public class BackendQueriesFactory : IBackendQueriesFactory
+    public class QueriesFactory : IBackendQueriesFactory
     {
         private readonly IErrorsInbox _errorsInbox;
         private readonly IErrorsBacklog _errorsBacklog;
@@ -16,7 +16,7 @@ namespace RElmah.Queries.Backend
         private readonly IBackendNotifier _backendNotifier;
         private readonly Func<IBackendQuery>[] _subscriptors;
 
-        public BackendQueriesFactory(IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor,
+        public QueriesFactory(IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor,
             IBackendNotifier backendNotifier,
             params Func<IBackendQuery>[] subscriptors)
         {
