@@ -4,14 +4,13 @@ using RElmah.Errors;
 using RElmah.Models.Settings;
 using RElmah.Notifiers;
 using RElmah.Publishers;
-using RElmah.Services;
-using RElmah.Services.Inbox;
 using RElmah.Queries;
 using RElmah.Queries.Backend;
-using RElmah.Queries.Backend.Nulls;
 using RElmah.Queries.Frontend;
+using RElmah.Services;
+using RElmah.Services.Inbox;
 using RElmah.Services.Nulls;
-using QueriesFactory = RElmah.Queries.Backend.QueriesFactory;
+using QueriesFactory = RElmah.Queries.Frontend.QueriesFactory;
 
 namespace RElmah.Middleware
 {
@@ -20,7 +19,7 @@ namespace RElmah.Middleware
         public static T Prepare<T>(
             this IRegistry registry, 
             IFrontendNotifier frontendNotifier,
-            Func<string, IErrorsInbox, IBackendNotifier> backendNotifierCreator, 
+            Func<string, IErrorsInbox, IDomainPersistor, IBackendNotifier> backendNotifierCreator, 
             IIdentityProvider identityProvider,
             Func<IFrontendQueriesFactory, IBackendQueriesFactory, IErrorsInbox, IDomainPersistor, IBackendNotifier, T> resultor,
             Settings settings = null)
@@ -36,7 +35,7 @@ namespace RElmah.Middleware
 
             var dh = new DomainHolder(ds);
 
-            var fqf = new Queries.Frontend.QueriesFactory(ei, bi, bl, dh, dh, frontendNotifier,
+            var fqf = new QueriesFactory(ei, bi, bl, dh, dh, frontendNotifier,
                      () => new ErrorsQuery(),
                      () => new RecapsQuery());
 
@@ -44,8 +43,10 @@ namespace RElmah.Middleware
             var bn  = NullBackendNotifier.Instance;
             if (settings != null && settings.Bootstrap != null && !string.IsNullOrWhiteSpace(settings.Bootstrap.TargetBackendEndpoint))
             {
-                bn  = backendNotifierCreator(settings.Bootstrap.TargetBackendEndpoint, bi);
-                bqf = new QueriesFactory(ei, bl, dh, dh, bn, () => new ErrorsBusQuery());
+                bn  = backendNotifierCreator(settings.Bootstrap.TargetBackendEndpoint, bi, dh);
+                bqf = new Queries.Backend.QueriesFactory(ei, bl, dh, dh, bn, 
+                    () => new ErrorsBusQuery(),
+                    () => new ConfigurationBusQuery());
             }
 
             //Infrastructure

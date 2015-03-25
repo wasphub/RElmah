@@ -20,7 +20,7 @@ namespace RElmah.Host.Extensions.AppBuilder
                          ? settings.Bootstrap.IdentityProviderBuilder()
                          : new WindowsPrincipalIdentityProvider();
 
-            var bp       = registry.Prepare(frontend, (ep, ei) => new BackendNotifier(ep, ei), ip, (fqf, bqf, ei, dh, bn) => new { fqf, bqf, ei, dh, bn }, settings);
+            var bp       = registry.Prepare(frontend, (ep, ei, dh) => new BackendNotifier(ep, ei, dh), ip, (fqf, bqf, ei, dh, bn) => new { fqf, bqf, ei, dh, bn }, settings);
 
             var dp       = new DelegatingUserIdProvider(ip);
 

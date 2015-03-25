@@ -47,6 +47,7 @@ namespace RElmah.Notifiers
     public interface IBackendNotifier
     {
         void Error(ErrorPayload payload);
+        void Cluster(Delta<Cluster> payload);
     }
 }
 
