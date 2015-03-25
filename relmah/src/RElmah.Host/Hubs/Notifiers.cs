@@ -56,12 +56,26 @@ namespace RElmah.Host.Hubs
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:
-                        domainPublisher.AddCluster(p.Target.Name);
-                        break;
-                    case DeltaType.Removed:
-                        domainPublisher.RemoveCluster(p.Target.Name);
-                        break;
+                    case DeltaType.Added:   domainPublisher.AddCluster(p.Target.Name);      break;
+                    case DeltaType.Removed: domainPublisher.RemoveCluster(p.Target.Name);   break;
+                }
+            });
+
+            _proxy.On<Delta<Application>>("application", p =>
+            {
+                switch (p.Type)
+                {
+                    case DeltaType.Added:   domainPublisher.AddApplication(p.Target.Name);    break;
+                    case DeltaType.Removed: domainPublisher.RemoveApplication(p.Target.Name); break;
+                }
+            });
+
+            _proxy.On<Delta<User>>("user", p =>
+            {
+                switch (p.Type)
+                {
+                    case DeltaType.Added:   domainPublisher.AddUser(p.Target.Name);    break;
+                    case DeltaType.Removed: domainPublisher.RemoveUser(p.Target.Name); break;
                 }
             });
 
@@ -75,7 +89,17 @@ namespace RElmah.Host.Hubs
 
         public void Cluster(Delta<Cluster> payload)
         {
-            _proxy.Invoke("Cluster", payload.Target, payload.Type);
+            _proxy.Invoke("Cluster", payload);
+        }
+
+        public void Application(Delta<Application> payload)
+        {
+            _proxy.Invoke("Application", payload);
+        }
+
+        public void User(Delta<User> payload)
+        {
+            _proxy.Invoke("User", payload);
         }
     }
 }

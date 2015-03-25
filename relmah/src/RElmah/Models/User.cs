@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using RElmah.Extensions;
 
 namespace RElmah.Models
 {
-    public class User
+    public class User : ISerializable
     {
         public static User Create(string name)
         {
@@ -33,5 +34,19 @@ namespace RElmah.Models
         {
             return new User(Name, Tokens.EmptyIfNull().Except(token.ToSingleton()));
         }
+
+        #region Serialization
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Name", Name);
+        }
+
+        public User(SerializationInfo info, StreamingContext context)
+        {
+            Name = (string)info.GetValue("Name", typeof(string));
+        }
+
+        #endregion
     }
 }

@@ -13,9 +13,19 @@ namespace RElmah.Host.Hubs
             Clients.Others.error(payload);
         }
 
-        public void Cluster(Cluster cluster, DeltaType type)
+        public void Cluster(Delta<Cluster> cluster)
         {
-            Clients.Others.cluster(cluster.Name);
+            Clients.Others.cluster(cluster);
+        }
+
+        public void Application(Delta<Application> application)
+        {
+            Clients.Others.application(application);
+        }
+
+        public void User(Delta<User> user)
+        {
+            Clients.Others.user(user);
         }
     }
 }

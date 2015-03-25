@@ -1,16 +1,29 @@
 using System;
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 
 namespace RElmah.Queries.Backend
 {
     public class ConfigurationBusQuery : IBackendQuery
     {
-        public async Task<IDisposable> Run(RunTargets targets)
+        public Task<IDisposable> Run(RunTargets targets)
         {
-            return targets.DomainPublisher.GetClustersSequence().Subscribe(payload =>
+            var clusters = targets.DomainPublisher.GetClustersSequence().Subscribe(payload =>
             {
                 targets.BackendNotifier.Cluster(payload);
             });
+
+            var applications = targets.DomainPublisher.GetApplicationsSequence().Subscribe(payload =>
+            {
+                targets.BackendNotifier.Application(payload);
+            });
+
+            var users = targets.DomainPublisher.GetUsersSequence().Subscribe(payload =>
+            {
+                targets.BackendNotifier.User(payload);
+            });
+
+            return Task.FromResult((IDisposable)new CompositeDisposable(clusters, applications, users));
         }
     }
 }

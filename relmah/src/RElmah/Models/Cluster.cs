@@ -9,7 +9,7 @@ namespace RElmah.Models
     public class Cluster : ISerializable
     {
         private readonly IImmutableDictionary<string, Application> _applications = ImmutableDictionary<string, Application>.Empty;
-        private readonly IImmutableDictionary<string, User> _users = ImmutableDictionary<string, User>.Empty;
+        private readonly IImmutableDictionary<string, User>        _users        = ImmutableDictionary<string, User>.Empty;
 
         public static Cluster Create(string name)
         {
@@ -124,16 +124,22 @@ namespace RElmah.Models
             return _users.Keys.Contains(user);
         }
 
+        #region Serialization
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            // Use the AddValue method to specify serialized values.
             info.AddValue("Name", Name);
+            info.AddValue("_applications", _applications);
+            info.AddValue("_users", _users);
         }
 
-        // The special constructor is used to deserialize values. 
         public Cluster(SerializationInfo info, StreamingContext context)
         {
-            Name = (string)info.GetValue("Name", typeof(string));
+            Name          = (string)info.GetValue("Name", typeof(string));
+            _applications = (ImmutableDictionary<string, Application>)info.GetValue("_applications", typeof(ImmutableDictionary<string, Application>));
+            _users        = (ImmutableDictionary<string, User>)info.GetValue("_users", typeof(ImmutableDictionary<string, User>));
         }
+
+        #endregion
     }
 }

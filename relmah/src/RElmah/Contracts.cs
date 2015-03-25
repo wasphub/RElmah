@@ -48,6 +48,8 @@ namespace RElmah.Notifiers
     {
         void Error(ErrorPayload payload);
         void Cluster(Delta<Cluster> payload);
+        void Application(Delta<Application> payload);
+        void User(Delta<User> payload);
     }
 }
 

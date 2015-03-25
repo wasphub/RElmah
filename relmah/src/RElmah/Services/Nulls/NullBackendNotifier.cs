@@ -17,5 +17,13 @@ namespace RElmah.Services.Nulls
         public void Cluster(Delta<Cluster> payload)
         {
         }
+
+        public void Application(Delta<Application> payload)
+        {
+        }
+
+        public void User(Delta<User> payload)
+        {
+        }
     }
 }
