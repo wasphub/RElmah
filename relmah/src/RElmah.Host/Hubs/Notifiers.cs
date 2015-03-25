@@ -57,8 +57,8 @@ namespace RElmah.Host.Hubs
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddCluster(p.Target.Name);      break;
-                    case DeltaType.Removed: domainPublisher.RemoveCluster(p.Target.Name);   break;
+                    case DeltaType.Added:   domainPublisher.AddCluster(p.Target.Name);    break;
+                    case DeltaType.Removed: domainPublisher.RemoveCluster(p.Target.Name); break;
                 }
             });
 
@@ -84,7 +84,7 @@ namespace RElmah.Host.Hubs
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added: domainPublisher.AddUser(p.Target.Name);      break;
+                    case DeltaType.Added:   domainPublisher.AddUser(p.Target.Name);    break;
                     case DeltaType.Removed: domainPublisher.RemoveUser(p.Target.Name); break;
                 }
             });
