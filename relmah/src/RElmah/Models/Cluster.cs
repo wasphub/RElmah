@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.Serialization;
 using RElmah.Extensions;
 
 namespace RElmah.Models
 {
-    public class Cluster
+    public class Cluster : ISerializable
     {
         private readonly IImmutableDictionary<string, Application> _applications = ImmutableDictionary<string, Application>.Empty;
         private readonly IImmutableDictionary<string, User> _users = ImmutableDictionary<string, User>.Empty;
@@ -121,6 +122,18 @@ namespace RElmah.Models
         public bool HasUser(string user)
         {
             return _users.Keys.Contains(user);
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            // Use the AddValue method to specify serialized values.
+            info.AddValue("Name", Name);
+        }
+
+        // The special constructor is used to deserialize values. 
+        public Cluster(SerializationInfo info, StreamingContext context)
+        {
+            Name = (string)info.GetValue("Name", typeof(string));
         }
     }
 }
