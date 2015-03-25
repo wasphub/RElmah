@@ -50,6 +50,8 @@ namespace RElmah.Notifiers
         void Cluster(Delta<Cluster> payload);
         void Application(Delta<Application> payload);
         void User(Delta<User> payload);
+        void ClusterUser(Delta<Relationship<Cluster, User>> payload);
+        void ClusterApplication(Delta<Relationship<Cluster, Application>> payload);
     }
 }
 

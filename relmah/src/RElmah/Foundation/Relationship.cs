@@ -1,4 +1,6 @@
-﻿namespace RElmah.Foundation
+﻿using System.Runtime.Serialization;
+
+namespace RElmah.Foundation
 {
     public static class Relationship
     {
@@ -8,7 +10,7 @@
         }
     }
 
-    public class Relationship<TP, TS>
+    public class Relationship<TP, TS> : ISerializable
     {
         public Relationship(TP primary, TS secondary)
         {
@@ -18,5 +20,21 @@
 
         public TP Primary { get; private set; }
         public TS Secondary { get; private set; }
+
+        #region Serialization
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Primary", Primary);
+            info.AddValue("Secondary", Secondary);
+        }
+
+        public Relationship(SerializationInfo info, StreamingContext context)
+        {
+            Primary   = (TP)info.GetValue("Primary", typeof(TP));
+            Secondary = (TS)info.GetValue("Secondary", typeof(TS));
+        }
+
+        #endregion
     }
 }

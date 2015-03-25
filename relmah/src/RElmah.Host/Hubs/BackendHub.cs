@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using RElmah.Common;
+using RElmah.Foundation;
 using RElmah.Models;
 
 namespace RElmah.Host.Hubs
@@ -26,6 +27,16 @@ namespace RElmah.Host.Hubs
         public void User(Delta<User> user)
         {
             Clients.Others.user(user);
+        }
+
+        public void ClusterApplication(Delta<Relationship<Cluster, Application>> ca)
+        {
+            Clients.Others.clusterApplication(ca);
+        }
+
+        public void ClusterUser(Delta<Relationship<Cluster, User>> cu)
+        {
+            Clients.Others.clusterUser(cu);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using RElmah.Common;
+using RElmah.Foundation;
 using RElmah.Models;
 using RElmah.Notifiers;
 
@@ -23,6 +24,14 @@ namespace RElmah.Services.Nulls
         }
 
         public void User(Delta<User> payload)
+        {
+        }
+
+        public void ClusterUser(Delta<Relationship<Cluster, User>> payload)
+        {
+        }
+
+        public void ClusterApplication(Delta<Relationship<Cluster, Application>> payload)
         {
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNet.SignalR.Client;
 using RElmah.Common;
 using RElmah.Domain;
 using RElmah.Errors;
+using RElmah.Foundation;
 using RElmah.Models;
 using RElmah.Notifiers;
 
@@ -79,6 +80,33 @@ namespace RElmah.Host.Hubs
                 }
             });
 
+            _proxy.On<Delta<User>>("user", p =>
+            {
+                switch (p.Type)
+                {
+                    case DeltaType.Added: domainPublisher.AddUser(p.Target.Name);      break;
+                    case DeltaType.Removed: domainPublisher.RemoveUser(p.Target.Name); break;
+                }
+            });
+
+            _proxy.On<Delta<Relationship<Cluster, Application>>>("clusterApplication", p =>
+            {
+                switch (p.Type)
+                {
+                    case DeltaType.Added:   domainPublisher.AddApplicationToCluster(p.Target.Primary.Name, p.Target.Secondary.Name);      break;
+                    case DeltaType.Removed: domainPublisher.RemoveApplicationFromCluster(p.Target.Primary.Name, p.Target.Secondary.Name); break;
+                }
+            });
+
+            _proxy.On<Delta<Relationship<Cluster, User>>>("clusterUser", p =>
+            {
+                switch (p.Type)
+                {
+                    case DeltaType.Added:   domainPublisher.AddUserToCluster(p.Target.Primary.Name, p.Target.Secondary.Name);      break;
+                    case DeltaType.Removed: domainPublisher.RemoveUserFromCluster(p.Target.Primary.Name, p.Target.Secondary.Name); break;
+                }
+            });
+
             connection.Start().Wait();
         }
 
@@ -100,6 +128,16 @@ namespace RElmah.Host.Hubs
         public void User(Delta<User> payload)
         {
             _proxy.Invoke("User", payload);
+        }
+
+        public void ClusterApplication(Delta<Relationship<Cluster, Application>> payload)
+        {
+            _proxy.Invoke("ClusterApplication", payload);
+        }
+
+        public void ClusterUser(Delta<Relationship<Cluster, User>> payload)
+        {
+            _proxy.Invoke("ClusterUser", payload);
         }
     }
 }

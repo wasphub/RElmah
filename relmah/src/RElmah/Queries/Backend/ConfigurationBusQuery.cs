@@ -23,7 +23,17 @@ namespace RElmah.Queries.Backend
                 targets.BackendNotifier.User(payload);
             });
 
-            return Task.FromResult((IDisposable)new CompositeDisposable(clusters, applications, users));
+            var clusterApplications = targets.DomainPublisher.GetClusterApplicationsSequence().Subscribe(payload =>
+            {
+                targets.BackendNotifier.ClusterApplication(payload);
+            });
+
+            var clusterUsers = targets.DomainPublisher.GetClusterUsersSequence().Subscribe(payload =>
+            {
+                targets.BackendNotifier.ClusterUser(payload);
+            });
+
+            return Task.FromResult((IDisposable)new CompositeDisposable(clusters, applications, users, clusterApplications, clusterUsers));
         }
     }
 }
