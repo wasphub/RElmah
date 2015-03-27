@@ -19,7 +19,8 @@ namespace RElmah.Middleware
         public static T Prepare<T>(
             this IRegistry registry, 
             IFrontendNotifier frontendNotifier,
-            Func<string, IErrorsInbox, IDomainPersistor, IBackendNotifier> backendNotifierCreator, 
+            Func<string, IErrorsInbox, IDomainPersistor, IBackendNotifier> frontendBackendNotifierCreator,
+            Func<IBackendNotifier> backendFrontendNotifierCreator, 
             IIdentityProvider identityProvider,
             Func<IFrontendQueriesFactory, IBackendQueriesFactory, IErrorsInbox, IDomainPersistor, IBackendNotifier, T> resultor,
             Settings settings = null)
@@ -43,9 +44,15 @@ namespace RElmah.Middleware
             var bn  = NullBackendNotifier.Instance;
             if (settings != null && settings.Bootstrap != null && !string.IsNullOrWhiteSpace(settings.Bootstrap.TargetBackendEndpoint))
             {
-                bn  = backendNotifierCreator(settings.Bootstrap.TargetBackendEndpoint, bi, dh);
+                bn  = frontendBackendNotifierCreator(settings.Bootstrap.TargetBackendEndpoint, bi, dh);
                 bqf = new Queries.Backend.QueriesFactory(ei, bl, dh, dh, bn, 
                     () => new ErrorsBusQuery(),
+                    () => new ConfigurationBusQuery());
+            }
+            else if (settings != null && settings.Bootstrap != null && settings.Bootstrap.RunBackend)
+            {
+                bn = backendFrontendNotifierCreator();
+                bqf = new Queries.Backend.QueriesFactory(ei, bl, dh, dh, bn,
                     () => new ConfigurationBusQuery());
             }
 

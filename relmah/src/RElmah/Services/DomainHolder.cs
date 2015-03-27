@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -74,6 +75,10 @@ namespace RElmah.Services
                     Op = op
                 };
             clusterApps.Subscribe(p => _usersApplications.SetItem(p.User, p.Op(p.Current, p.Applications)));
+
+            //debug
+            _clusterUserOperations.Subscribe(n => Trace.WriteLine(n.Target.Secondary.Name));
+            _clusterUserOperationsStream.Subscribe(n => Trace.WriteLine(n.Target.Secondary.Name));
         }
 
         public DomainHolder() : this(NullDomainStore.Instance) { }

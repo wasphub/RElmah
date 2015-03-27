@@ -5,10 +5,12 @@ namespace RElmah.Extensions
 {
     public static class StringExtensions
     {
-        public static bool IsTruthy(this string source)
+        public static bool IsTruthy(this string source, bool def = false)
         {
+            if (string.IsNullOrWhiteSpace(source)) return def;
+
             var truthyValues = new []  { "true", "yes", "1" };
-            return source != null && truthyValues.Select(v => source.Equals(v, StringComparison.OrdinalIgnoreCase)).Any(v => v);
+            return truthyValues.Select(v => source.Equals(v, StringComparison.OrdinalIgnoreCase)).Any(v => v);
         }
     }
 }

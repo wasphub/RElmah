@@ -20,18 +20,22 @@ namespace RElmah.Host.Extensions.AppBuilder
                          ? settings.Bootstrap.IdentityProviderBuilder()
                          : new WindowsPrincipalIdentityProvider();
 
-            var bp       = registry.Prepare(frontend, (ep, ei, dh) => new BackendNotifier(ep, ei, dh), ip, (fqf, bqf, ei, dh, bn) => new { fqf, bqf, ei, dh, bn }, settings);
+            var bp       = registry.Prepare(frontend, 
+                (ep, ei, dh) => new FrontendBackendNotifier(ep, ei, dh),
+                () => new BackendFrontendNotifier(), 
+                ip, 
+                (fqf, bqf, ei, dh, bn) => new { fqf, bqf, ei, dh, bn }, 
+                settings);
 
             var dp       = new DelegatingUserIdProvider(ip);
 
             registry.Register(typeof(IUserIdProvider), () => dp);
 
-            //Frontend hub
-            registry.Register(typeof(ErrorsHub), () => new ErrorsHub(bp.fqf, dp));
-
-            //Backend hub, optional
+            //Frontend or Backend?
             if (settings != null && settings.Bootstrap != null && settings.Bootstrap.RunBackend)
                 registry.Register(typeof(BackendHub), () => new BackendHub());
+            else
+                registry.Register(typeof(ErrorsHub), () => new ErrorsHub(bp.fqf, dp));
 
             if (settings != null && settings.Bootstrap != null && settings.Bootstrap.Registry != null)
                 settings.Bootstrap.Registry(registry);
@@ -44,7 +48,7 @@ namespace RElmah.Host.Extensions.AppBuilder
                         ? builder.UseRElmahMiddleware<RandomSourceErrorsMiddleware>(bp.ei, bp.dh, settings.Errors)
                         : builder.UseRElmahMiddleware<ErrorsMiddleware>(bp.ei, settings.Errors);
 
-            if (settings != null && settings.Domain != null && settings.Domain.Exposed)
+            if (settings != null && settings.Domain != null)
                 builder = builder.UseRElmahMiddleware<DomainMiddleware>(bp.dh, settings.Domain);
 
             bp.bqf.Setup();

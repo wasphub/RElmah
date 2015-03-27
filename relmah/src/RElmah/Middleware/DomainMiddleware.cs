@@ -43,6 +43,10 @@ namespace RElmah.Middleware
                     })
                 )
 
+                //  This portion is "hacky" for now, 
+                //  I'll have to make it cleaner when
+                //  I'll have more time for details.
+
                 //AD users
                 .ForRoute("clusters/{cluster}/users/{domain}/{user}", route => route
                     .Get(async (environment, keys, _) =>
@@ -67,6 +71,7 @@ namespace RElmah.Middleware
                     .Delete(async (environment, keys, _) =>
                         await updater.RemoveUserFromCluster(keys["cluster"], keys["user"]))
                 )
+
                 .ForRoute("clusters/{cluster}/users", route => route
                     .Post(async (environment, keys, form) => 
                         await updater.AddUserToCluster(keys["cluster"], form["name"]))

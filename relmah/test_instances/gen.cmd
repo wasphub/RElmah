@@ -12,48 +12,46 @@
 set local
 cls
 
-set config=/XF *.config
+set config=*.config
 if "%1"=="config" set config=
 
 rem backend
-call :gen_server 9000 %config%
+call :gen_server 9000 b %config%
 
-rem rem servers
-call :gen_server 9001 %config%
-call :gen_server 9002 %config%
-call :gen_server 9003 %config%
+rem servers
+call :gen_server 9001 f %config%
+call :gen_server 9002 f %config%
 
-rem rem dashboards
-call :gen_dashboard 8001 %config%
-call :gen_dashboard 8002 %config%
-call :gen_dashboard 8003 %config%
+rem dashboards
+call :gen_dashboard 7001 d %config%
+call :gen_dashboard 7002 d %config%
 
-rem rem error sources
-call :gen_source 7001 %config%
-call :gen_source 7002 %config%
-call :gen_source 7003 %config%
+rem error sources
+call :gen_source 8001 e %config%
+call :gen_source 8002 e %config%
+
 
 goto :end
 
 :gen
 set local
-robocopy ../src/Samples/RElmah.%2 %3%1 *.* /MIR %4
-echo "%programfiles(x86)%\IIS Express\iisexpress.exe" /path:%cd%\%3%1 /port:%1 > run_%1.cmd
+robocopy ../src/Samples/RElmah.%2 %3%1 *.* /MIR /XF %4
+echo "%programfiles(x86)%\IIS Express\iisexpress.exe" /path:%cd%\%3%1 /port:%1 ^& exit > run_%3_%1.cmd
 goto :eof
 
 :gen_server
 set local
-call :gen %1 Server s %2
+call :gen %1 Server %2 %3
 goto :eof
 
 :gen_dashboard
 set local
-call :gen %1 Dashboard.Basic s %2
+call :gen %1 Dashboard.Basic %2 %3
 goto :eof
 
 :gen_source
 set local
-call :gen %1 Source s %2
+call :gen %1 Source %2 %3
 goto :eof
 
 :end

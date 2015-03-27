@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Client;
 using RElmah.Common;
 using RElmah.Domain;
@@ -38,11 +39,11 @@ namespace RElmah.Host.Hubs
         }
     }
 
-    public class BackendNotifier : IBackendNotifier
+    public class FrontendBackendNotifier : IBackendNotifier
     {
         private readonly IHubProxy _proxy;
 
-        public BackendNotifier(string endpoint, IErrorsInbox errorsInbox, IDomainPersistor domainPublisher)
+        public FrontendBackendNotifier(string endpoint, IErrorsInbox errorsInbox, IDomainPersistor domainPublisher)
         {
             var connection = new HubConnection(endpoint)
             {
@@ -138,6 +139,41 @@ namespace RElmah.Host.Hubs
         public void ClusterUser(Delta<Relationship<Cluster, User>> payload)
         {
             _proxy.Invoke("ClusterUser", payload);
+        }
+    }
+
+    public class BackendFrontendNotifier : IBackendNotifier
+    {
+        private readonly IHubContext _context = GlobalHost.ConnectionManager.GetHubContext<BackendHub>();
+
+        public void Error(ErrorPayload payload)
+        {
+            _context.Clients.All.Error(payload);
+        }
+
+        public void Cluster(Delta<Cluster> payload)
+        {
+            _context.Clients.All.Cluster(payload);
+        }
+
+        public void Application(Delta<Application> payload)
+        {
+            _context.Clients.All.Application(payload);
+        }
+
+        public void User(Delta<User> payload)
+        {
+            _context.Clients.All.User(payload);
+        }
+
+        public void ClusterApplication(Delta<Relationship<Cluster, Application>> payload)
+        {
+            _context.Clients.All.ClusterApplication(payload);
+        }
+
+        public void ClusterUser(Delta<Relationship<Cluster, User>> payload)
+        {
+            _context.Clients.All.ClusterUser(payload);
         }
     }
 }

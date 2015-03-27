@@ -18,10 +18,13 @@ namespace RElmah.Server
     {
         public void Configuration(IAppBuilder app)
         {
-            var appSettings = ConfigurationManager.AppSettings;
+            var appSettings           = ConfigurationManager.AppSettings;
 
-            var runBackend = appSettings["runBackend"].IsTruthy();
-            var isTruthy = appSettings["winAuth"].IsTruthy();
+            var runBackend            = appSettings["runBackend"].IsTruthy();
+            var winAuth               = appSettings["winAuth"].IsTruthy();
+            var runErrors             = appSettings["runErrors"].IsTruthy(true);
+            var runDomain             = appSettings["runDomain"].IsTruthy();
+
             var targetBackendEndpoint = appSettings["targetBackendEndpoint"];
 
             app
@@ -33,22 +36,20 @@ namespace RElmah.Server
 
                 .UseRElmah(new Settings
                 {
-                    Errors = new ErrorsSettings
+                    Errors = runErrors.Then(() => new ErrorsSettings
                     {
-                        UseRandomizer = true,
                         Prefix = "relmah-errors"
-                    },
+                    }),
 
-                    Domain = new DomainSettings
+                    Domain = runDomain.Then(() => new DomainSettings
                     {
-                        Exposed = true,
                         Prefix  = "relmah-domain"
-                    },
+                    }),
 
                     Bootstrap = new BootstrapperSettings
                     {       
                         //Enable the following line to use the basic client side token for authentication (for test purposes)
-                        IdentityProviderBuilder = () => isTruthy 
+                        IdentityProviderBuilder = () => winAuth 
                                                         ? (IIdentityProvider)new WindowsPrincipalIdentityProvider() 
                                                         : new ClientTokenIdentityProvider(),
 
