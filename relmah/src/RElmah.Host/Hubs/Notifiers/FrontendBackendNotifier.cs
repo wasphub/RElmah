@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.Net;
-using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Client;
 using RElmah.Common;
 using RElmah.Domain;
@@ -9,36 +7,8 @@ using RElmah.Foundation;
 using RElmah.Models;
 using RElmah.Notifiers;
 
-namespace RElmah.Host.Hubs
+namespace RElmah.Host.Hubs.Notifiers
 {
-    public class FrontendNotifier : IFrontendNotifier
-    {
-        public void Recap(string user, Recap recap)
-        {
-            ErrorsHub.Recap(user, recap);
-        }
-
-        public void Error(string user, ErrorPayload payload)
-        {
-            ErrorsHub.Error(user, payload);
-        }
-
-        public void UserApplications(string user, IEnumerable<string> added, IEnumerable<string> removed)
-        {
-            ErrorsHub.UserApplications(user, added, removed);
-        }
-
-        public void AddGroup(string token, string @group)
-        {
-            ErrorsHub.AddGroup(token, @group);
-        }
-
-        public void RemoveGroup(string token, string @group)
-        {
-            ErrorsHub.RemoveGroup(token, @group);
-        }
-    }
-
     public class FrontendBackendNotifier : IBackendNotifier
     {
         private readonly IHubProxy _proxy;
@@ -139,41 +109,6 @@ namespace RElmah.Host.Hubs
         public void ClusterUser(Delta<Relationship<Cluster, User>> payload)
         {
             _proxy.Invoke("ClusterUser", payload);
-        }
-    }
-
-    public class BackendFrontendNotifier : IBackendNotifier
-    {
-        private readonly IHubContext _context = GlobalHost.ConnectionManager.GetHubContext<BackendHub>();
-
-        public void Error(ErrorPayload payload)
-        {
-            _context.Clients.All.Error(payload);
-        }
-
-        public void Cluster(Delta<Cluster> payload)
-        {
-            _context.Clients.All.Cluster(payload);
-        }
-
-        public void Application(Delta<Application> payload)
-        {
-            _context.Clients.All.Application(payload);
-        }
-
-        public void User(Delta<User> payload)
-        {
-            _context.Clients.All.User(payload);
-        }
-
-        public void ClusterApplication(Delta<Relationship<Cluster, Application>> payload)
-        {
-            _context.Clients.All.ClusterApplication(payload);
-        }
-
-        public void ClusterUser(Delta<Relationship<Cluster, User>> payload)
-        {
-            _context.Clients.All.ClusterUser(payload);
         }
     }
 }

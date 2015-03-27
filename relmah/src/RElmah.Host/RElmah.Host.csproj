@@ -85,7 +85,9 @@
     <Compile Include="Extensions\AppBuilder\AppBuilderExtensions.cs" />
     <Compile Include="Extensions\GeneralExtensions.cs" />
     <Compile Include="Hubs\BackendHub.cs" />
-    <Compile Include="Hubs\Notifiers.cs" />
+    <Compile Include="Hubs\Notifiers\BackendFrontendNotifier.cs" />
+    <Compile Include="Hubs\Notifiers\FrontendBackendNotifier.cs" />
+    <Compile Include="Hubs\Notifiers\FrontendNotifier.cs" />
     <Compile Include="Services\ClientTokenIdentityProvider.cs" />
     <Compile Include="Services\DelegatingUserIdProvider.cs" />
     <Compile Include="Hubs\ErrorsHub.cs" />

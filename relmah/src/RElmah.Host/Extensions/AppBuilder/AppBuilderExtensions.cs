@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.SignalR;
 using Owin;
 using RElmah.Host.Hubs;
+using RElmah.Host.Hubs.Notifiers;
 using RElmah.Host.Services;
 using RElmah.Middleware;
 using RElmah.Models.Settings;
