@@ -58,8 +58,8 @@ namespace RElmah.Host.Hubs
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddCluster(p.Target.Name);    break;
-                    case DeltaType.Removed: domainPublisher.RemoveCluster(p.Target.Name); break;
+                    case DeltaType.Added:   domainPublisher.AddCluster(p.Target.Name, true);    break;
+                    case DeltaType.Removed: domainPublisher.RemoveCluster(p.Target.Name, true); break;
                 }
             });
 
@@ -67,8 +67,8 @@ namespace RElmah.Host.Hubs
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddApplication(p.Target.Name);    break;
-                    case DeltaType.Removed: domainPublisher.RemoveApplication(p.Target.Name); break;
+                    case DeltaType.Added: domainPublisher.AddApplication(p.Target.Name, true); break;
+                    case DeltaType.Removed: domainPublisher.RemoveApplication(p.Target.Name, true); break;
                 }
             });
 
@@ -76,8 +76,8 @@ namespace RElmah.Host.Hubs
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddUser(p.Target.Name);    break;
-                    case DeltaType.Removed: domainPublisher.RemoveUser(p.Target.Name); break;
+                    case DeltaType.Added: domainPublisher.AddUser(p.Target.Name, true); break;
+                    case DeltaType.Removed: domainPublisher.RemoveUser(p.Target.Name, true); break;
                 }
             });
 
@@ -85,8 +85,8 @@ namespace RElmah.Host.Hubs
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddUser(p.Target.Name);    break;
-                    case DeltaType.Removed: domainPublisher.RemoveUser(p.Target.Name); break;
+                    case DeltaType.Added: domainPublisher.AddUser(p.Target.Name, true); break;
+                    case DeltaType.Removed: domainPublisher.RemoveUser(p.Target.Name, true); break;
                 }
             });
 
@@ -94,8 +94,8 @@ namespace RElmah.Host.Hubs
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddApplicationToCluster(p.Target.Primary.Name, p.Target.Secondary.Name);      break;
-                    case DeltaType.Removed: domainPublisher.RemoveApplicationFromCluster(p.Target.Primary.Name, p.Target.Secondary.Name); break;
+                    case DeltaType.Added: domainPublisher.AddApplicationToCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
+                    case DeltaType.Removed: domainPublisher.RemoveApplicationFromCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
                 }
             });
 
@@ -103,8 +103,8 @@ namespace RElmah.Host.Hubs
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddUserToCluster(p.Target.Primary.Name, p.Target.Secondary.Name);      break;
-                    case DeltaType.Removed: domainPublisher.RemoveUserFromCluster(p.Target.Primary.Name, p.Target.Secondary.Name); break;
+                    case DeltaType.Added: domainPublisher.AddUserToCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
+                    case DeltaType.Removed: domainPublisher.RemoveUserFromCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
                 }
             });
 

@@ -29,7 +29,7 @@ namespace RElmah.Tests.Services
             });
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(adder(n))),
+                AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(adder(n))),
                 GetClusters      = () => Task.FromResult((IEnumerable<Cluster>)store.Values),
                 GetClusterString = n => Task.FromResult(new ValueOrError<Cluster>(store[n]))
             });
@@ -76,9 +76,9 @@ namespace RElmah.Tests.Services
 
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(adder(n))),
+                AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(adder(n))),
                 GetClusters = () => Task.FromResult((IEnumerable<Cluster>)store.Values),
-                RemoveClusterString = n => Task.FromResult(new ValueOrError<bool>(remover(n)))
+                RemoveClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<bool>(remover(n)))
             });
 
             Delta<Cluster> observed = null;
@@ -129,7 +129,7 @@ namespace RElmah.Tests.Services
             });
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddApplicationString = n => Task.FromResult(new ValueOrError<Application>(adder(n))),
+                AddApplicationStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Application>(adder(n))),
                 GetApplications = () => Task.FromResult((IEnumerable<Application>)store.Values),
                 GetApplicationString = n => Task.FromResult(new ValueOrError<Application>(store[n]))
             });
@@ -176,9 +176,9 @@ namespace RElmah.Tests.Services
 
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddApplicationString = n => Task.FromResult(new ValueOrError<Application>(adder(n))),
+                AddApplicationStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Application>(adder(n))),
                 GetApplications = () => Task.FromResult((IEnumerable<Application>)store.Values),
-                RemoveApplicationString = n => Task.FromResult(new ValueOrError<bool>(remover(n)))
+                RemoveApplicationStringBoolean = (n, _) => Task.FromResult(new ValueOrError<bool>(remover(n)))
             });
 
             Delta<Application> observed = null;
@@ -229,7 +229,7 @@ namespace RElmah.Tests.Services
             });
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddUserString = n => Task.FromResult(new ValueOrError<User>(adder(n))),
+                AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(adder(n))),
                 GetUsers = () => Task.FromResult((IEnumerable<User>)store.Values),
                 GetUserString = n => Task.FromResult(new ValueOrError<User>(store[n]))
             });
@@ -276,9 +276,9 @@ namespace RElmah.Tests.Services
 
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddUserString = n => Task.FromResult(new ValueOrError<User>(adder(n))),
+                AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(adder(n))),
                 GetUsers = () => Task.FromResult((IEnumerable<User>)store.Values),
-                RemoveUserString = n => Task.FromResult(new ValueOrError<bool>(remover(n)))
+                RemoveUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<bool>(remover(n)))
             });
 
             Delta<User> observed = null;
@@ -345,9 +345,9 @@ namespace RElmah.Tests.Services
             });
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
-                AddUserString = n => Task.FromResult(new ValueOrError<User>(uAdder(n))),
-                AddUserToClusterStringString = (c, u) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuAdder(c, u)))
+                AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
+                AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(uAdder(n))),
+                AddUserToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuAdder(c, u)))
             });
 
             Delta<Relationship<Cluster, User>> observed = null;
@@ -414,10 +414,10 @@ namespace RElmah.Tests.Services
             });
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
-                AddUserString = n => Task.FromResult(new ValueOrError<User>(uAdder(n))),
-                AddUserToClusterStringString = (c, u) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuAdder(c, u))),
-                RemoveUserFromClusterStringString = (c, u) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuRemover(c, u)))
+                AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
+                AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(uAdder(n))),
+                AddUserToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuAdder(c, u))),
+                RemoveUserFromClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuRemover(c, u)))
             });
 
             Delta<Relationship<Cluster, User>> observed = null;
@@ -434,7 +434,7 @@ namespace RElmah.Tests.Services
 
 
             //Act
-            var _        = await sut.AddUserToCluster(cAnswer.Value.Name, uAnswer.Value.Name);
+            var __       = await sut.AddUserToCluster(cAnswer.Value.Name, uAnswer.Value.Name);
             var cuAnswer = await sut.RemoveUserFromCluster(cAnswer.Value.Name, uAnswer.Value.Name);
             var cuCheck  = cuAnswer.Value.Primary.Users;
 
@@ -496,11 +496,11 @@ namespace RElmah.Tests.Services
             });
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
-                AddUserString = n => Task.FromResult(new ValueOrError<User>(uAdder(n))),
-                AddApplicationString = n => Task.FromResult(new ValueOrError<Application>(aAdder(n))),
-                AddUserToClusterStringString = (c, u) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuAdder(c, u))),
-                AddApplicationToClusterStringString = (c, u) => Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(caAdder(c, u)))
+                AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
+                AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(uAdder(n))),
+                AddApplicationStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Application>(aAdder(n))),
+                AddUserToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuAdder(c, u))),
+                AddApplicationToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(caAdder(c, u)))
             });
 
             Delta<Relationship<Cluster, Application>> observed = null;
@@ -520,7 +520,7 @@ namespace RElmah.Tests.Services
 
 
             //Act
-            var _         = await sut.AddUserToCluster(cAnswer.Value.Name, uAnswer.Value.Name);
+            var __        = await sut.AddUserToCluster(cAnswer.Value.Name, uAnswer.Value.Name);
             var uabAnswer = await sut.GetUserApplications(UserName);
 
             Assert.NotNull(uabAnswer);
@@ -598,12 +598,12 @@ namespace RElmah.Tests.Services
             });
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddClusterString = n => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
-                AddUserString = n => Task.FromResult(new ValueOrError<User>(uAdder(n))),
-                AddApplicationString = n => Task.FromResult(new ValueOrError<Application>(aAdder(n))),
-                AddUserToClusterStringString = (c, u) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuAdder(c, u))),
-                AddApplicationToClusterStringString = (c, u) => Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(caAdder(c, u))),
-                RemoveApplicationFromClusterStringString = (c, u) => Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(caRemover(c, u)))
+                AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
+                AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(uAdder(n))),
+                AddApplicationStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Application>(aAdder(n))),
+                AddUserToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuAdder(c, u))),
+                AddApplicationToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(caAdder(c, u))),
+                RemoveApplicationFromClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(caRemover(c, u)))
             });
 
             Delta<Relationship<Cluster, Application>> observed = null;
@@ -623,8 +623,8 @@ namespace RElmah.Tests.Services
 
 
             //Act
-            var _        = await sut.AddUserToCluster(cAnswer.Value.Name, uAnswer.Value.Name);
-            var __       = await sut.AddApplicationToCluster(cAnswer.Value.Name, aAnswer.Value.Name);
+            var __       = await sut.AddUserToCluster(cAnswer.Value.Name, uAnswer.Value.Name);
+            var ___      = await sut.AddApplicationToCluster(cAnswer.Value.Name, aAnswer.Value.Name);
             var caAnswer = await sut.RemoveApplicationFromCluster(cAnswer.Value.Name, aAnswer.Value.Name);
             var caCheck  = caAnswer.Value.Primary.Applications;
 

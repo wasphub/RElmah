@@ -47,7 +47,7 @@ namespace RElmah.Middleware
                 bn  = frontendBackendNotifierCreator(settings.Bootstrap.TargetBackendEndpoint, bi, dh);
                 bqf = new Queries.Backend.QueriesFactory(ei, bl, dh, dh, bn, 
                     () => new ErrorsBusQuery(),
-                    () => new ConfigurationBusQuery());
+                    () => new ConfigurationBusQuery(true));
             }
             else if (settings != null && settings.Bootstrap != null && settings.Bootstrap.RunBackend)
             {

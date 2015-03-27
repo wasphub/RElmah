@@ -13,12 +13,12 @@ namespace RElmah.Services.Nulls
 
         public static IDomainStore Instance = new NullDomainStore();
 
-        public Task<ValueOrError<Cluster>> AddCluster(string name)
+        public Task<ValueOrError<Cluster>> AddCluster(string name, bool fromBackend = false)
         {
             return Task.FromResult(new ValueOrError<Cluster>(Cluster.Create(name)));
         }
 
-        public Task<ValueOrError<bool>> RemoveCluster(string name)
+        public Task<ValueOrError<bool>> RemoveCluster(string name, bool fromBackend = false)
         {
             return Task.FromResult(new ValueOrError<bool>(true));
         }
@@ -33,12 +33,12 @@ namespace RElmah.Services.Nulls
             return Task.FromResult(new ValueOrError<Cluster>(Cluster.Create(name)));
         }
 
-        public Task<ValueOrError<Application>> AddApplication(string name)
+        public Task<ValueOrError<Application>> AddApplication(string name, bool fromBackend = false)
         {
             return Task.FromResult(new ValueOrError<Application>(Application.Create(name)));
         }
 
-        public Task<ValueOrError<bool>> RemoveApplication(string name)
+        public Task<ValueOrError<bool>> RemoveApplication(string name, bool fromBackend = false)
         {
             return Task.FromResult(new ValueOrError<bool>(true));
         }
@@ -53,12 +53,12 @@ namespace RElmah.Services.Nulls
             return Task.FromResult(new ValueOrError<Application>(Application.Create(name)));
         }
 
-        public Task<ValueOrError<User>> AddUser(string name)
+        public Task<ValueOrError<User>> AddUser(string name, bool fromBackend = false)
         {
             return Task.FromResult(new ValueOrError<User>(User.Create(name)));
         }
 
-        public Task<ValueOrError<bool>> RemoveUser(string name)
+        public Task<ValueOrError<bool>> RemoveUser(string name, bool fromBackend = false)
         {
             return Task.FromResult(new ValueOrError<bool>(true));
         }
@@ -73,22 +73,22 @@ namespace RElmah.Services.Nulls
             return Task.FromResult(new ValueOrError<User>(User.Create(name)));
         }
 
-        public Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user)
+        public Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user, bool fromBackend = false)
         {
             return Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(new Relationship<Cluster, User>(Cluster.Create(cluster), User.Create(user))));
         }
 
-        public Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user)
+        public Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user, bool fromBackend = false)
         {
             return Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(new Relationship<Cluster, User>(Cluster.Create(cluster), User.Create(user))));
         }
 
-        public Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application)
+        public Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application, bool fromBackend = false)
         {
             return Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(new Relationship<Cluster, Application>(Cluster.Create(cluster), Application.Create(application))));
         }
 
-        public Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application)
+        public Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application, bool fromBackend = false)
         {
             return Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(new Relationship<Cluster, Application>(Cluster.Create(cluster), Application.Create(application))));
         }

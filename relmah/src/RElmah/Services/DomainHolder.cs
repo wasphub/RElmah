@@ -75,10 +75,6 @@ namespace RElmah.Services
                     Op = op
                 };
             clusterApps.Subscribe(p => _usersApplications.SetItem(p.User, p.Op(p.Current, p.Applications)));
-
-            //debug
-            _clusterUserOperations.Subscribe(n => Trace.WriteLine(n.Target.Secondary.Name));
-            _clusterUserOperationsStream.Subscribe(n => Trace.WriteLine(n.Target.Secondary.Name));
         }
 
         public DomainHolder() : this(NullDomainStore.Instance) { }
@@ -88,20 +84,20 @@ namespace RElmah.Services
             return _clusterDeltasStream;
         }
 
-        public async Task<ValueOrError<Cluster>> AddCluster(string name)
+        public async Task<ValueOrError<Cluster>> AddCluster(string name, bool fromBackend = false)
         {
-            var s = await _domainStore.AddCluster(name);
+            var s = await _domainStore.AddCluster(name, fromBackend);
 
-            if (s.HasValue) _clusterDeltas.OnNext(Delta.Create(s.Value, DeltaType.Added));
+            if (s.HasValue) _clusterDeltas.OnNext(Delta.Create(s.Value, DeltaType.Added, fromBackend));
 
             return s;
         }
 
-        public async Task<ValueOrError<bool>> RemoveCluster(string name)
+        public async Task<ValueOrError<bool>> RemoveCluster(string name, bool fromBackend = false)
         {
-            var s = await _domainStore.RemoveCluster(name);
+            var s = await _domainStore.RemoveCluster(name, fromBackend);
 
-            if (s.HasValue) _clusterDeltas.OnNext(Delta.Create(Cluster.Create(name), DeltaType.Removed));
+            if (s.HasValue) _clusterDeltas.OnNext(Delta.Create(Cluster.Create(name), DeltaType.Removed, fromBackend));
 
             return s;
         }
@@ -121,20 +117,20 @@ namespace RElmah.Services
             return _applicationDeltasStream;
         }
 
-        public async Task<ValueOrError<Application>> AddApplication(string name)
+        public async Task<ValueOrError<Application>> AddApplication(string name, bool fromBackend = false)
         {
-            var s = await _domainStore.AddApplication(name);
+            var s = await _domainStore.AddApplication(name, fromBackend);
 
-            if (s.HasValue) _applicationDeltas.OnNext(Delta.Create(s.Value, DeltaType.Added));
+            if (s.HasValue) _applicationDeltas.OnNext(Delta.Create(s.Value, DeltaType.Added, fromBackend));
 
             return s;
         }
 
-        public async Task<ValueOrError<bool>> RemoveApplication(string name)
+        public async Task<ValueOrError<bool>> RemoveApplication(string name, bool fromBackend = false)
         {
-            var s = await _domainStore.RemoveApplication(name);
+            var s = await _domainStore.RemoveApplication(name, fromBackend);
 
-            if (s.HasValue) _applicationDeltas.OnNext(Delta.Create(Application.Create(name), DeltaType.Removed));
+            if (s.HasValue) _applicationDeltas.OnNext(Delta.Create(Application.Create(name), DeltaType.Removed, fromBackend));
 
             return s;
         }
@@ -154,20 +150,20 @@ namespace RElmah.Services
             return _userDeltasStream;
         }
 
-        public async Task<ValueOrError<User>> AddUser(string name)
+        public async Task<ValueOrError<User>> AddUser(string name, bool fromBackend = false)
         {
-            var s = await _domainStore.AddUser(name);
+            var s = await _domainStore.AddUser(name, fromBackend);
 
-            if (s.HasValue) _userDeltas.OnNext(Delta.Create(s.Value, DeltaType.Added));
+            if (s.HasValue) _userDeltas.OnNext(Delta.Create(s.Value, DeltaType.Added, fromBackend));
 
             return s;
         }
 
-        public async Task<ValueOrError<bool>> RemoveUser(string name)
+        public async Task<ValueOrError<bool>> RemoveUser(string name, bool fromBackend = false)
         {
-            var s = await _domainStore.RemoveUser(name);
+            var s = await _domainStore.RemoveUser(name, fromBackend);
 
-            if (s.HasValue) _userDeltas.OnNext(Delta.Create(User.Create(name), DeltaType.Removed));
+            if (s.HasValue) _userDeltas.OnNext(Delta.Create(User.Create(name), DeltaType.Removed, fromBackend));
 
             return s;
         }
@@ -182,38 +178,38 @@ namespace RElmah.Services
             return _domainStore.GetUser(name);
         }
 
-        public async Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user)
+        public async Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user, bool fromBackend = false)
         {
-            var s = await _domainStore.AddUserToCluster(cluster, user);
+            var s = await _domainStore.AddUserToCluster(cluster, user, fromBackend);
 
-            if (s.HasValue) _clusterUserOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Added));
+            if (s.HasValue) _clusterUserOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Added, fromBackend));
 
             return s;
         }
 
-        public async Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user)
+        public async Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user, bool fromBackend = false)
         {
-            var s = await _domainStore.RemoveUserFromCluster(cluster, user);
+            var s = await _domainStore.RemoveUserFromCluster(cluster, user, fromBackend);
 
-            if (s.HasValue) _clusterUserOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Removed));
+            if (s.HasValue) _clusterUserOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Removed, fromBackend));
 
             return s;
         }
 
-        public async Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application)
+        public async Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application, bool fromBackend = false)
         {
-            var s = await _domainStore.AddApplicationToCluster(cluster, application);
+            var s = await _domainStore.AddApplicationToCluster(cluster, application, fromBackend);
 
-            if (s.HasValue) _clusterApplicationOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Added));
+            if (s.HasValue) _clusterApplicationOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Added, fromBackend));
 
             return s;
         }
 
-        public async Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application)
+        public async Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application, bool fromBackend = false)
         {
-            var s = await _domainStore.RemoveApplicationFromCluster(cluster, application);
+            var s = await _domainStore.RemoveApplicationFromCluster(cluster, application, fromBackend);
 
-            if (s.HasValue) _clusterApplicationOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Removed));
+            if (s.HasValue) _clusterApplicationOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Removed, fromBackend));
 
             return s;
         }

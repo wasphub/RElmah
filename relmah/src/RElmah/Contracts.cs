@@ -136,16 +136,16 @@ namespace RElmah.Domain
 
     public interface IDomainPersistor : IDomainReader
     {
-        Task<ValueOrError<Cluster>> AddCluster(string name);
-        Task<ValueOrError<bool>> RemoveCluster(string name);
-        Task<ValueOrError<Application>> AddApplication(string name);
-        Task<ValueOrError<bool>> RemoveApplication(string name);
-        Task<ValueOrError<User>> AddUser(string name);
-        Task<ValueOrError<bool>> RemoveUser(string name);
-        Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user);
-        Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user);
-        Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application);
-        Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application);
+        Task<ValueOrError<Cluster>> AddCluster(string name, bool fromBackend = false);
+        Task<ValueOrError<bool>> RemoveCluster(string name, bool fromBackend = false);
+        Task<ValueOrError<Application>> AddApplication(string name, bool fromBackend = false);
+        Task<ValueOrError<bool>> RemoveApplication(string name, bool fromBackend = false);
+        Task<ValueOrError<User>> AddUser(string name, bool fromBackend = false);
+        Task<ValueOrError<bool>> RemoveUser(string name, bool fromBackend = false);
+        Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user, bool fromBackend = false);
+        Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user, bool fromBackend = false);
+        Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application, bool fromBackend = false);
+        Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application, bool fromBackend = false);
         Task<ValueOrError<User>> AddUserToken(string user, string token);
         Task<ValueOrError<User>> RemoveUserToken(string token);
     }

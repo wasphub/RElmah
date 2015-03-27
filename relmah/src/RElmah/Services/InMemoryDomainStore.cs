@@ -18,14 +18,14 @@ namespace RElmah.Services
         private readonly AtomicImmutableDictionary<string, Application> _applications =
             new AtomicImmutableDictionary<string, Application>();
 
-        public Task<ValueOrError<Cluster>> AddCluster(string name)
+        public Task<ValueOrError<Cluster>> AddCluster(string name, bool fromBackend = false)
         {
             var cluster = Cluster.Create(name);
             _clusters.Add(cluster.Name, cluster);
             return Task.FromResult(ValueOrError.Create(cluster));
         }
 
-        public Task<ValueOrError<bool>> RemoveCluster(string name)
+        public Task<ValueOrError<bool>> RemoveCluster(string name, bool fromBackend = false)
         {
             _clusters.Remove(name);
 
@@ -42,7 +42,7 @@ namespace RElmah.Services
             return Task.FromResult(new ValueOrError<Cluster>(_clusters[name]));
         }
 
-        public Task<ValueOrError<Application>> AddApplication(string name)
+        public Task<ValueOrError<Application>> AddApplication(string name, bool fromBackend = false)
         {
             var application = Application.Create(name);
             _applications.Add(application.Name, application);
@@ -50,7 +50,7 @@ namespace RElmah.Services
             return Task.FromResult(ValueOrError.Create(application));
         }
 
-        public Task<ValueOrError<bool>> RemoveApplication(string name)
+        public Task<ValueOrError<bool>> RemoveApplication(string name, bool fromBackend = false)
         {
             _applications.Remove(name);
 
@@ -67,14 +67,14 @@ namespace RElmah.Services
             return Task.FromResult(new ValueOrError<Application>(_applications[name]));
         }
 
-        public Task<ValueOrError<User>> AddUser(string name)
+        public Task<ValueOrError<User>> AddUser(string name, bool fromBackend = false)
         {
             var user = User.Create(name);
             _users.Add(user.Name, user);
             return Task.FromResult(ValueOrError.Create(user));
         }
 
-        public Task<ValueOrError<bool>> RemoveUser(string name)
+        public Task<ValueOrError<bool>> RemoveUser(string name, bool fromBackend = false)
         {
             _users.Remove(name);
 
@@ -91,7 +91,7 @@ namespace RElmah.Services
             return Task.FromResult(new ValueOrError<User>(_users[name]));
         }
 
-        public Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user)
+        public Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user, bool fromBackend = false)
         {
             var c = _clusters[cluster];
             var u = _users[user];
@@ -101,7 +101,7 @@ namespace RElmah.Services
             return Task.FromResult(ValueOrError.Create(Relationship.Create(value, u)));
         }
 
-        public Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user)
+        public Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user, bool fromBackend = false)
         {
             var c = _clusters[cluster];
             var u = _users[user];
@@ -111,7 +111,7 @@ namespace RElmah.Services
             return Task.FromResult(ValueOrError.Create(Relationship.Create(value, u)));
         }
 
-        public Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application)
+        public Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application, bool fromBackend = false)
         {
             var c = _clusters[cluster];
             var a = _applications[application];
@@ -121,7 +121,7 @@ namespace RElmah.Services
             return Task.FromResult(ValueOrError.Create(Relationship.Create(value, a)));
         }
 
-        public Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application)
+        public Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application, bool fromBackend = false)
         {
             var c = _clusters[cluster];
             var a = _applications[application];
