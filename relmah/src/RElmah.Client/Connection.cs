@@ -9,41 +9,47 @@ namespace RElmah.Client
 {
     public class Connection : IDisposable
     {
-        private readonly HubConnection _connection;
+        private readonly string _endpoint;
+        private HubConnection _connection;
 
         private readonly Subject<ErrorPayload> _errors = new Subject<ErrorPayload>();
 
-        public Connection(string endpoint, ClientToken token)
+        public Connection(string endpoint)
         {
-            _connection = new HubConnection(endpoint, string.Format("user={0}", token.Token));
-
-            SetupProxy();
+            _endpoint = endpoint;
         }
 
-        public Connection(string endpoint, ICredentials credentials)
-        {
-            _connection = new HubConnection(endpoint)
-            {
-                Credentials = credentials
-            };
-
-            SetupProxy();
-        }
-
-        private void SetupProxy()
+        private Task Connect(HubConnection connection)
         {
             var proxy = _connection.CreateHubProxy("relmah-errors");
 
             proxy.On<ErrorPayload>(
                 "error",
                 p => _errors.OnNext(p));
+
+            return connection.Start();
         }
 
-        public Connection(string endpoint) : this(endpoint, CredentialCache.DefaultCredentials) { }
+        public Task Start(ClientToken token)
+        {
+            _connection = new HubConnection(_endpoint, string.Format("user={0}", token.Token));
+
+            return Connect(_connection);
+        }
+
+        public Task Start(ICredentials credentials)
+        {
+            _connection = new HubConnection(_endpoint)
+            {
+                Credentials = credentials
+            };
+
+            return Connect(_connection);
+        }
 
         public Task Start()
         {
-            return _connection.Start().ContinueWith(t => { var foo = _connection.State; });
+            return Start(CredentialCache.DefaultCredentials);
         }
 
         public IObservable<ErrorPayload> Errors { get { return _errors; } }
