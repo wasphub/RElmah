@@ -66,8 +66,6 @@
     </Compile>
     <Compile Include="ClientToken.cs" />
     <Compile Include="Connection.cs" />
-    <Compile Include="ConnectionOptions.cs" />
-    <Compile Include="FilteredSubject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
