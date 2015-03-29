@@ -40,5 +40,10 @@ namespace RElmah.Extensions
         {
             return from kvp in source select new KeyValuePair<TK, TR>(kvp.Key, selector(kvp.Value));
         }
+
+        public static void Do<TK, TR>(this IDictionary<TK, TR> source, TK key, Action<TR> action)
+        {
+            if (source.ContainsKey(key)) action(source[key]);
+        }
     }
 }

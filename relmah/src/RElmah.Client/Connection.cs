@@ -7,6 +7,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using RElmah.Common;
+using RElmah.Extensions;
 
 namespace RElmah.Client
 {
@@ -16,8 +17,9 @@ namespace RElmah.Client
 
         private HubConnection _connection;
 
-        private readonly ISubject<ErrorPayload> _errors = new Subject<ErrorPayload>();
+        private readonly ISubject<ErrorPayload>         _errors = new Subject<ErrorPayload>();
         private readonly ISubject<ApplicationOperation> _applications = new Subject<ApplicationOperation>();
+        private readonly ISubject<RecapAggregate>       _recaps = new Subject<RecapAggregate>();
 
         public Connection(string endpoint)
         {
@@ -28,6 +30,8 @@ namespace RElmah.Client
         public IObservable<IGroupedObservable<ErrorType, ErrorPayload>> ErrorTypes { get; private set; }
 
         public IObservable<ApplicationOperation> Applications { get { return _applications; } }
+
+        public IObservable<RecapAggregate> Recaps { get { return _recaps; } }
 
         public Task Start(ClientToken token)
         {
@@ -117,18 +121,58 @@ namespace RElmah.Client
             }
         }
 
+        public class RecapAggregate
+        {
+            public readonly string Name;
+            public readonly string Type;
+            public readonly int Measure;
+
+            public RecapAggregate(string name, string type, int measure)
+            {
+                Name    = name;
+                Type    = type;
+                Measure = measure;
+            }
+
+            protected bool Equals(RecapAggregate other)
+            {
+                return string.Equals(Name, other.Name) && string.Equals(Type, other.Type) && Measure == other.Measure;
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    var hashCode = (Name != null ? Name.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (Type != null ? Type.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ Measure;
+                    return hashCode;
+                }
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != GetType()) return false;
+                return Equals((RecapAggregate) obj);
+            }
+        }
+
         private Task Connect(HubConnection connection)
         {
             var errorsProxy = connection.CreateHubProxy("relmah-errors");
 
+            //streams by error type
             ErrorTypes = _errors.GroupBy(e => new ErrorType(e.SourceId, e.Error.Type));
 
+            //errors
             errorsProxy.On<ErrorPayload>(
                 "error",
                 p => _errors.OnNext(p));
 
+            //apps visibility
             var apps = new HashSet<string>();
-
             errorsProxy.On<IEnumerable<string>, IEnumerable<string>>(
                 "applications",
                 (es, rs) =>
@@ -145,6 +189,35 @@ namespace RElmah.Client
                     } 
                 });
 
+            //recaps
+            var groups = new Dictionary<string, IDisposable>();
+            errorsProxy.On<Recap>(
+                "recap",
+                p =>
+                {
+                    groups["*"] = ErrorTypes.Subscribe(et =>
+                    {
+                        var key = et.Key.SourceId + '-' + et.Key.Type;
+                        groups.Do(key, d => d.Dispose());
+
+                        var rs =
+                            from a in p.Apps
+                            where a.Name == et.Key.SourceId
+                            from b in a.Types
+                            where b.Name == et.Key.Type
+                            select b.Measure;
+
+                        var r = rs.Aggregate(0, (acc, cur) => acc + cur);
+
+                        groups[key] = et
+                            .Scan(0, (ka, ep) => ka + 1)
+                            .Subscribe(e =>
+                            {
+                                _recaps.OnNext(new RecapAggregate(et.Key.SourceId, et.Key.Type, e + r));
+                            });
+                    });
+                });
+
             return connection.Start();
         }
 
@@ -153,8 +226,14 @@ namespace RElmah.Client
             _connection.Dispose();
 
             _errors.OnCompleted();
+            _applications.OnCompleted();
+            _recaps.OnCompleted();
 
             var disposable = _errors as IDisposable;
+            if (disposable != null) disposable.Dispose();
+            disposable = _applications as IDisposable;
+            if (disposable != null) disposable.Dispose();
+            disposable = _recaps as IDisposable;
             if (disposable != null) disposable.Dispose();
         }
     }
