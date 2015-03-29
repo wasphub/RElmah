@@ -45,8 +45,8 @@
 
                     var proxy    = conn.createHubProxy('relmah-errors');
 
-                    errors       = new FilteredSubject(subs.errors, errors);
-                    applications = new FilteredSubject(subs.applications, applications);
+                    errors       = new FilteredSubject(subs.errorsFilter, errors);
+                    applications = new FilteredSubject(subs.applicationsFilter, applications);
                     recaps       = new Rx.Subject();
 
                     proxy.on('error', function (p) {
