@@ -13,15 +13,7 @@ var c = new Connection("http://localhost:9100/");
 await c.Start();
 
 var q = 
-	from error in c.Errors
-	group error.Error by error.Error.Type into gs
-	select gs;
-	
-q.Subscribe(gs => 
-	gs.Scan(
-		new { gs.Key, Count = 0 }, 
-		(a, g) => new { a.Key, Count = a.Count + 1 })
-	  .DumpLive()
-);
-	  
-q.DumpLive();
+	from app in c.Applications
+	select new { app.Name, app.Type };
+	 
+q.Subscribe(o => new { o.Name, o.Type }.Dump());
