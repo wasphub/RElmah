@@ -9,7 +9,7 @@
   <Namespace>System.Reactive.Linq</Namespace>
 </Query>
 
-var c = new Connection("http://localhost:9474/");
+var c = new Connection("http://localhost:9100/");
 c.Start();
 
 var q = 
@@ -17,4 +17,4 @@ var q =
 	where error.Error.Type.IndexOf("Argument", StringComparison.OrdinalIgnoreCase) > -1
 	select new { error.Error, error.Error.Time };
 	  
-q.DumpLive();
+q.DumpLatest(true);
