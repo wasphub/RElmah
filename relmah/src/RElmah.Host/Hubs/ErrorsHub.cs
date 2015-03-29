@@ -43,7 +43,7 @@ namespace RElmah.Host.Hubs
             return base.OnDisconnected(stopCalled);
         }
 
-        public static void Recap(string user, Models.Recap recap)
+        public static void Recap(string user, Recap recap)
         {
             GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>().Clients.User(user).recap(recap);
         }

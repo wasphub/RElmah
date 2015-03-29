@@ -67,7 +67,6 @@
                     var groups = {};
 
                     proxy.on('recap', function (recap) {
-                        console.log(recap);
                         groups['*'] && groups['*'].dispose();
 
                         var irs = recap.Apps
@@ -83,8 +82,8 @@
 
                         groups['*'] = getErrorTypes()
                             .subscribe(function(et) {
-                                    var key = et.key.app + '-' + et.key.type;
-                                    groups[key] && groups[key].dispose();
+                                var key = et.key.app + '-' + et.key.type;
+                                groups[key] && groups[key].dispose();
 
                                 var rs = recap.Apps
                                     .filter(function(a) { return a.Name === et.key.app; })
@@ -108,6 +107,7 @@
                     starting && starting();
 
                     conn.qs = { user: opts && opts.user };
+
                     return conn.start();
                 },
                 getErrors: function () {

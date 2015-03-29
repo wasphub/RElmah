@@ -131,7 +131,6 @@
     <Compile Include="Middleware\Router.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Cluster.cs" />
-    <Compile Include="Models\Recap.cs" />
     <Compile Include="Models\Settings\BootstrapperSettings.cs" />
     <Compile Include="Models\Settings\DomainSettings.cs" />
     <Compile Include="Models\Settings\ErrorsSettings.cs" />
