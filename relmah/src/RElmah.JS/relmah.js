@@ -4,24 +4,6 @@
 
     var relmah = (function () {
 
-        function FilteredSubject(filter, previous) {
-            var that = this;
-
-            previous && previous.dispose && previous.dispose();
-
-            that.subject  = new Rx.Subject();
-            that.filtered = filter && typeof (filter) === 'function' && filter(that.subject) || that.subject;
-
-            that.dispose = function () {
-                that.subject.dispose();
-                that.filtered.dispose();
-            }
-
-            that.onNext = function (n) {
-                that.subject.onNext(n);
-            }
-        }
-
         return function (endpoint, subs) {
             var conn,
                 errors,
@@ -31,7 +13,7 @@
                 starting,
                 valueOf = function () { return JSON.stringify(this); },
                 getErrorTypes = function () {
-                    return errors.filtered.groupBy(
+                    return errors.groupBy(
                         function (e)    { return { app: e.SourceId, type: e.Error.Type, valueOf: valueOf }; },
                         function (e)    { return e; },
                         function (a, b) { return a.app === b.app && a.type === b.type; });
@@ -45,8 +27,8 @@
 
                     var proxy    = conn.createHubProxy('relmah-errors');
 
-                    errors       = new FilteredSubject(subs.errorsFilter, errors);
-                    applications = new FilteredSubject(subs.applicationsFilter, applications);
+                    errors       = new Rx.Subject();
+                    applications = new Rx.Subject();
                     recaps       = new Rx.Subject();
 
                     proxy.on('error', function (p) {
@@ -110,13 +92,9 @@
 
                     return conn.start();
                 },
-                getErrors: function () {
-                    return errors.filtered;
-                },
+                getErrors: function () { return errors; },
                 getErrorTypes: getErrorTypes,
-                getApplications: function () {
-                    return applications.filtered;
-                },
+                getApplications: function () { return applications; },
                 getRecaps: function () {
                     return recaps.groupBy(
                         function (e)    { return { app: e.app, type: e.type, valueOf: valueOf }; },
