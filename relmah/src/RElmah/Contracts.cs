@@ -38,10 +38,6 @@ namespace RElmah.Notifiers
         void Error(string user, ErrorPayload payload);
 
         void UserSources(string user, IEnumerable<string> added, IEnumerable<string> removed);
-
-        void AddGroup(string token, string group);
-
-        void RemoveGroup(string token, string group);
     }
 
     public interface IBackendNotifier

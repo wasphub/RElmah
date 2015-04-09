@@ -20,15 +20,5 @@ namespace RElmah.Host.Hubs.Notifiers
         {
             ErrorsHub.UserSources(user, added, removed);
         }
-
-        public void AddGroup(string token, string @group)
-        {
-            ErrorsHub.AddGroup(token, @group);
-        }
-
-        public void RemoveGroup(string token, string @group)
-        {
-            ErrorsHub.RemoveGroup(token, @group);
-        }
     }
 }

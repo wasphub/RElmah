@@ -17,7 +17,7 @@ namespace RElmah.Host.Hubs
         public ErrorsHub(IFrontendQueriesFactory frontendQueriesFactory, IUserIdProvider userIdProvider)
         {
             _frontendQueriesFactory = frontendQueriesFactory;
-            _userIdProvider      = userIdProvider;
+            _userIdProvider         = userIdProvider;
         }
 
         public override Task OnConnected()
@@ -27,7 +27,6 @@ namespace RElmah.Host.Hubs
             _frontendQueriesFactory.Setup(_userIdProvider.GetUserId(Context.Request), Context.ConnectionId, a =>
             {
                 sources = sources.Concat(new[] { a });
-                Groups.Add(Context.ConnectionId, a);
             });
 
             Clients.Caller
@@ -57,16 +56,6 @@ namespace RElmah.Host.Hubs
         {
             GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>().Clients.User(user)
                 .sources(added, removed);
-        }
-
-        public static void AddGroup(string token, string group)
-        {
-            GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>().Groups.Add(token, group);
-        }
-
-        public static void RemoveGroup(string token, string group)
-        {
-            GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>().Groups.Remove(token, group);
         }
     }
 }
