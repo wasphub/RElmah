@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Threading.Tasks;
 using RElmah.Domain;
 using RElmah.Errors;
 using RElmah.Extensions;
@@ -55,7 +56,10 @@ namespace RElmah.Queries.Frontend
                     DomainPublisher = _domainPublisher
                 });
 
-            var d = new CompositeDisposable(subscriptions.ToArray()).ToLayeredDisposable();
+            subscriptions = subscriptions.ToArray();
+            await Task.WhenAll(subscriptions);
+
+            var d = new CompositeDisposable(from s in subscriptions select s.Result).ToLayeredDisposable();
 
             _subscriptions.SetItem(user, d);
 

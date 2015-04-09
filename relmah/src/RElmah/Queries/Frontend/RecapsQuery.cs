@@ -56,23 +56,17 @@ namespace RElmah.Queries.Frontend
             var sources = clusterSources.Merge(userSources);
 
             //Stream
-            var subscription = rs.Concat(sources)
-                .Subscribe(async payload =>
-                {
-                    var recap = await targets.ErrorsBacklog.GetSourcesRecap(payload.Sources, xs => xs.Count());
-                    if (!recap.HasValue) return;
-
-                    targets.FrontendNotifier.Recap(name, recap.Value);
-                    targets.FrontendNotifier.UserSources(name,
-                        payload.Additions.Select(a => a.SourceId),
-                        payload.Removals.Select(a => a.SourceId));
-                });
-
-            return Disposable.Create(() =>
+            return rs.Concat(sources).Subscribe(async payload =>
             {
-                subscription.Dispose();
+                var recap = await targets.ErrorsBacklog.GetSourcesRecap(payload.Sources, xs => xs.Count());
+                if (!recap.HasValue) return;
+
+                targets.FrontendNotifier.Recap(name, recap.Value);
+                targets.FrontendNotifier.UserSources(name,
+                    payload.Additions.Select(a => a.SourceId),
+                    payload.Removals.Select(a => a.SourceId));
             });
-                        }
+        }
 
         static async Task<T> InitialRecap<T>(
             string name, 

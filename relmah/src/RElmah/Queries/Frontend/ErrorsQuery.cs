@@ -32,11 +32,10 @@ namespace RElmah.Queries.Frontend
                 where e.SourceId == a.SourceId
                 select e;
 
-            return errors
-                .Subscribe(payload =>
-                {
-                    targets.FrontendNotifier.Error(name, payload);
-                });
+            return errors.Subscribe(payload =>
+            {
+                targets.FrontendNotifier.Error(name, payload);
+            });
         }
     }
 }
