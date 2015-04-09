@@ -6,13 +6,13 @@ namespace RElmah.Common
 {
     public class Recap : ISerializable
     {
-        public IEnumerable<Application> Apps { get; private set; }
+        public IEnumerable<Source> Sources { get; private set; }
         public DateTime When { get; private set; }
 
-        public Recap(DateTime when, IEnumerable<Application> apps)
+        public Recap(DateTime when, IEnumerable<Source> sources)
         {
             When = when;
-            Apps = apps;
+            Sources = sources;
         }
 
         #region Serialization
@@ -20,41 +20,40 @@ namespace RElmah.Common
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("When", When);
-            info.AddValue("Apps", Apps);
+            info.AddValue("Sources", Sources);
         }
 
         public Recap(SerializationInfo info, StreamingContext context)
         {
-            When = (DateTime)info.GetValue("When", typeof(DateTime));
-            Apps = (IEnumerable<Application>)info.GetValue("Apps", typeof(IEnumerable<Application>));
-
+            When    = (DateTime)info.GetValue("When", typeof(DateTime));
+            Sources = (IEnumerable<Source>)info.GetValue("Sources", typeof(IEnumerable<Source>));
         }
 
         #endregion
 
-        public class Application
+        public class Source
         {
-            public string Name { get; private set; }
+            public string SourceId { get; private set; }
             public IEnumerable<Type> Types { get; private set; }
 
-            public Application(string type, IEnumerable<Type> types)
+            public Source(string sourceId, IEnumerable<Type> types)
             {
-                Name = type;
-                Types = types;
+                SourceId  = sourceId;
+                Types     = types;
             }
 
             #region Serialization
 
             public void GetObjectData(SerializationInfo info, StreamingContext context)
             {
-                info.AddValue("Name", Name);
+                info.AddValue("SourceId", SourceId);
                 info.AddValue("Types", Types);
             }
 
-            public Application(SerializationInfo info, StreamingContext context)
+            public Source(SerializationInfo info, StreamingContext context)
             {
-                Name  = (string)info.GetValue("Name", typeof(string));
-                Types = (IEnumerable<Type>)info.GetValue("Types", typeof(IEnumerable<Type>));
+                SourceId  = (string)info.GetValue("SourceId", typeof(string));
+                Types     = (IEnumerable<Type>)info.GetValue("Types", typeof(IEnumerable<Type>));
             }
 
             #endregion
@@ -75,13 +74,13 @@ namespace RElmah.Common
 
             public void GetObjectData(SerializationInfo info, StreamingContext context)
             {
-                info.AddValue("Name", Name);
+                info.AddValue("SourceId", Name);
                 info.AddValue("Measure", Measure);
             }
 
             public Type(SerializationInfo info, StreamingContext context)
             {
-                Name     = (string)info.GetValue("Name", typeof(string));
+                Name     = (string)info.GetValue("SourceId", typeof(string));
                 Measure  = (int)info.GetValue("Measure", typeof(int));
             }
 

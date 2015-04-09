@@ -56,34 +56,34 @@ namespace RElmah.Server
                         RunBackend = runBackend,
                         TargetBackendEndpoint = targetBackendEndpoint,
 
-                        Domain = async cu =>
+                        Domain = async conf =>
                         {              
-                            var c1 = await cu.AddCluster("foo");
-                            var c2 = await cu.AddCluster("bar");
+                            var c1 = await conf.AddCluster("foo");
+                            var c2 = await conf.AddCluster("bar");
 
-                            var a1 = await cu.AddApplication("e7001");
-                            var a2 = await cu.AddApplication("e7002");
-                            var a3 = await cu.AddApplication("e7003");
+                            var a1 = await conf.AddSource("e7001");
+                            var a2 = await conf.AddSource("e7002");
+                            var a3 = await conf.AddSource("e7003");
 
                             //For Windows Auth testing
-                            var u1 = await cu.AddUser(string.Format(@"{0}\{1}", Environment.UserDomainName, Environment.UserName));
+                            var u1 = await conf.AddUser(string.Format(@"{0}\{1}", Environment.UserDomainName, Environment.UserName));
                             
                             //For client token testing
-                            var u2 = await cu.AddUser(@"wasp");
-                            var u3 = await cu.AddUser(@"cuki");
-                            var u4 = await cu.AddUser(@"all");
+                            var u2 = await conf.AddUser(@"wasp");
+                            var u3 = await conf.AddUser(@"cuki");
+                            var u4 = await conf.AddUser(@"all");
 
                             Task.WaitAll(
-                                cu.AddApplicationToCluster(c1.Value.Name, a1.Value.Name),
-                                cu.AddApplicationToCluster(c2.Value.Name, a2.Value.Name),
-                                cu.AddApplicationToCluster(c2.Value.Name, a3.Value.Name),
+                                conf.AddSourceToCluster(c1.Value.Name, a1.Value.SourceId),
+                                conf.AddSourceToCluster(c2.Value.Name, a2.Value.SourceId),
+                                conf.AddSourceToCluster(c2.Value.Name, a3.Value.SourceId),
 
-                                cu.AddUserToCluster(c1.Value.Name, u1.Value.Name),
-                                cu.AddUserToCluster(c1.Value.Name, u2.Value.Name),
-                                cu.AddUserToCluster(c1.Value.Name, u4.Value.Name),
+                                conf.AddUserToCluster(c1.Value.Name, u1.Value.Name),
+                                conf.AddUserToCluster(c1.Value.Name, u2.Value.Name),
+                                conf.AddUserToCluster(c1.Value.Name, u4.Value.Name),
 
-                                cu.AddUserToCluster(c2.Value.Name, u3.Value.Name),
-                                cu.AddUserToCluster(c2.Value.Name, u4.Value.Name));
+                                conf.AddUserToCluster(c2.Value.Name, u3.Value.Name),
+                                conf.AddUserToCluster(c2.Value.Name, u4.Value.Name));
                         }
                     }
                 });

@@ -19,11 +19,11 @@ namespace RElmah.Services
             return Task.Factory.StartNew(() => _errors.Add(payload));
         }
 
-        public Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> reducer)
+        public Task<ValueOrError<Recap>> GetSourcesRecap(IEnumerable<Source> sources, Func<IEnumerable<ErrorPayload>, int> reducer)
         {
             var errors =
                 from e in _errors
-                where apps.Select(a => a.Name).Contains(e.SourceId)
+                where sources.Select(a => a.SourceId).Contains(e.SourceId)
                 select e;
 
             var grouped =
@@ -33,7 +33,7 @@ namespace RElmah.Services
                     from t in g
                     group t by t.Error.Type into x
                     select new Recap.Type(x.Key, reducer(x))
-                select new Recap.Application(g.Key, types);
+                select new Recap.Source(g.Key, types);
 
             return Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, grouped)));
         }

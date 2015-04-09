@@ -22,16 +22,16 @@ namespace RElmah.Host.Hubs
 
         public override Task OnConnected()
         {
-            var apps = Enumerable.Empty<string>();
+            var sources = Enumerable.Empty<string>();
 
             _frontendQueriesFactory.Setup(_userIdProvider.GetUserId(Context.Request), Context.ConnectionId, a =>
             {
-                apps = apps.Concat(new[] { a });
+                sources = sources.Concat(new[] { a });
                 Groups.Add(Context.ConnectionId, a);
             });
 
             Clients.Caller
-                .applications(apps);
+                .sources(sources);
 
             return base.OnConnected();
         }
@@ -53,10 +53,10 @@ namespace RElmah.Host.Hubs
             GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>().Clients.User(user).error(payload);
         }
 
-        public static void UserApplications(string user, IEnumerable<string> added, IEnumerable<string> removed)
+        public static void UserSources(string user, IEnumerable<string> added, IEnumerable<string> removed)
         {
             GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>().Clients.User(user)
-                .applications(added, removed);
+                .sources(added, removed);
         }
 
         public static void AddGroup(string token, string group)

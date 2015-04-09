@@ -48,7 +48,7 @@ namespace RElmah.Tests.Queries.Frontend
                     ErrorsBacklog = new StubIErrorsBacklog(),
                     DomainPersistor = new StubIDomainPersistor
                     {
-                        GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
+                        GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1") })
                     },
                     DomainPublisher = new StubIDomainPublisher()
                 });
@@ -87,7 +87,7 @@ namespace RElmah.Tests.Queries.Frontend
                     ErrorsBacklog = new StubIErrorsBacklog(),
                     DomainPersistor = new StubIDomainPersistor
                     {
-                        GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
+                        GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1") })
                     },
                     DomainPublisher = new StubIDomainPublisher()
                 });
@@ -128,7 +128,7 @@ namespace RElmah.Tests.Queries.Frontend
                     ErrorsBacklog = new StubIErrorsBacklog(),
                     DomainPersistor = new StubIDomainPersistor
                     {
-                        GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
+                        GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1") })
                     },
                     DomainPublisher = new StubIDomainPublisher()
                 });

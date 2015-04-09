@@ -41,9 +41,9 @@ namespace RElmah.Services.Inbox
             return _publishedErrors;
         }
 
-        public Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> reducer)
+        public Task<ValueOrError<Recap>> GetSourcesRecap(IEnumerable<Source> sources, Func<IEnumerable<ErrorPayload>, int> reducer)
         {
-            return _errorsBacklog.GetApplicationsRecap(apps, xs => xs.Count());
+            return _errorsBacklog.GetSourcesRecap(sources, xs => xs.Count());
         }
     }
 }

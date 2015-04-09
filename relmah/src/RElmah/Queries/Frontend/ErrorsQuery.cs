@@ -17,7 +17,7 @@ namespace RElmah.Queries.Frontend
             if (user.Value.Tokens.Count() > 1) return Disposable.Empty;
 
             var name = user.Value.Name;
-            Func<Task<IEnumerable<Application>>> getUserApps = async () => await targets.DomainPersistor.GetUserApplications(name);
+            Func<Task<IEnumerable<Source>>> getUserSources = async () => await targets.DomainPersistor.GetUserSources(name);
 
             var frontend = targets.ErrorsInbox != null 
                          ? targets.ErrorsInbox.GetErrorsStream() 
@@ -27,9 +27,9 @@ namespace RElmah.Queries.Frontend
                          : Observable.Empty<ErrorPayload>();
             var errors =
                 from e in frontend.Merge(backend)
-                from apps in getUserApps()
-                from a in apps
-                where e.SourceId == a.Name
+                from sources in getUserSources()
+                from a in sources
+                where e.SourceId == a.SourceId
                 select e;
 
             return errors

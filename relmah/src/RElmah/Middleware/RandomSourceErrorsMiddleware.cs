@@ -21,9 +21,9 @@ namespace RElmah.Middleware
 
         protected override string RetrieveSourceId(IDictionary<string, string> form)
         {
-            var apps = _domainPersistor.GetApplications().Result.ToArray();
-            var app  = apps.Skip(_random.Next(apps.Count())).First();
-            return app.Name;
+            var sources = _domainPersistor.GetSources().Result.ToArray();
+            var source  = sources.Skip(_random.Next(sources.Count())).First();
+            return source.SourceId;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -18,36 +17,36 @@ namespace RElmah.Services
 {
     public class DomainHolder : IDomainPublisher, IDomainPersistor
     {
-        delegate ImmutableHashSet<T> HashsetJunction<T>(ImmutableHashSet<T> set, IEnumerable<T> apps);
+        delegate ImmutableHashSet<T> HashsetJunction<T>(ImmutableHashSet<T> set, IEnumerable<T> sources);
 
         private readonly IDomainStore _domainStore;
 
-        private readonly Subject<Delta<Cluster>>                            _clusterDeltas                = new Subject<Delta<Cluster>>();
-        private readonly Subject<Delta<Application>>                        _applicationDeltas            = new Subject<Delta<Application>>();
-        private readonly Subject<Delta<User>>                               _userDeltas                   = new Subject<Delta<User>>();
-        private readonly Subject<Delta<Relationship<Cluster, User>>>        _clusterUserOperations        = new Subject<Delta<Relationship<Cluster, User>>>();
-        private readonly Subject<Delta<Relationship<Cluster, Application>>> _clusterApplicationOperations = new Subject<Delta<Relationship<Cluster, Application>>>();
+        private readonly Subject<Delta<Cluster>>                       _clusterDeltas           = new Subject<Delta<Cluster>>();
+        private readonly Subject<Delta<Source>>                        _sourceDeltas            = new Subject<Delta<Source>>();
+        private readonly Subject<Delta<User>>                          _userDeltas              = new Subject<Delta<User>>();
+        private readonly Subject<Delta<Relationship<Cluster, User>>>   _clusterUserOperations   = new Subject<Delta<Relationship<Cluster, User>>>();
+        private readonly Subject<Delta<Relationship<Cluster, Source>>> _clusterSourceOperations = new Subject<Delta<Relationship<Cluster, Source>>>();
 
-        private readonly IObservable<Delta<Cluster>> _clusterDeltasStream;
-        private readonly IObservable<Delta<Application>> _applicationDeltasStream;
-        private readonly IObservable<Delta<User>> _userDeltasStream;
-        private readonly IObservable<Delta<Relationship<Cluster, User>>> _clusterUserOperationsStream;
-        private readonly IObservable<Delta<Relationship<Cluster, Application>>> _clusterApplicationOperationsStream;
+        private readonly IObservable<Delta<Cluster>>                       _clusterDeltasStream;
+        private readonly IObservable<Delta<Source>>                        _sourceDeltasStream;
+        private readonly IObservable<Delta<User>>                          _userDeltasStream;
+        private readonly IObservable<Delta<Relationship<Cluster, User>>>   _clusterUserOperationsStream;
+        private readonly IObservable<Delta<Relationship<Cluster, Source>>> _clusterSourceOperationsStream;
 
-        private readonly AtomicImmutableDictionary<string, ImmutableHashSet<Application>> _usersApplications   = new AtomicImmutableDictionary<string, ImmutableHashSet<Application>>();
+        private readonly AtomicImmutableDictionary<string, ImmutableHashSet<Source>> _usersSources   = new AtomicImmutableDictionary<string, ImmutableHashSet<Source>>();
  
         public DomainHolder(IDomainStore domainStore)
         {
             _domainStore = domainStore;
 
-            _clusterDeltasStream                = _clusterDeltas.Publish().RefCount();
-            _applicationDeltasStream            = _applicationDeltas.Publish().RefCount();
-            _userDeltasStream                   = _userDeltas.Publish().RefCount();
-            _clusterUserOperationsStream        = _clusterUserOperations.Publish().RefCount();
-            _clusterApplicationOperationsStream = _clusterApplicationOperations.Publish().RefCount();
+            _clusterDeltasStream           = _clusterDeltas.Publish().RefCount();
+            _sourceDeltasStream            = _sourceDeltas.Publish().RefCount();
+            _userDeltasStream              = _userDeltas.Publish().RefCount();
+            _clusterUserOperationsStream   = _clusterUserOperations.Publish().RefCount();
+            _clusterSourceOperationsStream = _clusterSourceOperations.Publish().RefCount();
 
-            HashsetJunction<Application> except = (c, apps) => c.Except(apps);
-            HashsetJunction<Application> union  = (c, apps) => c.Union(apps);
+            HashsetJunction<Source> except = (c, sources) => c.Except(sources);
+            HashsetJunction<Source> union  = (c, sources) => c.Union(sources);
 
             var clusterUsers =
                 from p in _clusterUserOperations
@@ -55,26 +54,26 @@ namespace RElmah.Services
                 let user = p.Target.Secondary.Name
                 select new
                 {
-                    User = user, 
-                    Current = _usersApplications.Get(user, ImmutableHashSet<Application>.Empty),
-                    p.Target.Primary.Applications,
+                    User    = user, 
+                    Current = _usersSources.Get(user, ImmutableHashSet<Source>.Empty),
+                    Sources = p.Target.Primary.Sources,
                     Op = op
                 };
-            clusterUsers.Subscribe(p => _usersApplications.SetItem(p.User, p.Op(p.Current, p.Applications)));
+            clusterUsers.Subscribe(p => _usersSources.SetItem(p.User, p.Op(p.Current, p.Sources)));
 
-            var clusterApps =
-                from p in _clusterApplicationOperations
+            var clusterSources =
+                from p in _clusterSourceOperations
                 let op = p.Type == DeltaType.Added ? union : except
                 from un in p.Target.Primary.Users
                 let user = un.Name
                 select new
                 {
                     User = user,
-                    Current = _usersApplications.Get(user, ImmutableHashSet<Application>.Empty),
-                    Applications = p.Target.Secondary.ToSingleton(),
+                    Current = _usersSources.Get(user, ImmutableHashSet<Source>.Empty),
+                    Sources = p.Target.Secondary.ToSingleton(),
                     Op = op
                 };
-            clusterApps.Subscribe(p => _usersApplications.SetItem(p.User, p.Op(p.Current, p.Applications)));
+            clusterSources.Subscribe(p => _usersSources.SetItem(p.User, p.Op(p.Current, p.Sources)));
         }
 
         public DomainHolder() : this(NullDomainStore.Instance) { }
@@ -112,37 +111,37 @@ namespace RElmah.Services
             return _domainStore.GetCluster(name);
         }
 
-        public IObservable<Delta<Application>> GetApplicationsSequence()
+        public IObservable<Delta<Source>> GetSourcesSequence()
         {
-            return _applicationDeltasStream;
+            return _sourceDeltasStream;
         }
 
-        public async Task<ValueOrError<Application>> AddApplication(string name, bool fromBackend = false)
+        public async Task<ValueOrError<Source>> AddSource(string name, bool fromBackend = false)
         {
-            var s = await _domainStore.AddApplication(name, fromBackend);
+            var s = await _domainStore.AddSource(name, fromBackend);
 
-            if (s.HasValue) _applicationDeltas.OnNext(Delta.Create(s.Value, DeltaType.Added, fromBackend));
+            if (s.HasValue) _sourceDeltas.OnNext(Delta.Create(s.Value, DeltaType.Added, fromBackend));
 
             return s;
         }
 
-        public async Task<ValueOrError<bool>> RemoveApplication(string name, bool fromBackend = false)
+        public async Task<ValueOrError<bool>> RemoveSource(string name, bool fromBackend = false)
         {
-            var s = await _domainStore.RemoveApplication(name, fromBackend);
+            var s = await _domainStore.RemoveSource(name, fromBackend);
 
-            if (s.HasValue) _applicationDeltas.OnNext(Delta.Create(Application.Create(name), DeltaType.Removed, fromBackend));
+            if (s.HasValue) _sourceDeltas.OnNext(Delta.Create(Source.Create(name), DeltaType.Removed, fromBackend));
 
             return s;
         }
 
-        public Task<IEnumerable<Application>> GetApplications()
+        public Task<IEnumerable<Source>> GetSources()
         {
-            return _domainStore.GetApplications();
+            return _domainStore.GetSources();
         }
 
-        public Task<ValueOrError<Application>> GetApplication(string name)
+        public Task<ValueOrError<Source>> GetSource(string name)
         {
-            return _domainStore.GetApplication(name);
+            return _domainStore.GetSource(name);
         }
 
         public IObservable<Delta<User>> GetUsersSequence()
@@ -196,20 +195,20 @@ namespace RElmah.Services
             return s;
         }
 
-        public async Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application, bool fromBackend = false)
+        public async Task<ValueOrError<Relationship<Cluster, Source>>> AddSourceToCluster(string cluster, string source, bool fromBackend = false)
         {
-            var s = await _domainStore.AddApplicationToCluster(cluster, application, fromBackend);
+            var s = await _domainStore.AddSourceToCluster(cluster, source, fromBackend);
 
-            if (s.HasValue) _clusterApplicationOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Added, fromBackend));
+            if (s.HasValue) _clusterSourceOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Added, fromBackend));
 
             return s;
         }
 
-        public async Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application, bool fromBackend = false)
+        public async Task<ValueOrError<Relationship<Cluster, Source>>> RemoveSourceFromCluster(string cluster, string source, bool fromBackend = false)
         {
-            var s = await _domainStore.RemoveApplicationFromCluster(cluster, application, fromBackend);
+            var s = await _domainStore.RemoveSourceFromCluster(cluster, source, fromBackend);
 
-            if (s.HasValue) _clusterApplicationOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Removed, fromBackend));
+            if (s.HasValue) _clusterSourceOperations.OnNext(Delta.Create(Relationship.Create(s.Value.Primary, s.Value.Secondary), DeltaType.Removed, fromBackend));
 
             return s;
         }
@@ -219,17 +218,17 @@ namespace RElmah.Services
             return _clusterUserOperationsStream;
         }
 
-        public IObservable<Delta<Relationship<Cluster, Application>>> GetClusterApplicationsSequence()
+        public IObservable<Delta<Relationship<Cluster, Source>>> GetClusterSourcesSequence()
         {
-            return _clusterApplicationOperationsStream;
+            return _clusterSourceOperationsStream;
         }
 
-        public Task<IEnumerable<Application>> GetUserApplications(string user)
+        public Task<IEnumerable<Source>> GetUserSources(string user)
         {
             return Task.FromResult(
-                _usersApplications.ContainsKey(user)
-                ? _usersApplications[user]
-                : Enumerable.Empty<Application>());
+                _usersSources.ContainsKey(user)
+                ? _usersSources[user]
+                : Enumerable.Empty<Source>());
         }
 
         public async Task<ValueOrError<User>> AddUserToken(string user, string token)

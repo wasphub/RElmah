@@ -39,7 +39,7 @@ namespace RElmah.Queries.Frontend
 
         public async void Setup(string user, string token, Action<string> connector)
         {
-            Func<IEnumerable<Application>> getUserApps = () => _domainPersistor.GetUserApplications(user).Result;
+            Func<IEnumerable<Source>> getUserSources = () => _domainPersistor.GetUserSources(user).Result;
 
             var ut = await _domainPersistor.AddUserToken(user, token);
 
@@ -59,8 +59,8 @@ namespace RElmah.Queries.Frontend
 
             _subscriptions.SetItem(user, d);
 
-            //apps
-            getUserApps().Do(app => connector(app.Name));
+            //sources
+            getUserSources().Do(s => connector(s.SourceId));
         }
 
         public async void Teardown(string token)

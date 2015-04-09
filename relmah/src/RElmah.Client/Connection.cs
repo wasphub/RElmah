@@ -18,7 +18,7 @@ namespace RElmah.Client
         private HubConnection _connection;
 
         private readonly ISubject<ErrorPayload>         _errors = new Subject<ErrorPayload>();
-        private readonly ISubject<ApplicationOperation> _applications = new Subject<ApplicationOperation>();
+        private readonly ISubject<SourceOperation> _sources = new Subject<SourceOperation>();
         private readonly ISubject<RecapAggregate>       _recaps = new Subject<RecapAggregate>();
 
         public Connection(string endpoint)
@@ -29,7 +29,7 @@ namespace RElmah.Client
         public IObservable<ErrorPayload> Errors { get { return _errors; } }
         public IObservable<IGroupedObservable<ErrorType, ErrorPayload>> ErrorTypes { get; private set; }
 
-        public IObservable<ApplicationOperation> Applications { get { return _applications; } }
+        public IObservable<SourceOperation> Sources { get { return _sources; } }
 
         public IObservable<RecapAggregate> Recaps { get { return _recaps; } }
 
@@ -84,40 +84,40 @@ namespace RElmah.Client
             }
         }
 
-        public enum ApplicationOperationType
+        public enum SourceOperationType
         {
             Added,
             Removed
         }
 
-        public class ApplicationOperation
+        public class SourceOperation
         {
-            public readonly string Name;
-            public readonly ApplicationOperationType Type;
+            public readonly string SourceId;
+            public readonly SourceOperationType Type;
 
-            public ApplicationOperation(string name, ApplicationOperationType type)
+            public SourceOperation(string sourceId, SourceOperationType type)
             {
-                Name = name;
-                Type = type;
+                SourceId = sourceId;
+                Type     = type;
             }
 
             public override int GetHashCode()
             {
                 unchecked
                 {
-                    return ((Name != null ? Name.GetHashCode() : 0) * 397) ^ (Type.GetHashCode());
+                    return ((SourceId != null ? SourceId.GetHashCode() : 0) * 397) ^ (Type.GetHashCode());
                 }
             }
 
-            public bool Equals(ApplicationOperation target)
+            public bool Equals(SourceOperation target)
             {
                 if (target == null) return false;
-                return string.Equals(Name, target.Name) && Type == target.Type;
+                return string.Equals(SourceId, target.SourceId) && Type == target.Type;
             }
             public override bool Equals(object obj)
             {
                 if (ReferenceEquals(null, obj)) return false;
-                return obj is ApplicationOperation && Equals((ApplicationOperation)obj);
+                return obj is SourceOperation && Equals((SourceOperation)obj);
             }
         }
 
@@ -171,21 +171,21 @@ namespace RElmah.Client
                 "error",
                 p => _errors.OnNext(p));
 
-            //apps visibility
-            var apps = new HashSet<string>();
+            //sources visibility
+            var sources = new HashSet<string>();
             errorsProxy.On<IEnumerable<string>, IEnumerable<string>>(
-                "applications",
+                "sources",
                 (es, rs) =>
                 {
-                    foreach (var e in es.Where(e => !apps.Contains(e)))
+                    foreach (var e in es.Where(e => !sources.Contains(e)))
                     {
-                        _applications.OnNext(new ApplicationOperation(e,  ApplicationOperationType.Added));
-                        apps.Add(e);
+                        _sources.OnNext(new SourceOperation(e,  SourceOperationType.Added));
+                        sources.Add(e);
                     }
-                    foreach (var r in rs.Where(e => apps.Contains(e)))
+                    foreach (var r in rs.Where(e => sources.Contains(e)))
                     {
-                        _applications.OnNext(new ApplicationOperation(r, ApplicationOperationType.Removed));
-                        apps.Remove(r);
+                        _sources.OnNext(new SourceOperation(r, SourceOperationType.Removed));
+                        sources.Remove(r);
                     } 
                 });
 
@@ -201,8 +201,8 @@ namespace RElmah.Client
                         groups.Do(key, d => d.Dispose());
 
                         var rs =
-                            from a in p.Apps
-                            where a.Name == et.Key.SourceId
+                            from a in p.Sources
+                            where a.SourceId == et.Key.SourceId
                             from b in a.Types
                             where b.Name == et.Key.Type
                             select b.Measure;
@@ -226,12 +226,12 @@ namespace RElmah.Client
             _connection.Dispose();
 
             _errors.OnCompleted();
-            _applications.OnCompleted();
+            _sources.OnCompleted();
             _recaps.OnCompleted();
 
             var disposable = _errors as IDisposable;
             if (disposable != null) disposable.Dispose();
-            disposable = _applications as IDisposable;
+            disposable = _sources as IDisposable;
             if (disposable != null) disposable.Dispose();
             disposable = _recaps as IDisposable;
             if (disposable != null) disposable.Dispose();

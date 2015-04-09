@@ -20,9 +20,9 @@ namespace RElmah.Host.Hubs.Notifiers
             _context.Clients.All.Cluster(payload);
         }
 
-        public void Application(Delta<Application> payload)
+        public void Source(Delta<Source> payload)
         {
-            _context.Clients.All.Application(payload);
+            _context.Clients.All.Source(payload);
         }
 
         public void User(Delta<User> payload)
@@ -30,9 +30,9 @@ namespace RElmah.Host.Hubs.Notifiers
             _context.Clients.All.User(payload);
         }
 
-        public void ClusterApplication(Delta<Relationship<Cluster, Application>> payload)
+        public void ClusterSource(Delta<Relationship<Cluster, Source>> payload)
         {
-            _context.Clients.All.ClusterApplication(payload);
+            _context.Clients.All.ClusterSource(payload);
         }
 
         public void ClusterUser(Delta<Relationship<Cluster, User>> payload)

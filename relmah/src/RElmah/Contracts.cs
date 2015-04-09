@@ -37,7 +37,7 @@ namespace RElmah.Notifiers
 
         void Error(string user, ErrorPayload payload);
 
-        void UserApplications(string user, IEnumerable<string> added, IEnumerable<string> removed);
+        void UserSources(string user, IEnumerable<string> added, IEnumerable<string> removed);
 
         void AddGroup(string token, string group);
 
@@ -48,10 +48,10 @@ namespace RElmah.Notifiers
     {
         void Error(ErrorPayload payload);
         void Cluster(Delta<Cluster> payload);
-        void Application(Delta<Application> payload);
+        void Source(Delta<Source> payload);
         void User(Delta<User> payload);
         void ClusterUser(Delta<Relationship<Cluster, User>> payload);
-        void ClusterApplication(Delta<Relationship<Cluster, Application>> payload);
+        void ClusterSource(Delta<Relationship<Cluster, Source>> payload);
     }
 }
 
@@ -100,10 +100,10 @@ namespace RElmah.Publishers
     public interface IDomainPublisher
     {
         IObservable<Delta<Cluster>> GetClustersSequence();
-        IObservable<Delta<Application>> GetApplicationsSequence();
+        IObservable<Delta<Source>> GetSourcesSequence();
         IObservable<Delta<User>> GetUsersSequence();
         IObservable<Delta<Relationship<Cluster, User>>> GetClusterUsersSequence();
-        IObservable<Delta<Relationship<Cluster, Application>>> GetClusterApplicationsSequence();
+        IObservable<Delta<Relationship<Cluster, Source>>> GetClusterSourcesSequence();
     }
 }
 
@@ -117,7 +117,7 @@ namespace RElmah.Errors
     public interface IErrorsBacklog
     {
         Task Store(ErrorPayload payload);
-        Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps, Func<IEnumerable<ErrorPayload>, int> reducer);
+        Task<ValueOrError<Recap>> GetSourcesRecap(IEnumerable<Source> sources, Func<IEnumerable<ErrorPayload>, int> reducer);
     }
 }
 
@@ -127,25 +127,25 @@ namespace RElmah.Domain
     {
         Task<IEnumerable<Cluster>> GetClusters();
         Task<ValueOrError<Cluster>> GetCluster(string name);
-        Task<IEnumerable<Application>> GetApplications();
-        Task<ValueOrError<Application>> GetApplication(string name);
+        Task<IEnumerable<Source>> GetSources();
+        Task<ValueOrError<Source>> GetSource(string name);
         Task<IEnumerable<User>> GetUsers();
         Task<ValueOrError<User>> GetUser(string name);
-        Task<IEnumerable<Application>> GetUserApplications(string user);
+        Task<IEnumerable<Source>> GetUserSources(string user);
     }
 
     public interface IDomainPersistor : IDomainReader
     {
         Task<ValueOrError<Cluster>> AddCluster(string name, bool fromBackend = false);
         Task<ValueOrError<bool>> RemoveCluster(string name, bool fromBackend = false);
-        Task<ValueOrError<Application>> AddApplication(string name, bool fromBackend = false);
-        Task<ValueOrError<bool>> RemoveApplication(string name, bool fromBackend = false);
+        Task<ValueOrError<Source>> AddSource(string name, bool fromBackend = false);
+        Task<ValueOrError<bool>> RemoveSource(string name, bool fromBackend = false);
         Task<ValueOrError<User>> AddUser(string name, bool fromBackend = false);
         Task<ValueOrError<bool>> RemoveUser(string name, bool fromBackend = false);
         Task<ValueOrError<Relationship<Cluster, User>>> AddUserToCluster(string cluster, string user, bool fromBackend = false);
         Task<ValueOrError<Relationship<Cluster, User>>> RemoveUserFromCluster(string cluster, string user, bool fromBackend = false);
-        Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application, bool fromBackend = false);
-        Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application, bool fromBackend = false);
+        Task<ValueOrError<Relationship<Cluster, Source>>> AddSourceToCluster(string cluster, string source, bool fromBackend = false);
+        Task<ValueOrError<Relationship<Cluster, Source>>> RemoveSourceFromCluster(string cluster, string source, bool fromBackend = false);
         Task<ValueOrError<User>> AddUserToken(string user, string token);
         Task<ValueOrError<User>> RemoveUserToken(string token);
     }

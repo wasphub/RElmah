@@ -7,7 +7,7 @@
         return function (endpoint, subs) {
             var conn,
                 errors,
-                applications,
+                sources,
                 recaps,
                 apps = {},
                 starting,
@@ -23,25 +23,25 @@
 
             return {
                 start: function (opts) {
-                    conn = $.hubConnection(endpoint);
+                    conn         = $.hubConnection(endpoint);
 
                     var proxy    = conn.createHubProxy('relmah-errors');
 
-                    errors       = new Rx.Subject();
-                    applications = new Rx.Subject();
-                    recaps       = new Rx.Subject();
+                    errors  = new Rx.Subject();
+                    sources = new Rx.Subject();
+                    recaps  = new Rx.Subject();
 
                     proxy.on('error', function (p) {
                         errors.onNext(p);
                     });
 
-                    proxy.on('applications', function (existingApps, removedApps) {
+                    proxy.on('sources', function (existingApps, removedApps) {
                         existingApps.forEach(function(k) {
-                            !apps[k] && applications.onNext({ name: k, action: 'added' });
+                            !apps[k] && sources.onNext({ name: k, action: 'added' });
                             apps[k] = true;
                         });
                         removedApps && removedApps.forEach(function (k) {
-                            apps[k] && applications.onNext({ name: k, action: 'removed' });
+                            apps[k] && sources.onNext({ name: k, action: 'removed' });
                             apps[k] = false;
                         });
                     });
@@ -51,10 +51,10 @@
                     proxy.on('recap', function (recap) {
                         groups['*'] && groups['*'].dispose();
 
-                        var irs = recap.Apps
+                        var irs = recap.Sources
                             .map(function(a) {
                                 return a.Types
-                                    .map(function(b) { return { app: a.Name, type: b.Name, measure: b.Measure }; });
+                                    .map(function(b) { return { app: a.SourceId, type: b.Name, measure: b.Measure }; });
                             });
 
                         [].concat.apply([], irs)
@@ -67,8 +67,8 @@
                                 var key = et.key.app + '-' + et.key.type;
                                 groups[key] && groups[key].dispose();
 
-                                var rs = recap.Apps
-                                    .filter(function(a) { return a.Name === et.key.app; })
+                                var rs = recap.Sources
+                                    .filter(function(a) { return a.SourceId === et.key.app; })
                                     .map(function(a) {
                                         return a.Types
                                             .filter(function(b) { return b.Name === et.key.type; })
@@ -94,7 +94,7 @@
                 },
                 getErrors: function () { return errors; },
                 getErrorTypes: getErrorTypes,
-                getApplications: function () { return applications; },
+                getApplications: function () { return sources; },
                 getRecaps: function () {
                     return recaps.groupBy(
                         function (e)    { return { app: e.app, type: e.type, valueOf: valueOf }; },

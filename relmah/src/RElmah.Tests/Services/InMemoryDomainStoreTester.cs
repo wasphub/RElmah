@@ -8,7 +8,7 @@ namespace RElmah.Tests.Services
     public class InMemoryDomainStoreTester
     {
         const string ClusterName     = "c1";
-        const string ApplicationName = "a1";
+        const string SourceName      = "a1";
         const string UserName        = "u1";
 
         [Fact]
@@ -66,52 +66,52 @@ namespace RElmah.Tests.Services
         }
 
         [Fact]
-        public async Task AddApplication()
+        public async Task AddSource()
         {
             //Arrange
             var sut = new InMemoryDomainStore();
 
             //Act
-            var answer = await sut.AddApplication(ApplicationName);
-            var check  = (await sut.GetApplications()).Single();
-            var single = await sut.GetApplication(ApplicationName);
+            var answer = await sut.AddSource(SourceName);
+            var check  = (await sut.GetSources()).Single();
+            var single = await sut.GetSource(SourceName);
 
             //Assert
             Assert.NotNull(answer);
             Assert.True(answer.HasValue);
             Assert.NotNull(answer.Value);
-            Assert.Equal(ApplicationName, answer.Value.Name);
+            Assert.Equal(SourceName, answer.Value.SourceId);
 
-            Assert.Equal(answer.Value.Name, check.Name);
+            Assert.Equal(answer.Value.SourceId, check.SourceId);
 
             Assert.NotNull(single);
             Assert.True(single.HasValue);
             Assert.NotNull(single.Value);
-            Assert.Equal(ApplicationName, single.Value.Name);
+            Assert.Equal(SourceName, single.Value.SourceId);
         }
 
         [Fact]
-        public async Task AddApplicationThenRemoveApplication()
+        public async Task AddSourceThenRemoveSource()
         {
             //Arrange
             var sut = new InMemoryDomainStore();
 
             //Act
-            var answer = await sut.AddApplication(ApplicationName);
-            var check = (await sut.GetApplications()).SingleOrDefault();
+            var answer = await sut.AddSource(SourceName);
+            var check = (await sut.GetSources()).SingleOrDefault();
 
             //Assert
             Assert.NotNull(answer);
             Assert.True(answer.HasValue);
             Assert.NotNull(answer.Value);
-            Assert.Equal(ApplicationName, answer.Value.Name);
+            Assert.Equal(SourceName, answer.Value.SourceId);
 
             Assert.NotNull(check);
-            Assert.Equal(answer.Value.Name, check.Name);
+            Assert.Equal(answer.Value.SourceId, check.SourceId);
 
             //Act
-            var r = await sut.RemoveApplication(ApplicationName);
-            check = (await sut.GetApplications()).SingleOrDefault();
+            var r = await sut.RemoveSource(SourceName);
+            check = (await sut.GetSources()).SingleOrDefault();
 
             //Assert
             Assert.True(r.HasValue);
@@ -300,7 +300,7 @@ namespace RElmah.Tests.Services
         }
 
         [Fact]
-        public async Task AddApplicationToCluster()
+        public async Task AddSourceToCluster()
         {
             //Arrange 
             var sut = new InMemoryDomainStore();
@@ -308,7 +308,7 @@ namespace RElmah.Tests.Services
             //Act
             var cAnswer = await sut.AddCluster(ClusterName);
             var uAnswer = await sut.AddUser(UserName);
-            var aAnswer = await sut.AddApplication(ApplicationName);
+            var aAnswer = await sut.AddSource(SourceName);
 
             //Assert
             Assert.NotNull(cAnswer);
@@ -320,17 +320,17 @@ namespace RElmah.Tests.Services
 
             //Act
             var _         = await sut.AddUserToCluster(cAnswer.Value.Name, uAnswer.Value.Name);
-            var caAnswer  = await sut.AddApplicationToCluster(cAnswer.Value.Name, aAnswer.Value.Name);
-            var caCheck   = caAnswer.Value.Primary.Applications;
+            var caAnswer  = await sut.AddSourceToCluster(cAnswer.Value.Name, aAnswer.Value.SourceId);
+            var caCheck   = caAnswer.Value.Primary.Sources;
 
             //Assert
             Assert.Equal(ClusterName, caAnswer.Value.Primary.Name);
-            Assert.Equal(ApplicationName, caAnswer.Value.Secondary.Name);
-            Assert.Equal(ApplicationName, caCheck.Single().Name);
+            Assert.Equal(SourceName, caAnswer.Value.Secondary.SourceId);
+            Assert.Equal(SourceName, caCheck.Single().SourceId);
         }
 
         [Fact]
-        public async Task AddApplicationToClusterThenRemoveIt()
+        public async Task AddSourceToClusterThenRemoveIt()
         {
             //Arrange
 
@@ -338,7 +338,7 @@ namespace RElmah.Tests.Services
 
             var cAnswer = await sut.AddCluster(ClusterName);
             var uAnswer = await sut.AddUser(UserName);
-            var aAnswer = await sut.AddApplication(ApplicationName);
+            var aAnswer = await sut.AddSource(SourceName);
             Assert.NotNull(cAnswer);
             Assert.True(cAnswer.HasValue);
             Assert.NotNull(uAnswer);
@@ -349,14 +349,14 @@ namespace RElmah.Tests.Services
 
             //Act
             var _        = await sut.AddUserToCluster(cAnswer.Value.Name, uAnswer.Value.Name);
-            var __       = await sut.AddApplicationToCluster(cAnswer.Value.Name, aAnswer.Value.Name);
-            var caAnswer = await sut.RemoveApplicationFromCluster(cAnswer.Value.Name, aAnswer.Value.Name);
-            var caCheck  = caAnswer.Value.Primary.Applications;
+            var __       = await sut.AddSourceToCluster(cAnswer.Value.Name, aAnswer.Value.SourceId);
+            var caAnswer = await sut.RemoveSourceFromCluster(cAnswer.Value.Name, aAnswer.Value.SourceId);
+            var caCheck  = caAnswer.Value.Primary.Sources;
 
 
             //Assert
             Assert.Equal(ClusterName, caAnswer.Value.Primary.Name);
-            Assert.Equal(ApplicationName, caAnswer.Value.Secondary.Name);
+            Assert.Equal(SourceName, caAnswer.Value.Secondary.SourceId);
             Assert.Equal(0, caCheck.Count());
         }
     }

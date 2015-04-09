@@ -19,9 +19,9 @@ namespace RElmah.Host.Hubs
             Clients.Others.cluster(cluster);
         }
 
-        public void Application(Delta<Application> application)
+        public void Source(Delta<Source> source)
         {
-            Clients.Others.application(application);
+            Clients.Others.source(source);
         }
 
         public void User(Delta<User> user)
@@ -29,9 +29,9 @@ namespace RElmah.Host.Hubs
             Clients.Others.user(user);
         }
 
-        public void ClusterApplication(Delta<Relationship<Cluster, Application>> ca)
+        public void ClusterSource(Delta<Relationship<Cluster, Source>> cs)
         {
-            Clients.Others.clusterApplication(ca);
+            Clients.Others.clusterSource(cs);
         }
 
         public void ClusterUser(Delta<Relationship<Cluster, User>> cu)

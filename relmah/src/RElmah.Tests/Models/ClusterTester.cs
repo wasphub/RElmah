@@ -7,16 +7,16 @@ namespace RElmah.Tests.Models
     public class ClusterTester
     {
         [Fact]
-        public void CreateWithApplications()
+        public void CreateWithSources()
         {
-            var c = Cluster.Create("c", new[] {Application.Create("a")});
+            var c = Cluster.Create("c", new[] {Source.Create("a")});
 
-            Assert.Equal(1, c.Applications.Count());
-            Assert.Equal(1, c.Applications.Count(a => a.Name == "a"));
+            Assert.Equal(1, c.Sources.Count());
+            Assert.Equal(1, c.Sources.Count(a => a.SourceId == "a"));
 
-            var application = c.GetApplication("a");
-            Assert.NotNull(application);
-            Assert.Equal("a", application.Name);
+            var source = c.GetSource("a");
+            Assert.NotNull(source);
+            Assert.Equal("a", source.SourceId);
         }
 
         [Fact]
@@ -29,12 +29,12 @@ namespace RElmah.Tests.Models
         }
 
         [Fact]
-        public void CreateWithApplicationsAndUsers()
+        public void CreateWithSourcesAndUsers()
         {
-            var c = Cluster.Create("c", new[] { Application.Create("a") }, new[] { User.Create("a") });
+            var c = Cluster.Create("c", new[] { Source.Create("a") }, new[] { User.Create("a") });
 
-            Assert.Equal(1, c.Applications.Count());
-            Assert.Equal(1, c.Applications.Count(a => a.Name == "a"));
+            Assert.Equal(1, c.Sources.Count());
+            Assert.Equal(1, c.Sources.Count(a => a.SourceId == "a"));
             Assert.Equal(1, c.Users.Count());
             Assert.Equal(1, c.Users.Count(a => a.Name == "a"));
         }

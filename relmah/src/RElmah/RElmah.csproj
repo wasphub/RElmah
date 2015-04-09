@@ -129,7 +129,7 @@
     <Compile Include="Middleware\Bootstrapper.cs" />
     <Compile Include="Middleware\RandomSourceErrorsMiddleware.cs" />
     <Compile Include="Middleware\Router.cs" />
-    <Compile Include="Models\Application.cs" />
+    <Compile Include="Models\Source.cs" />
     <Compile Include="Models\Cluster.cs" />
     <Compile Include="Models\Settings\BootstrapperSettings.cs" />
     <Compile Include="Models\Settings\DomainSettings.cs" />

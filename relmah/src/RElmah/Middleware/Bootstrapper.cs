@@ -40,21 +40,20 @@ namespace RElmah.Middleware
                      () => new ErrorsQuery(),
                      () => new RecapsQuery());
 
-            var bqf = Queries.Backend.Nulls.QueriesFactory.Instance;
             var bn  = NullBackendNotifier.Instance;
+
             if (settings != null && settings.Bootstrap != null && !string.IsNullOrWhiteSpace(settings.Bootstrap.TargetBackendEndpoint))
             {
                 bn  = frontendBackendNotifierCreator(settings.Bootstrap.TargetBackendEndpoint, bi, dh);
-                bqf = new Queries.Backend.QueriesFactory(ei, bl, dh, dh, bn, 
-                    () => new ErrorsBusQuery(),
-                    () => new ConfigurationBusQuery(skipEventsFromBackend: true));
             }
             else if (settings != null && settings.Bootstrap != null && settings.Bootstrap.RunBackend)
             {
                 bn = backendFrontendNotifierCreator();
-                bqf = new Queries.Backend.QueriesFactory(ei, bl, dh, dh, bn,
-                    () => new ConfigurationBusQuery());
             }
+
+            var bqf = new Queries.Backend.QueriesFactory(ei, bl, dh, dh, bn,
+                () => new ErrorsBusQuery(),
+                () => new ConfigurationBusQuery(skipEventsFromBackend: settings == null || settings.Bootstrap == null || settings.Bootstrap.RunBackend));
 
             //Infrastructure
             registry.Register(typeof(IErrorsBacklog),          () => bl);

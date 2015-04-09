@@ -8,17 +8,17 @@ namespace RElmah.Models
 {
     public class Cluster : ISerializable
     {
-        private readonly IImmutableDictionary<string, Application> _applications = ImmutableDictionary<string, Application>.Empty;
-        private readonly IImmutableDictionary<string, User>        _users        = ImmutableDictionary<string, User>.Empty;
+        private readonly IImmutableDictionary<string, Source> _sources = ImmutableDictionary<string, Source>.Empty;
+        private readonly IImmutableDictionary<string, User>   _users   = ImmutableDictionary<string, User>.Empty;
 
         public static Cluster Create(string name)
         {
             return new Cluster(name);
         }
 
-        public static Cluster Create(string name, IEnumerable<Application> applications)
+        public static Cluster Create(string name, IEnumerable<Source> sources)
         {
-            return new Cluster(name, applications);
+            return new Cluster(name, sources);
         }
 
         public static Cluster Create(string name, IEnumerable<User> users)
@@ -26,9 +26,9 @@ namespace RElmah.Models
             return new Cluster(name, users);
         }
 
-        public static Cluster Create(string name, IEnumerable<Application> applications, IEnumerable<User> users)
+        public static Cluster Create(string name, IEnumerable<Source> sources, IEnumerable<User> users)
         {
-            return new Cluster(name, applications, users);
+            return new Cluster(name, sources, users);
         }
 
         Cluster(string name)
@@ -36,21 +36,21 @@ namespace RElmah.Models
             Name = name;
         }
 
-        Cluster(string name, IImmutableDictionary<string, Application> applications, IImmutableDictionary<string, User> users)
+        Cluster(string name, IImmutableDictionary<string, Source> sources, IImmutableDictionary<string, User> users)
         {
             Name = name;
 
             _users = users;
-            _applications = applications;
+            _sources = sources;
         }
 
-        Cluster(string name, IEnumerable<Application> applications)
+        Cluster(string name, IEnumerable<Source> sources)
         {
             Name = name;
 
-            var builder = ImmutableDictionary.CreateBuilder<string, Application>();
-            builder.AddRange(from a in applications select new KeyValuePair<string, Application>(a.Name, a));
-            _applications = builder.ToImmutable();
+            var builder = ImmutableDictionary.CreateBuilder<string, Source>();
+            builder.AddRange(from a in sources select new KeyValuePair<string, Source>(a.SourceId, a));
+            _sources = builder.ToImmutable();
         }
 
         Cluster(string name, IEnumerable<User> users)
@@ -62,7 +62,7 @@ namespace RElmah.Models
             _users = builder.ToImmutable();
         }
 
-        Cluster(string name, IEnumerable<Application> applications, IEnumerable<User> users)
+        Cluster(string name, IEnumerable<Source> sources, IEnumerable<User> users)
         {
             Name = name;
 
@@ -70,18 +70,18 @@ namespace RElmah.Models
             ub.AddRange(from u in users select new KeyValuePair<string, User>(u.Name, u));
             _users = ub.ToImmutable();
 
-            var ab = ImmutableDictionary.CreateBuilder<string, Application>();
-            ab.AddRange(from a in applications select new KeyValuePair<string, Application>(a.Name, a));
-            _applications = ab.ToImmutable();
+            var ab = ImmutableDictionary.CreateBuilder<string, Source>();
+            ab.AddRange(from a in sources select new KeyValuePair<string, Source>(a.SourceId, a));
+            _sources = ab.ToImmutable();
         }
 
         public string Name { get; private set; }
-        public IEnumerable<Application> Applications { get { return _applications.Values; } }
+        public IEnumerable<Source> Sources { get { return _sources.Values; } }
         public IEnumerable<User> Users { get { return _users.Values; } }
 
-        public Application GetApplication(string name)
+        public Source GetSource(string sourceId)
         {
-            return _applications.Get(name, null);
+            return _sources.Get(sourceId, null);
         }
 
         public User GetUser(string name)
@@ -89,34 +89,34 @@ namespace RElmah.Models
             return _users.Get(name, null);
         }
 
-        public Cluster AddApplication(Application app)
+        public Cluster AddSource(Source source)
         {
-            return new Cluster(Name, _applications.Add(app.Name, app), _users);
+            return new Cluster(Name, _sources.Add(source.SourceId, source), _users);
         }
 
-        public Cluster RemoveApplication(Application app)
+        public Cluster RemoveSource(Source source)
         {
-            return RemoveApplication(app.Name);
+            return RemoveSource(source.SourceId);
         }
 
-        public Cluster RemoveApplication(string name)
+        public Cluster RemoveSource(string source)
         {
-            return new Cluster(Name, _applications.Remove(name), _users);
+            return new Cluster(Name, _sources.Remove(source), _users);
         }
 
         public Cluster SetUser(User user)
         {
-            return new Cluster(Name, _applications, _users.SetItem(user.Name, user));
+            return new Cluster(Name, _sources, _users.SetItem(user.Name, user));
         }
 
-        public Cluster RemoveUser(User app)
+        public Cluster RemoveUser(User user)
         {
-            return RemoveUser(app.Name);
+            return RemoveUser(user.Name);
         }
 
         public Cluster RemoveUser(string name)
         {
-            return new Cluster(Name, _applications, _users.Remove(name));
+            return new Cluster(Name, _sources, _users.Remove(name));
         }
 
         public bool HasUser(string user)
@@ -129,15 +129,15 @@ namespace RElmah.Models
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Name", Name);
-            info.AddValue("_applications", _applications);
+            info.AddValue("_sources", _sources);
             info.AddValue("_users", _users);
         }
 
         public Cluster(SerializationInfo info, StreamingContext context)
         {
-            Name          = (string)info.GetValue("Name", typeof(string));
-            _applications = (ImmutableDictionary<string, Application>)info.GetValue("_applications", typeof(ImmutableDictionary<string, Application>));
-            _users        = (ImmutableDictionary<string, User>)info.GetValue("_users", typeof(ImmutableDictionary<string, User>));
+            Name     = (string)info.GetValue("Name", typeof(string));
+            _sources = (ImmutableDictionary<string, Source>)info.GetValue("_sources", typeof(ImmutableDictionary<string, Source>));
+            _users   = (ImmutableDictionary<string, User>)info.GetValue("_users", typeof(ImmutableDictionary<string, User>));
         }
 
         #endregion

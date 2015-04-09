@@ -50,15 +50,15 @@ namespace RElmah.Tests.Queries.Frontend
                     },
                     ErrorsBacklog = new StubIErrorsBacklog
                     {
-                        GetApplicationsRecapIEnumerableOfApplicationFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, Enumerable.Empty<Recap.Application>())))
+                        GetSourcesRecapIEnumerableOfSourceFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, Enumerable.Empty<Recap.Source>())))
                     },
                     DomainPersistor = new StubIDomainPersistor
                     {
-                        GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { Application.Create("a1") })
+                        GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1") })
                     },
                     DomainPublisher = new StubIDomainPublisher
                     {
-                        GetClusterApplicationsSequence = () => Observable.Empty<Delta<Relationship<Cluster, Application>>>(),
+                        GetClusterSourcesSequence = () => Observable.Empty<Delta<Relationship<Cluster, Source>>>(),
                         GetClusterUsersSequence = () => Observable.Empty<Delta<Relationship<Cluster, User>>>()
                     }
                 });
@@ -78,13 +78,13 @@ namespace RElmah.Tests.Queries.Frontend
 
             //Act
             var user          = User.Create("u1");
-            var application   = Application.Create("a1");
+            var source        = Source.Create("a1");
             var cluster       = Cluster.Create("c1", new[] {user});
 
-            var rca = Relationship.Create(cluster, application);
+            var rca = Relationship.Create(cluster, source);
             var rcu = Relationship.Create(cluster, user);
 
-            var clusterApplicationsStream = scheduler.CreateColdObservable(
+            var clusterSourcesStream = scheduler.CreateColdObservable(
                 Notification.CreateOnNext(Delta.Create(rca, DeltaType.Added)).RecordAt(1)    
             );
 
@@ -93,7 +93,7 @@ namespace RElmah.Tests.Queries.Frontend
             );
 
             var errorsStream = scheduler.CreateColdObservable(
-                Notification.CreateOnNext(new ErrorPayload(application.Name, new Error(), "e1", "")).RecordAt(5)
+                Notification.CreateOnNext(new ErrorPayload(source.SourceId, new Error(), "e1", "")).RecordAt(5)
             );
 
             sut.Run(
@@ -112,19 +112,19 @@ namespace RElmah.Tests.Queries.Frontend
                     },
                     ErrorsBacklog = new StubIErrorsBacklog
                     {
-                        GetApplicationsRecapIEnumerableOfApplicationFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(
+                        GetSourcesRecapIEnumerableOfSourceFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(
                             new ValueOrError<Recap>(
                                 new Recap(
                                     DateTime.UtcNow,
-                                    Enumerable.Empty<Recap.Application>())))
+                                    Enumerable.Empty<Recap.Source>())))
                     },
                     DomainPersistor = new StubIDomainPersistor
                     {
-                        GetUserApplicationsString = _ => Task.FromResult((IEnumerable<Application>)new[] { application })
+                        GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { source })
                     },
                     DomainPublisher = new StubIDomainPublisher
                     {
-                        GetClusterApplicationsSequence = () => clusterApplicationsStream,
+                        GetClusterSourcesSequence = () => clusterSourcesStream,
                         GetClusterUsersSequence = () => clusterUsersStream
                     }
                 });

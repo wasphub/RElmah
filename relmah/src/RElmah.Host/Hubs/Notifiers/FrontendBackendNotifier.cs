@@ -33,12 +33,12 @@ namespace RElmah.Host.Hubs.Notifiers
                 }
             });
 
-            _proxy.On<Delta<Application>>("application", p =>
+            _proxy.On<Delta<Source>>("source", p =>
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added: domainPublisher.AddApplication(p.Target.Name, true); break;
-                    case DeltaType.Removed: domainPublisher.RemoveApplication(p.Target.Name, true); break;
+                    case DeltaType.Added:   domainPublisher.AddSource(p.Target.SourceId, true); break;
+                    case DeltaType.Removed: domainPublisher.RemoveSource(p.Target.SourceId, true); break;
                 }
             });
 
@@ -46,26 +46,17 @@ namespace RElmah.Host.Hubs.Notifiers
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added: domainPublisher.AddUser(p.Target.Name, true); break;
+                    case DeltaType.Added:   domainPublisher.AddUser(p.Target.Name, true); break;
                     case DeltaType.Removed: domainPublisher.RemoveUser(p.Target.Name, true); break;
                 }
             });
 
-            _proxy.On<Delta<User>>("user", p =>
+            _proxy.On<Delta<Relationship<Cluster, Source>>>("clusterSource", p =>
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added: domainPublisher.AddUser(p.Target.Name, true); break;
-                    case DeltaType.Removed: domainPublisher.RemoveUser(p.Target.Name, true); break;
-                }
-            });
-
-            _proxy.On<Delta<Relationship<Cluster, Application>>>("clusterApplication", p =>
-            {
-                switch (p.Type)
-                {
-                    case DeltaType.Added: domainPublisher.AddApplicationToCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
-                    case DeltaType.Removed: domainPublisher.RemoveApplicationFromCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
+                    case DeltaType.Added:   domainPublisher.AddSourceToCluster(p.Target.Primary.Name, p.Target.Secondary.SourceId, true); break;
+                    case DeltaType.Removed: domainPublisher.RemoveSourceFromCluster(p.Target.Primary.Name, p.Target.Secondary.SourceId, true); break;
                 }
             });
 
@@ -73,7 +64,7 @@ namespace RElmah.Host.Hubs.Notifiers
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added: domainPublisher.AddUserToCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
+                    case DeltaType.Added:   domainPublisher.AddUserToCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
                     case DeltaType.Removed: domainPublisher.RemoveUserFromCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
                 }
             });
@@ -91,9 +82,9 @@ namespace RElmah.Host.Hubs.Notifiers
             _proxy.Invoke("Cluster", payload);
         }
 
-        public void Application(Delta<Application> payload)
+        public void Source(Delta<Source> payload)
         {
-            _proxy.Invoke("Application", payload);
+            _proxy.Invoke("Source", payload);
         }
 
         public void User(Delta<User> payload)
@@ -101,9 +92,9 @@ namespace RElmah.Host.Hubs.Notifiers
             _proxy.Invoke("User", payload);
         }
 
-        public void ClusterApplication(Delta<Relationship<Cluster, Application>> payload)
+        public void ClusterSource(Delta<Relationship<Cluster, Source>> payload)
         {
-            _proxy.Invoke("ClusterApplication", payload);
+            _proxy.Invoke("ClusterSource", payload);
         }
 
         public void ClusterUser(Delta<Relationship<Cluster, User>> payload)

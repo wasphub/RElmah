@@ -20,25 +20,25 @@ namespace RElmah.Middleware
 
                 .WithPrefix(settings.Prefix)
 
-                .ForRoute("clusters/{cluster}/apps/{app}", route => route
+                .ForRoute("clusters/{cluster}/sources/{source}", route => route
                     .Get(async (environment, keys, _) =>
                     {
                         var cluster = await updater.GetCluster(keys["cluster"]);
                         return cluster.HasValue 
-                            ? cluster.Value.GetApplication(keys["app"])
+                            ? cluster.Value.GetSource(keys["source"])
                             : null;
                     })
                     .Delete(async (environment, keys, _) => 
-                        await updater.RemoveApplicationFromCluster(keys["cluster"], keys["app"]))
+                        await updater.RemoveSourceFromCluster(keys["cluster"], keys["source"]))
                 )
-                .ForRoute("clusters/{cluster}/apps", route => route
+                .ForRoute("clusters/{cluster}/sources", route => route
                     .Post(async (environment, keys, form) => 
-                        await updater.AddApplicationToCluster(keys["cluster"], form["name"]))
+                        await updater.AddSourceToCluster(keys["cluster"], form["name"]))
                     .Get(async (environment, keys, _) =>
                     {
                         var cluster = await updater.GetCluster(keys["cluster"]);
                         return cluster.HasValue
-                            ? cluster.Value.Applications
+                            ? cluster.Value.Sources
                             : null;
                     })
                 )
@@ -110,17 +110,17 @@ namespace RElmah.Middleware
                         await updater.GetUsers())
                 )
 
-                .ForRoute("apps/{app}", route => route
+                .ForRoute("sources/{source}", route => route
                     .Get(async (environment, keys, _) =>
-                        await updater.GetApplication(keys["app"]))
+                        await updater.GetSource(keys["source"]))
                     .Delete(async (environment, keys, _) =>
-                        await updater.RemoveApplication(keys["app"]))
+                        await updater.RemoveSource(keys["source"]))
                 )
-                .ForRoute("apps", route => route
+                .ForRoute("sources", route => route
                     .Post(async (environment, keys, form) => 
-                        await updater.AddApplication(form["name"]))
+                        await updater.AddSource(form["name"]))
                     .Get(async (environment, keys, _) =>
-                        await updater.GetApplications())
+                        await updater.GetSources())
                 )
 
             );

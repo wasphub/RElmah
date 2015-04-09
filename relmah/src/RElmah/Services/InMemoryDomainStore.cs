@@ -15,8 +15,8 @@ namespace RElmah.Services
         private readonly AtomicImmutableDictionary<string, User> _users =
             new AtomicImmutableDictionary<string, User>();
 
-        private readonly AtomicImmutableDictionary<string, Application> _applications =
-            new AtomicImmutableDictionary<string, Application>();
+        private readonly AtomicImmutableDictionary<string, Source> _sources =
+            new AtomicImmutableDictionary<string, Source>();
 
         public Task<ValueOrError<Cluster>> AddCluster(string name, bool fromBackend = false)
         {
@@ -42,29 +42,29 @@ namespace RElmah.Services
             return Task.FromResult(new ValueOrError<Cluster>(_clusters[name]));
         }
 
-        public Task<ValueOrError<Application>> AddApplication(string name, bool fromBackend = false)
+        public Task<ValueOrError<Source>> AddSource(string name, bool fromBackend = false)
         {
-            var application = Application.Create(name);
-            _applications.Add(application.Name, application);
+            var source = Source.Create(name);
+            _sources.Add(source.SourceId, source);
 
-            return Task.FromResult(ValueOrError.Create(application));
+            return Task.FromResult(ValueOrError.Create(source));
         }
 
-        public Task<ValueOrError<bool>> RemoveApplication(string name, bool fromBackend = false)
+        public Task<ValueOrError<bool>> RemoveSource(string name, bool fromBackend = false)
         {
-            _applications.Remove(name);
+            _sources.Remove(name);
 
             return Task.FromResult(ValueOrError.Create(true));
         }
 
-        public Task<IEnumerable<Application>> GetApplications()
+        public Task<IEnumerable<Source>> GetSources()
         {
-            return Task.FromResult(_applications.Values);
+            return Task.FromResult(_sources.Values);
         }
 
-        public Task<ValueOrError<Application>> GetApplication(string name)
+        public Task<ValueOrError<Source>> GetSource(string name)
         {
-            return Task.FromResult(new ValueOrError<Application>(_applications[name]));
+            return Task.FromResult(new ValueOrError<Source>(_sources[name]));
         }
 
         public Task<ValueOrError<User>> AddUser(string name, bool fromBackend = false)
@@ -111,27 +111,27 @@ namespace RElmah.Services
             return Task.FromResult(ValueOrError.Create(Relationship.Create(value, u)));
         }
 
-        public Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application, bool fromBackend = false)
+        public Task<ValueOrError<Relationship<Cluster, Source>>> AddSourceToCluster(string cluster, string source, bool fromBackend = false)
         {
             var c = _clusters[cluster];
-            var a = _applications[application];
+            var a = _sources[source];
 
-            var value = c.AddApplication(a);
+            var value = c.AddSource(a);
             _clusters.SetItem(cluster, value);
             return Task.FromResult(ValueOrError.Create(Relationship.Create(value, a)));
         }
 
-        public Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application, bool fromBackend = false)
+        public Task<ValueOrError<Relationship<Cluster, Source>>> RemoveSourceFromCluster(string cluster, string source, bool fromBackend = false)
         {
             var c = _clusters[cluster];
-            var a = _applications[application];
+            var a = _sources[source];
 
-            var value = c.RemoveApplication(a);
+            var value = c.RemoveSource(a);
             _clusters.SetItem(cluster, value);
             return Task.FromResult(ValueOrError.Create(Relationship.Create(value, a)));
         }
 
-        public Task<IEnumerable<Application>> GetUserApplications(string user)
+        public Task<IEnumerable<Source>> GetUserSources(string user)
         {
             throw new System.NotImplementedException();
         }

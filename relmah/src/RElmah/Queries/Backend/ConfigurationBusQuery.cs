@@ -23,11 +23,11 @@ namespace RElmah.Queries.Backend
                 targets.BackendNotifier.Cluster(payload);
             });
 
-            var applications = targets.DomainPublisher.GetApplicationsSequence()
+            var sources = targets.DomainPublisher.GetSourcesSequence()
                 .Where(p => !_skipEventsFromBackend || !p.FromBackend)
                 .Subscribe(payload =>
             {
-                targets.BackendNotifier.Application(payload);
+                targets.BackendNotifier.Source(payload);
             });
 
             var users = targets.DomainPublisher.GetUsersSequence()
@@ -37,11 +37,11 @@ namespace RElmah.Queries.Backend
                 targets.BackendNotifier.User(payload);
             });
 
-            var clusterApplications = targets.DomainPublisher.GetClusterApplicationsSequence()
+            var clusterSources = targets.DomainPublisher.GetClusterSourcesSequence()
                 .Where(p => !_skipEventsFromBackend || !p.FromBackend)
                 .Subscribe(payload =>
             {
-                targets.BackendNotifier.ClusterApplication(payload);
+                targets.BackendNotifier.ClusterSource(payload);
             });
 
             var clusterUsers = targets.DomainPublisher.GetClusterUsersSequence()
@@ -51,7 +51,7 @@ namespace RElmah.Queries.Backend
                 targets.BackendNotifier.ClusterUser(payload);
             });
 
-            return Task.FromResult((IDisposable)new CompositeDisposable(clusters, applications, users, clusterApplications, clusterUsers));
+            return Task.FromResult((IDisposable)new CompositeDisposable(clusters, sources, users, clusterSources, clusterUsers));
         }
     }
 }

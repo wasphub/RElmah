@@ -19,7 +19,7 @@ namespace RElmah.Services.Nulls
         {
         }
 
-        public void Application(Delta<Application> payload)
+        public void Source(Delta<Source> payload)
         {
         }
 
@@ -31,7 +31,7 @@ namespace RElmah.Services.Nulls
         {
         }
 
-        public void ClusterApplication(Delta<Relationship<Cluster, Application>> payload)
+        public void ClusterSource(Delta<Relationship<Cluster, Source>> payload)
         {
         }
     }

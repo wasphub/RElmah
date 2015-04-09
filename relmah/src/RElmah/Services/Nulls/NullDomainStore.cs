@@ -34,24 +34,24 @@ namespace RElmah.Services.Nulls
             return Task.FromResult(new ValueOrError<Cluster>(Cluster.Create(name)));
         }
 
-        public Task<ValueOrError<Application>> AddApplication(string name, bool fromBackend = false)
+        public Task<ValueOrError<Source>> AddSource(string name, bool fromBackend = false)
         {
-            return Task.FromResult(new ValueOrError<Application>(Application.Create(name)));
+            return Task.FromResult(new ValueOrError<Source>(Source.Create(name)));
         }
 
-        public Task<ValueOrError<bool>> RemoveApplication(string name, bool fromBackend = false)
+        public Task<ValueOrError<bool>> RemoveSource(string name, bool fromBackend = false)
         {
             return Task.FromResult(new ValueOrError<bool>(true));
         }
 
-        public Task<IEnumerable<Application>> GetApplications()
+        public Task<IEnumerable<Source>> GetSources()
         {
-            return Task.FromResult(Enumerable.Empty<Application>());
+            return Task.FromResult(Enumerable.Empty<Source>());
         }
 
-        public Task<ValueOrError<Application>> GetApplication(string name)
+        public Task<ValueOrError<Source>> GetSource(string name)
         {
-            return Task.FromResult(new ValueOrError<Application>(Application.Create(name)));
+            return Task.FromResult(new ValueOrError<Source>(Source.Create(name)));
         }
 
         public Task<ValueOrError<User>> AddUser(string name, bool fromBackend = false)
@@ -84,19 +84,19 @@ namespace RElmah.Services.Nulls
             return Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(new Relationship<Cluster, User>(Cluster.Create(cluster), User.Create(user))));
         }
 
-        public Task<ValueOrError<Relationship<Cluster, Application>>> AddApplicationToCluster(string cluster, string application, bool fromBackend = false)
+        public Task<ValueOrError<Relationship<Cluster, Source>>> AddSourceToCluster(string cluster, string source, bool fromBackend = false)
         {
-            return Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(new Relationship<Cluster, Application>(Cluster.Create(cluster), Application.Create(application))));
+            return Task.FromResult(new ValueOrError<Relationship<Cluster, Source>>(new Relationship<Cluster, Source>(Cluster.Create(cluster), Source.Create(source))));
         }
 
-        public Task<ValueOrError<Relationship<Cluster, Application>>> RemoveApplicationFromCluster(string cluster, string application, bool fromBackend = false)
+        public Task<ValueOrError<Relationship<Cluster, Source>>> RemoveSourceFromCluster(string cluster, string source, bool fromBackend = false)
         {
-            return Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(new Relationship<Cluster, Application>(Cluster.Create(cluster), Application.Create(application))));
+            return Task.FromResult(new ValueOrError<Relationship<Cluster, Source>>(new Relationship<Cluster, Source>(Cluster.Create(cluster), Source.Create(source))));
         }
 
-        public Task<IEnumerable<Application>> GetUserApplications(string user)
+        public Task<IEnumerable<Source>> GetUserSources(string user)
         {
-            return Task.FromResult(Enumerable.Empty<Application>());
+            return Task.FromResult(Enumerable.Empty<Source>());
         }
 
         public Task<ValueOrError<User>> AddUserToken(string user, string token)
@@ -109,7 +109,7 @@ namespace RElmah.Services.Nulls
             return Task.FromResult(new ValueOrError<User>((User)null));
         }
 
-        public Task<ValueOrError<Recap>> GetApplicationsRecap(IEnumerable<Application> apps)
+        public Task<ValueOrError<Recap>> GetSourcesRecap(IEnumerable<Source> sources)
         {
             return Task.FromResult(new ValueOrError<Recap>((Recap)null));
         }

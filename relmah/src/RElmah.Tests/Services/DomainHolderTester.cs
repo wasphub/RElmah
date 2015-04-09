@@ -14,7 +14,7 @@ namespace RElmah.Tests.Services
     public class DomainHolderTester
     {
         const string ClusterName     = "c1";
-        const string ApplicationName = "a1";
+        const string SourceName      = "a1";
         const string UserName        = "u1";
 
         [Fact]
@@ -118,94 +118,94 @@ namespace RElmah.Tests.Services
         }
 
         [Fact]
-        public async Task AddApplication()
+        public async Task AddSource()
         {
             //Arrange
-            var store = new Dictionary<string, Application>();
-            var adder = new Func<string, Application>(n =>
+            var store = new Dictionary<string, Source>();
+            var adder = new Func<string, Source>(n =>
             {
-                store.Add(n, Application.Create(n));
+                store.Add(n, Source.Create(n));
                 return store[n];
             });
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddApplicationStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Application>(adder(n))),
-                GetApplications = () => Task.FromResult((IEnumerable<Application>)store.Values),
-                GetApplicationString = n => Task.FromResult(new ValueOrError<Application>(store[n]))
+                AddSourceStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Source>(adder(n))),
+                GetSources = () => Task.FromResult((IEnumerable<Source>)store.Values),
+                GetSourceString = n => Task.FromResult(new ValueOrError<Source>(store[n]))
             });
 
-            Delta<Application> observed = null;
-            sut.GetApplicationsSequence().Subscribe(p =>
+            Delta<Source> observed = null;
+            sut.GetSourcesSequence().Subscribe(p =>
             {
                 observed = p;
             });
 
             //Act
-            var answer = await sut.AddApplication(ApplicationName);
-            var check = (await sut.GetApplications()).Single();
-            var single = await sut.GetApplication(ApplicationName);
+            var answer = await sut.AddSource(SourceName);
+            var check = (await sut.GetSources()).Single();
+            var single = await sut.GetSource(SourceName);
 
             //Assert
             Assert.NotNull(answer);
             Assert.True(answer.HasValue);
             Assert.NotNull(answer.Value);
-            Assert.Equal(ApplicationName, answer.Value.Name);
+            Assert.Equal(SourceName, answer.Value.SourceId);
 
-            Assert.Equal(answer.Value.Name, check.Name);
+            Assert.Equal(answer.Value.SourceId, check.SourceId);
 
             Assert.NotNull(single.Value);
-            Assert.Equal(ApplicationName, single.Value.Name);
+            Assert.Equal(SourceName, single.Value.SourceId);
 
             Assert.NotNull(observed);
             Assert.NotNull(observed.Target);
-            Assert.Equal(ApplicationName, observed.Target.Name);
+            Assert.Equal(SourceName, observed.Target.SourceId);
             Assert.Equal(DeltaType.Added, observed.Type);
         }
 
         [Fact]
-        public async Task AddApplicationThenRemoveApplication()
+        public async Task AddSourceThenRemoveSource()
         {
             //Arrange
-            var store = new Dictionary<string, Application>();
-            var adder = new Func<string, Application>(n =>
+            var store = new Dictionary<string, Source>();
+            var adder = new Func<string, Source>(n =>
             {
-                store.Add(n, Application.Create(n));
+                store.Add(n, Source.Create(n));
                 return store[n];
             });
             var remover = new Func<string, bool>(store.Remove);
 
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddApplicationStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Application>(adder(n))),
-                GetApplications = () => Task.FromResult((IEnumerable<Application>)store.Values),
-                RemoveApplicationStringBoolean = (n, _) => Task.FromResult(new ValueOrError<bool>(remover(n)))
+                AddSourceStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Source>(adder(n))),
+                GetSources = () => Task.FromResult((IEnumerable<Source>)store.Values),
+                RemoveSourceStringBoolean = (n, _) => Task.FromResult(new ValueOrError<bool>(remover(n)))
             });
 
-            Delta<Application> observed = null;
-            sut.GetApplicationsSequence().Subscribe(p =>
+            Delta<Source> observed = null;
+            sut.GetSourcesSequence().Subscribe(p =>
             {
                 observed = p;
             });
 
             //Act
-            var answer = await sut.AddApplication(ApplicationName);
-            var check = (await sut.GetApplications()).Single();
+            var answer = await sut.AddSource(SourceName);
+            var check = (await sut.GetSources()).Single();
 
             //Assert
             Assert.NotNull(answer);
             Assert.True(answer.HasValue);
             Assert.NotNull(answer.Value);
-            Assert.Equal(ApplicationName, answer.Value.Name);
+            Assert.Equal(SourceName, answer.Value.SourceId);
 
-            Assert.Equal(answer.Value.Name, check.Name);
+            Assert.Equal(answer.Value.SourceId, check.SourceId);
 
             Assert.NotNull(observed);
             Assert.NotNull(observed.Target);
-            Assert.Equal(ApplicationName, observed.Target.Name);
+            Assert.Equal(SourceName, observed.Target.SourceId);
             Assert.Equal(DeltaType.Added, observed.Type);
 
             //Act
-            var r = await sut.RemoveApplication(ApplicationName);
+            var r = await sut.RemoveSource(SourceName);
 
             //Assert
             Assert.True(r.HasValue);
@@ -213,7 +213,7 @@ namespace RElmah.Tests.Services
 
             Assert.NotNull(observed);
             Assert.NotNull(observed.Target);
-            Assert.Equal(ApplicationName, observed.Target.Name);
+            Assert.Equal(SourceName, observed.Target.SourceId);
             Assert.Equal(DeltaType.Removed, observed.Type);
         }
 
@@ -452,15 +452,15 @@ namespace RElmah.Tests.Services
         }
 
         [Fact]
-        public async Task AddApplicationToCluster()
+        public async Task AddSourceToCluster()
         {
             //Arrange
             var store = new
             {
                 Clusters = new Dictionary<string, Cluster>(),
                 Users = new Dictionary<string, User>(),
-                Applications = new Dictionary<string, Application>(),
-                ClusterApplications = new Dictionary<string, string[]>(),
+                Sources = new Dictionary<string, Source>(),
+                ClusterSources = new Dictionary<string, string[]>(),
                 ClusterUsers = new Dictionary<string, string[]>()
             };
             var cAdder = new Func<string, Cluster>(n =>
@@ -468,10 +468,10 @@ namespace RElmah.Tests.Services
                 store.Clusters.Add(n, Cluster.Create(n));
                 return store.Clusters[n];
             });
-            var aAdder = new Func<string, Application>(n =>
+            var aAdder = new Func<string, Source>(n =>
             {
-                store.Applications.Add(n, Application.Create(n));
-                return store.Applications[n];
+                store.Sources.Add(n, Source.Create(n));
+                return store.Sources[n];
             });
             var uAdder = new Func<string, User>(n =>
             {
@@ -486,31 +486,31 @@ namespace RElmah.Tests.Services
                 store.Clusters[c] = cluster;
                 return new Relationship<Cluster, User>(cluster, user);
             });
-            var caAdder = new Func<string, string, Relationship<Cluster, Application>>((c, u) =>
+            var caAdder = new Func<string, string, Relationship<Cluster, Source>>((c, u) =>
             {
-                store.ClusterApplications.Add(c, new[] { u });
-                var app = store.Applications[store.ClusterApplications[c][0]];
-                var cluster = store.Clusters[c].AddApplication(app);
+                store.ClusterSources.Add(c, new[] { u });
+                var app = store.Sources[store.ClusterSources[c][0]];
+                var cluster = store.Clusters[c].AddSource(app);
                 store.Clusters[c] = cluster;
-                return new Relationship<Cluster, Application>(cluster, app);
+                return new Relationship<Cluster, Source>(cluster, app);
             });
             var sut = new DomainHolder(new StubIDomainStore
             {
                 AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
                 AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(uAdder(n))),
-                AddApplicationStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Application>(aAdder(n))),
+                AddSourceStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Source>(aAdder(n))),
                 AddUserToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuAdder(c, u))),
-                AddApplicationToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(caAdder(c, u)))
+                AddSourceToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, Source>>(caAdder(c, u)))
             });
 
-            Delta<Relationship<Cluster, Application>> observed = null;
-            sut.GetClusterApplicationsSequence().Subscribe(p =>
+            Delta<Relationship<Cluster, Source>> observed = null;
+            sut.GetClusterSourcesSequence().Subscribe(p =>
             {
                 observed = p;
             });
             var cAnswer = await sut.AddCluster(ClusterName);
             var uAnswer = await sut.AddUser(UserName);
-            var aAnswer = await sut.AddApplication(ApplicationName);
+            var aAnswer = await sut.AddSource(SourceName);
             Assert.NotNull(cAnswer);
             Assert.True(cAnswer.HasValue);
             Assert.NotNull(uAnswer);
@@ -521,42 +521,42 @@ namespace RElmah.Tests.Services
 
             //Act
             var __        = await sut.AddUserToCluster(cAnswer.Value.Name, uAnswer.Value.Name);
-            var uabAnswer = await sut.GetUserApplications(UserName);
+            var uabAnswer = await sut.GetUserSources(UserName);
 
             Assert.NotNull(uabAnswer);
             Assert.Equal(0, uabAnswer.Count());
             
-            var caAnswer  = await sut.AddApplicationToCluster(cAnswer.Value.Name, aAnswer.Value.Name);
-            var uaaAnswer = await sut.GetUserApplications(UserName);
-            var caCheck   = caAnswer.Value.Primary.Applications;
+            var caAnswer  = await sut.AddSourceToCluster(cAnswer.Value.Name, aAnswer.Value.SourceId);
+            var uaaAnswer = await sut.GetUserSources(UserName);
+            var caCheck   = caAnswer.Value.Primary.Sources;
 
 
             //Assert
             Assert.Equal(ClusterName, caAnswer.Value.Primary.Name);
-            Assert.Equal(ApplicationName, caAnswer.Value.Secondary.Name);
-            Assert.Equal(ApplicationName, caCheck.Single().Name);
+            Assert.Equal(SourceName, caAnswer.Value.Secondary.SourceId);
+            Assert.Equal(SourceName, caCheck.Single().SourceId);
 
             Assert.NotNull(uaaAnswer);
             Assert.Equal(1, uaaAnswer.Count());
-            Assert.Equal(ApplicationName, uaaAnswer.Single().Name);
+            Assert.Equal(SourceName, uaaAnswer.Single().SourceId);
 
             Assert.NotNull(observed);
             Assert.NotNull(observed.Target);
             Assert.Equal(ClusterName, observed.Target.Primary.Name);
-            Assert.Equal(ApplicationName, observed.Target.Secondary.Name);
+            Assert.Equal(SourceName, observed.Target.Secondary.SourceId);
             Assert.Equal(DeltaType.Added, observed.Type);
         }
 
         [Fact]
-        public async Task AddApplicationToClusterThenRemoveIt()
+        public async Task AddSourceToClusterThenRemoveIt()
         {
             //Arrange
             var store = new
             {
                 Clusters = new Dictionary<string, Cluster>(),
                 Users = new Dictionary<string, User>(),
-                Applications = new Dictionary<string, Application>(),
-                ClusterApplications = new Dictionary<string, string[]>(),
+                Sources = new Dictionary<string, Source>(),
+                ClusterSources = new Dictionary<string, string[]>(),
                 ClusterUsers = new Dictionary<string, string[]>()
             };
             var cAdder = new Func<string, Cluster>(n =>
@@ -564,10 +564,10 @@ namespace RElmah.Tests.Services
                 store.Clusters.Add(n, Cluster.Create(n));
                 return store.Clusters[n];
             });
-            var aAdder = new Func<string, Application>(n =>
+            var aAdder = new Func<string, Source>(n =>
             {
-                store.Applications.Add(n, Application.Create(n));
-                return store.Applications[n];
+                store.Sources.Add(n, Source.Create(n));
+                return store.Sources[n];
             });
             var uAdder = new Func<string, User>(n =>
             {
@@ -582,38 +582,38 @@ namespace RElmah.Tests.Services
                 store.Clusters[c] = cluster;
                 return new Relationship<Cluster, User>(cluster, user);
             });
-            var caAdder = new Func<string, string, Relationship<Cluster, Application>>((c, u) =>
+            var caAdder = new Func<string, string, Relationship<Cluster, Source>>((c, u) =>
             {
-                store.ClusterApplications.Add(c, new[] { u });
-                var app = store.Applications[store.ClusterApplications[c][0]];
-                var cluster = store.Clusters[c].AddApplication(app);
+                store.ClusterSources.Add(c, new[] { u });
+                var app = store.Sources[store.ClusterSources[c][0]];
+                var cluster = store.Clusters[c].AddSource(app);
                 store.Clusters[c] = cluster;
-                return new Relationship<Cluster, Application>(cluster, app);
+                return new Relationship<Cluster, Source>(cluster, app);
             }); 
-            var caRemover = new Func<string, string, Relationship<Cluster, Application>>((c, u) =>
+            var caRemover = new Func<string, string, Relationship<Cluster, Source>>((c, u) =>
             {
-                store.ClusterApplications[c] = new[] { u };
-                var user = store.Applications[u];
-                return new Relationship<Cluster, Application>(Cluster.Create(c), user);
+                store.ClusterSources[c] = new[] { u };
+                var user = store.Sources[u];
+                return new Relationship<Cluster, Source>(Cluster.Create(c), user);
             });
             var sut = new DomainHolder(new StubIDomainStore
             {
                 AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
                 AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(uAdder(n))),
-                AddApplicationStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Application>(aAdder(n))),
+                AddSourceStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Source>(aAdder(n))),
                 AddUserToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuAdder(c, u))),
-                AddApplicationToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(caAdder(c, u))),
-                RemoveApplicationFromClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, Application>>(caRemover(c, u)))
+                AddSourceToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, Source>>(caAdder(c, u))),
+                RemoveSourceFromClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, Source>>(caRemover(c, u)))
             });
 
-            Delta<Relationship<Cluster, Application>> observed = null;
-            sut.GetClusterApplicationsSequence().Subscribe(p =>
+            Delta<Relationship<Cluster, Source>> observed = null;
+            sut.GetClusterSourcesSequence().Subscribe(p =>
             {
                 observed = p;
             });
             var cAnswer = await sut.AddCluster(ClusterName);
             var uAnswer = await sut.AddUser(UserName);
-            var aAnswer = await sut.AddApplication(ApplicationName);
+            var aAnswer = await sut.AddSource(SourceName);
             Assert.NotNull(cAnswer);
             Assert.True(cAnswer.HasValue);
             Assert.NotNull(uAnswer);
@@ -624,20 +624,20 @@ namespace RElmah.Tests.Services
 
             //Act
             var __       = await sut.AddUserToCluster(cAnswer.Value.Name, uAnswer.Value.Name);
-            var ___      = await sut.AddApplicationToCluster(cAnswer.Value.Name, aAnswer.Value.Name);
-            var caAnswer = await sut.RemoveApplicationFromCluster(cAnswer.Value.Name, aAnswer.Value.Name);
-            var caCheck  = caAnswer.Value.Primary.Applications;
+            var ___      = await sut.AddSourceToCluster(cAnswer.Value.Name, aAnswer.Value.SourceId);
+            var caAnswer = await sut.RemoveSourceFromCluster(cAnswer.Value.Name, aAnswer.Value.SourceId);
+            var caCheck  = caAnswer.Value.Primary.Sources;
 
 
             //Assert
             Assert.Equal(ClusterName, caAnswer.Value.Primary.Name);
-            Assert.Equal(ApplicationName, caAnswer.Value.Secondary.Name);
+            Assert.Equal(SourceName, caAnswer.Value.Secondary.SourceId);
             Assert.Equal(0, caCheck.Count());
 
             Assert.NotNull(observed);
             Assert.NotNull(observed.Target);
             Assert.Equal(ClusterName, observed.Target.Primary.Name);
-            Assert.Equal(ApplicationName, observed.Target.Secondary.Name);
+            Assert.Equal(SourceName, observed.Target.Secondary.SourceId);
             Assert.Equal(DeltaType.Removed, observed.Type);
         }
     }
