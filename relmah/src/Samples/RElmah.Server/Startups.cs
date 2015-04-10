@@ -35,10 +35,10 @@ namespace RElmah.Server
                                   : new ClientTokenIdentityProvider()
                     })
                     .RunFrontend()
-                    .ForErrors()
-                    .ForDomain(new DomainOptions
+                    .ReceiveErrors()
+                    .ExposeConfiguration(new ConfigurationOptions
                     {
-                        DomainConfigurator = async conf =>
+                        Configurator = async conf =>
                         {
                             var c01 = await conf.AddCluster("c01");
 
@@ -96,10 +96,10 @@ namespace RElmah.Server
                                      TargetBackendEndpointSetter = () => new Uri(targetBackendEndpoint)
                                  } 
                                  : null)
-                    .ForErrors(new ErrorsOptions { UseRandomizerSetter = () => true })
-                    .ForDomain(new DomainOptions
+                    .ReceiveErrors(new ErrorsOptions { UseRandomizerSetter = () => true })
+                    .ExposeConfiguration(new ConfigurationOptions
                     {
-                        DomainConfigurator = async conf =>
+                        Configurator = async conf =>
                         {
                             var c01 = await conf.AddCluster("c01");
                             var c02 = await conf.AddCluster("c02");

@@ -126,7 +126,7 @@
     <Compile Include="Middleware\Bootstrapping\Builder\BootstrapSettings.cs" />
     <Compile Include="Middleware\Bootstrapping\Builder\BootstrapSettingsBuilder.cs" />
     <Compile Include="Middleware\Bootstrapping\Builder\BootstrapOptions.cs" />
-    <Compile Include="Middleware\Bootstrapping\Builder\DomainOptions.cs" />
+    <Compile Include="Middleware\Bootstrapping\Builder\ConfigurationOptions.cs" />
     <Compile Include="Middleware\Bootstrapping\Builder\ErrorsOptions.cs" />
     <Compile Include="Middleware\Bootstrapping\Builder\FrontendOptions.cs" />
     <Compile Include="Middleware\Bootstrapping\Builder\Side.cs" />

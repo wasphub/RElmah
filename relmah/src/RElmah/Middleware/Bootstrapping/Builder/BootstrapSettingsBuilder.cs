@@ -80,12 +80,12 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                 _settings = settings;
             }
 
-            public FrontendForErrorsSettingsBuilder ForErrors(ErrorsOptions options = null)
+            public FrontendForErrorsSettingsBuilder ReceiveErrors(ErrorsOptions options = null)
             {
-                return ForErrors(true, options);
+                return ReceiveErrors(true, options);
             }
 
-            public FrontendForErrorsSettingsBuilder ForErrors(bool active, ErrorsOptions options = null)
+            public FrontendForErrorsSettingsBuilder ReceiveErrors(bool active, ErrorsOptions options = null)
             {
                 _settings.ForErrors = active;
 
@@ -100,12 +100,12 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                 return new FrontendForErrorsSettingsBuilder(_settings);
             }
 
-            public FrontendForDomainSettingsBuilder ForDomain(DomainOptions options = null)
+            public FrontendForDomainSettingsBuilder ForDomain(ConfigurationOptions options = null)
             {
                 return ForDomain(true, options);
             }
 
-            public FrontendForDomainSettingsBuilder ForDomain(bool active, DomainOptions options = null)
+            public FrontendForDomainSettingsBuilder ForDomain(bool active, ConfigurationOptions options = null)
             {
                 _settings.ForDomain = active;
 
@@ -113,8 +113,8 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                                        ? options.PrefixSetter()
                                        : "relmah-domain";
 
-                if (options != null && options.DomainConfigurator != null)
-                    _settings.DomainConfigurator = options.DomainConfigurator;
+                if (options != null && options.Configurator != null)
+                    _settings.DomainConfigurator = options.Configurator;
 
                 return new FrontendForDomainSettingsBuilder(_settings);
             }
@@ -134,12 +134,12 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                 _settings = settings;
             }
 
-            public BootstrapSettingsFinalBuilder ForDomain(DomainOptions options = null)
+            public BootstrapSettingsFinalBuilder ExposeConfiguration(ConfigurationOptions options = null)
             {
-                return ForDomain(true, options);
+                return ExposeConfiguration(true, options);
             }
 
-            public BootstrapSettingsFinalBuilder ForDomain(bool active, DomainOptions options = null)
+            public BootstrapSettingsFinalBuilder ExposeConfiguration(bool active, ConfigurationOptions options = null)
             {
                 _settings.ForDomain = active;
 
@@ -147,8 +147,8 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                                        ? options.PrefixSetter()
                                        : "relmah-domain";
 
-                if (options != null && options.DomainConfigurator != null)
-                    _settings.DomainConfigurator = options.DomainConfigurator;
+                if (options != null && options.Configurator != null)
+                    _settings.DomainConfigurator = options.Configurator;
 
                 return new BootstrapSettingsFinalBuilder(_settings);
             }
