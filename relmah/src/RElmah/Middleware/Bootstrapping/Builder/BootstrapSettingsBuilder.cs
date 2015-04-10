@@ -30,7 +30,6 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                     throw new InvalidOperationException("Identity provider must be not null");
 
                 _settings.IdentityProviderBuilder = identityProviderBuilderSetter;
-
             }
 
             if (options.DomainStoreBuilder != null)
