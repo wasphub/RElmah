@@ -25,41 +25,41 @@ namespace RElmah.Middleware.Bootstrapping
             Func<IFrontendQueriesFactory, IBackendQueriesFactory, IErrorsInbox, IDomainPersistor, IBackendNotifier, T> resultor,
             BootstrapSettings settings)
         {
-            var bl = new InMemoryErrorsBacklog();
-            var ei = new QueuedErrorsInbox(bl);
+            var ebl = new InMemoryErrorsBacklog();
+            var fei = new QueuedErrorsInbox(ebl);
 
-            var bi = new QueuedErrorsInbox();   //for backend only
+            var bei = new QueuedErrorsInbox();   //for backend only
 
-            var ds = settings.DomainStoreBuilder != null
-                   ? settings.DomainStoreBuilder()
-                   : new InMemoryDomainStore();
+            var ds  = settings.DomainStoreBuilder != null
+                    ? settings.DomainStoreBuilder()
+                    : new InMemoryDomainStore();
 
-            var dh = new DomainHolder(ds);
+            var dh  = new DomainHolder(ds);
 
-            var fqf = new QueriesFactory(ei, bi, bl, dh, dh, frontendNotifier,
-                     () => new ErrorsQuery(),
-                     () => new RecapsQuery());
+            var fqf = new QueriesFactory(fei, bei, ebl, dh, dh, frontendNotifier,
+                () => new ErrorsQuery(),
+                () => new RecapsQuery());
 
-            var bn = settings.Side == Side.Frontend && !string.IsNullOrWhiteSpace(settings.TargetBackendEndpoint)
-                   ? frontendBackendNotifierCreator(settings.TargetBackendEndpoint, bi, dh)
-                   : settings.Side == Side.Backend
-                     ? backendFrontendNotifierCreator()
-                     : NullBackendNotifier.Instance;
+            var ben = settings.Side == Side.Frontend && !string.IsNullOrWhiteSpace(settings.TargetBackendEndpoint)
+                    ? frontendBackendNotifierCreator(settings.TargetBackendEndpoint, bei, dh)
+                    : settings.Side == Side.Backend
+                      ? backendFrontendNotifierCreator()
+                      : NullBackendNotifier.Instance;
 
-            var bqf = new Queries.Backend.QueriesFactory(ei, bl, dh, dh, bn,
+            var bqf = new Queries.Backend.QueriesFactory(fei, ebl, dh, dh, ben,
                 () => new ErrorsBusQuery(),
                 () => new ConfigurationBusQuery(settings.Side == Side.Backend));
 
             //Infrastructure
-            registry.Register(typeof(IErrorsBacklog), () => bl);
-            registry.Register(typeof(IErrorsInbox), () => ei);
-            registry.Register(typeof(IDomainPublisher), () => dh);
-            registry.Register(typeof(IDomainPersistor), () => dh);
-            registry.Register(typeof(IDomainStore), () => ds);
+            registry.Register(typeof(IErrorsBacklog),          () => ebl);
+            registry.Register(typeof(IErrorsInbox),            () => fei);
+            registry.Register(typeof(IDomainPublisher),        () => dh);
+            registry.Register(typeof(IDomainPersistor),        () => dh);
+            registry.Register(typeof(IDomainStore),            () => ds);
             registry.Register(typeof(IFrontendQueriesFactory), () => fqf);
-            registry.Register(typeof(IBackendQueriesFactory), () => bqf);
+            registry.Register(typeof(IBackendQueriesFactory),  () => bqf);
 
-            return resultor(fqf, bqf, ei, dh, bn);
+            return resultor(fqf, bqf, fei, dh, ben);
         }
     }
 }
