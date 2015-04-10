@@ -18,8 +18,6 @@ namespace RElmah.Server
 
             var winAuth               = appSettings["winAuth"].IsTruthy();
 
-            var targetBackendEndpoint = appSettings["targetBackendEndpoint"];
-
             app
                 .Map("/signalr", builder =>
                 {
@@ -92,7 +90,12 @@ namespace RElmah.Server
                                   ? (IIdentityProvider)new WindowsPrincipalIdentityProvider()
                                   : new ClientTokenIdentityProvider()
                     })
-                    .RunFrontend()
+                    .RunFrontend(targetBackendEndpoint != null 
+                                 ? new FrontendOptions
+                                 {
+                                     TargetBackendEndpointSetter = () => new Uri(targetBackendEndpoint)
+                                 } 
+                                 : null)
                     .ForErrors(new ErrorsOptions { UseRandomizerSetter = () => true })
                     .ForDomain(new DomainOptions
                     {
