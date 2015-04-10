@@ -41,7 +41,7 @@ namespace RElmah.Middleware.Bootstrapping
 
             var bqf = new Queries.Backend.QueriesFactory(fei, ebl, dh, dh, ben,
                 () => new ErrorsBusQuery(),
-                () => new ConfigurationBusQuery(settings.Side == Side.Backend));
+                () => new ConfigurationBusQuery(settings.Side == Side.Frontend));
 
             //Infrastructure
             registry.Register(typeof(IErrorsBacklog),          () => ebl);
