@@ -5,6 +5,8 @@ namespace RElmah.Middleware.Bootstrapping.Builder
 {
     public class BootstrapSettings
     {
+        internal BootstrapSettings() { }
+
         public Func<IIdentityProvider> IdentityProviderBuilder { get; set; }
         public string TargetBackendEndpoint { get; set; }
         public Side Side { get; set; }
