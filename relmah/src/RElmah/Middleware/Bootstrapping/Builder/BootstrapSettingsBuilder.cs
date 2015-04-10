@@ -134,12 +134,12 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                 _settings = settings;
             }
 
-            public FrontendForDomainFinalSettingsBuilder ForDomain(DomainOptions options = null)
+            public BootstrapSettingsFinalBuilder ForDomain(DomainOptions options = null)
             {
                 return ForDomain(true, options);
             }
 
-            public FrontendForDomainFinalSettingsBuilder ForDomain(bool active, DomainOptions options = null)
+            public BootstrapSettingsFinalBuilder ForDomain(bool active, DomainOptions options = null)
             {
                 _settings.ForDomain = active;
 
@@ -150,7 +150,7 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                 if (options != null && options.DomainConfigurator != null)
                     _settings.DomainConfigurator = options.DomainConfigurator;
 
-                return new FrontendForDomainFinalSettingsBuilder(_settings);
+                return new BootstrapSettingsFinalBuilder(_settings);
             }
 
             public BootstrapSettings Build()
@@ -159,11 +159,11 @@ namespace RElmah.Middleware.Bootstrapping.Builder
             }
         }
 
-        public class FrontendForErrorsFinalSettingsBuilder
+        public class BootstrapSettingsFinalBuilder
         {
             readonly BootstrapSettings _settings;
 
-            internal FrontendForErrorsFinalSettingsBuilder(BootstrapSettings settings)
+            internal BootstrapSettingsFinalBuilder(BootstrapSettings settings)
             {
                 _settings = settings;
             }
@@ -183,12 +183,12 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                 _settings = settings;
             }
 
-            public FrontendForErrorsFinalSettingsBuilder ForErrors(ErrorsOptions options = null)
+            public BootstrapSettingsFinalBuilder ForErrors(ErrorsOptions options = null)
             {
                 return ForErrors(true, options);
             }
 
-            public FrontendForErrorsFinalSettingsBuilder ForErrors(bool active, ErrorsOptions options = null)
+            public BootstrapSettingsFinalBuilder ForErrors(bool active, ErrorsOptions options = null)
             {
                 _settings.ForErrors = true;
 
@@ -200,22 +200,7 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                                         ? options.UseRandomizerSetter()
                                         : _settings.UseRandomizer;
 
-                return new FrontendForErrorsFinalSettingsBuilder(_settings);
-            }
-
-            public BootstrapSettings Build()
-            {
-                return _settings;
-            }
-        }
-
-        public class FrontendForDomainFinalSettingsBuilder
-        {
-            readonly BootstrapSettings _settings;
-
-            internal FrontendForDomainFinalSettingsBuilder(BootstrapSettings settings)
-            {
-                _settings = settings;
+                return new BootstrapSettingsFinalBuilder(_settings);
             }
 
             public BootstrapSettings Build()
