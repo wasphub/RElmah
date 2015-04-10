@@ -46,7 +46,7 @@ namespace RElmah.Middleware.Bootstrapping.Builder
             return new BootstrapSettingsBuilder(_settings);
         }
 
-        public FrontendSettingsBuilder AsFrontend(FrontendOptions options = null)
+        public FrontendSettingsBuilder RunFrontend(FrontendOptions options = null)
         {
             _settings.Side = Side.Frontend;
 
@@ -62,7 +62,7 @@ namespace RElmah.Middleware.Bootstrapping.Builder
             return new FrontendSettingsBuilder(_settings);
         }
 
-        public BackendSettingsBuilder AsBackend()
+        public BackendSettingsBuilder RunBackend()
         {
             _settings.Side = Side.Backend;
 
