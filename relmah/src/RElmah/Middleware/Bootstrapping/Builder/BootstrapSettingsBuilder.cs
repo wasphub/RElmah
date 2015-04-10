@@ -62,11 +62,11 @@ namespace RElmah.Middleware.Bootstrapping.Builder
             return new FrontendSettingsBuilder(_settings);
         }
 
-        public BackendSettingsBuilder RunBackend()
+        public BootstrapSettingsFinalBuilder RunBackend()
         {
             _settings.Side = Side.Backend;
 
-            return new BackendSettingsBuilder(_settings);
+            return new BootstrapSettingsFinalBuilder(_settings);
         }
 
         #region Inner builders
@@ -159,21 +159,6 @@ namespace RElmah.Middleware.Bootstrapping.Builder
             }
         }
 
-        public class BootstrapSettingsFinalBuilder
-        {
-            readonly BootstrapSettings _settings;
-
-            internal BootstrapSettingsFinalBuilder(BootstrapSettings settings)
-            {
-                _settings = settings;
-            }
-
-            public BootstrapSettings Build()
-            {
-                return _settings;
-            }
-        }
-
         public class FrontendForDomainSettingsBuilder
         {
             readonly BootstrapSettings _settings;
@@ -209,11 +194,11 @@ namespace RElmah.Middleware.Bootstrapping.Builder
             }
         }
 
-        public class BackendSettingsBuilder
+        public class BootstrapSettingsFinalBuilder
         {
             readonly BootstrapSettings _settings;
 
-            internal BackendSettingsBuilder(BootstrapSettings settings)
+            internal BootstrapSettingsFinalBuilder(BootstrapSettings settings)
             {
                 _settings = settings;
             }
