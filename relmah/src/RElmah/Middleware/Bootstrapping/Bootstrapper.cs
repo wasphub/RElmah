@@ -40,17 +40,11 @@ namespace RElmah.Middleware.Bootstrapping
                      () => new ErrorsQuery(),
                      () => new RecapsQuery());
 
-            var bn = NullBackendNotifier.Instance;
-
-            if (settings.Side == Side.Frontend && !string.IsNullOrWhiteSpace(settings.TargetBackendEndpoint))
-            {
-                bn = frontendBackendNotifierCreator(settings.TargetBackendEndpoint, bi, dh);
-            }
-            
-            if (settings.Side == Side.Backend)
-            {
-                bn = backendFrontendNotifierCreator();
-            }
+            var bn = settings.Side == Side.Frontend && !string.IsNullOrWhiteSpace(settings.TargetBackendEndpoint)
+                   ? frontendBackendNotifierCreator(settings.TargetBackendEndpoint, bi, dh)
+                   : settings.Side == Side.Backend
+                     ? backendFrontendNotifierCreator()
+                     : NullBackendNotifier.Instance;
 
             var bqf = new Queries.Backend.QueriesFactory(ei, bl, dh, dh, bn,
                 () => new ErrorsBusQuery(),
