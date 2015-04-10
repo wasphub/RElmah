@@ -77,6 +77,8 @@ namespace RElmah.Host.Extensions.AppBuilder
             var settings = bootstrapper(new BootstrapSettingsBuilder());
 
             var registry = new Registry();
+            if (settings.RegistryConfigurator != null)
+                settings.RegistryConfigurator(registry);
 
             var frontend = new FrontendNotifier();
 
