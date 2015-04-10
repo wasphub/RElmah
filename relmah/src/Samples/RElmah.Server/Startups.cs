@@ -32,13 +32,8 @@ namespace RElmah.Server
                         IdentityProviderBuilderSetter = () => 
                             () => winAuth
                                   ? (IIdentityProvider)new WindowsPrincipalIdentityProvider()
-                                  : new ClientTokenIdentityProvider()
-                    })
-                    .RunFrontend()
-                    .ReceiveErrors()
-                    .ExposeConfiguration(new ConfigurationOptions
-                    {
-                        Configurator = async conf =>
+                                  : new ClientTokenIdentityProvider(),
+                        InitConfiguration = async conf =>
                         {
                             var c01 = await conf.AddCluster("c01");
 
@@ -58,6 +53,9 @@ namespace RElmah.Server
                             );
                         }
                     })
+                    .RunFrontend()
+                    .ReceiveErrors()
+                    .ExposeConfiguration()
                     .Build()
                     
                 );
@@ -88,22 +86,12 @@ namespace RElmah.Server
                         IdentityProviderBuilderSetter = () =>
                             () => winAuth
                                   ? (IIdentityProvider)new WindowsPrincipalIdentityProvider()
-                                  : new ClientTokenIdentityProvider()
-                    })
-                    .RunFrontend(targetBackendEndpoint != null 
-                                 ? new FrontendOptions
-                                 {
-                                     TargetBackendEndpointSetter = () => new Uri(targetBackendEndpoint)
-                                 } 
-                                 : null)
-                    .ReceiveErrors(new ErrorsOptions { UseRandomizerSetter = () => true })
-                    .ExposeConfiguration(new ConfigurationOptions
-                    {
-                        Configurator = async conf =>
+                                  : new ClientTokenIdentityProvider(),
+                        InitConfiguration = async conf =>
                         {
                             var c01 = await conf.AddCluster("c01");
                             var c02 = await conf.AddCluster("c02");
-                                    
+
                             var s01 = await conf.AddSource("s01");
                             var s02 = await conf.AddSource("s02");
                             var s03 = await conf.AddSource("s03");
@@ -130,6 +118,14 @@ namespace RElmah.Server
                             );
                         }
                     })
+                    .RunFrontend(targetBackendEndpoint != null 
+                                 ? new FrontendOptions
+                                 {
+                                     TargetBackendEndpointSetter = () => new Uri(targetBackendEndpoint)
+                                 } 
+                                 : null)
+                    .ReceiveErrors(new ErrorsOptions { UseRandomizerSetter = () => true })
+                    .ExposeConfiguration()
                     .Build()
 
                 );

@@ -15,8 +15,8 @@ namespace RElmah.Middleware.Bootstrapping.Builder
         public string ErrorsPrefix { get; internal set; }
         public string DomainPrefix { get; internal set; }
         public Func<IDomainStore> DomainStoreBuilder { get; internal set; }
-        public Action<IDomainPersistor> DomainConfigurator { get; internal set; }
-        public Action<IRegistry> RegistryConfigurator { get; internal set; }
+        public Action<IDomainPersistor> InitConfiguration { get; internal set; }
+        public Action<IRegistry> InitRegistry { get; internal set; }
         public bool UseRandomizer { get; internal set; }
     }
 }

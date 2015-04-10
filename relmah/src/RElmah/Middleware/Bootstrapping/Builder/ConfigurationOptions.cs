@@ -6,6 +6,6 @@ namespace RElmah.Middleware.Bootstrapping.Builder
     public class ConfigurationOptions
     {
         public Func<string> PrefixSetter { get; set; }
-        public Action<IDomainPersistor> Configurator { get; set; }
+        
     }
 }

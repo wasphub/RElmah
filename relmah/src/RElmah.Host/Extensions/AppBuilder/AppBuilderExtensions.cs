@@ -30,8 +30,8 @@ namespace RElmah.Host.Extensions.AppBuilder
             var settings = bootstrapper(new BootstrapSettingsBuilder());
 
             var registry = new Registry();
-            if (settings.RegistryConfigurator != null)
-                settings.RegistryConfigurator(registry);
+            if (settings.InitRegistry != null)
+                settings.InitRegistry(registry);
 
             var frontend = new FrontendNotifier();
 
@@ -56,11 +56,11 @@ namespace RElmah.Host.Extensions.AppBuilder
             else
                 registry.Register(typeof(ErrorsHub), () => new ErrorsHub(bp.fqf, dp));
 
-            if (settings.RegistryConfigurator != null)
-                settings.RegistryConfigurator(registry);
+            if (settings.InitRegistry != null)
+                settings.InitRegistry(registry);
 
-            if (settings.DomainConfigurator != null)
-                settings.DomainConfigurator(bp.dh);
+            if (settings.InitConfiguration != null)
+                settings.InitConfiguration(bp.dh);
 
             if (settings.ForErrors)
                 builder = settings.UseRandomizer

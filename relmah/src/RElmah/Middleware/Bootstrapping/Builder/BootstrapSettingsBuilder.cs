@@ -34,14 +34,13 @@ namespace RElmah.Middleware.Bootstrapping.Builder
             }
 
             if (options.DomainStoreBuilder != null)
-            {
                 _settings.DomainStoreBuilder = options.DomainStoreBuilder;
-            }
 
-            if (options.RegistryConfigurator != null)
-            {
-                _settings.RegistryConfigurator = options.RegistryConfigurator;
-            }
+            if (options.InitRegistry != null)
+                _settings.InitRegistry = options.InitRegistry;
+
+            if (options.InitConfiguration != null)
+                _settings.InitConfiguration = options.InitConfiguration;
 
             return new BootstrapSettingsBuilder(_settings);
         }
@@ -113,9 +112,6 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                                        ? options.PrefixSetter()
                                        : "relmah-domain";
 
-                if (options != null && options.Configurator != null)
-                    _settings.DomainConfigurator = options.Configurator;
-
                 return new FrontendForDomainSettingsBuilder(_settings);
             }
 
@@ -146,9 +142,6 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                 _settings.DomainPrefix = options != null && options.PrefixSetter != null
                                        ? options.PrefixSetter()
                                        : "relmah-domain";
-
-                if (options != null && options.Configurator != null)
-                    _settings.DomainConfigurator = options.Configurator;
 
                 return new BootstrapSettingsFinalBuilder(_settings);
             }
