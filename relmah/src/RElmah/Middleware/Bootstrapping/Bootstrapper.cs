@@ -16,14 +16,7 @@ namespace RElmah.Middleware.Bootstrapping
 {
     public static class Bootstrapper
     {
-        public static T Prepare<T>(
-            this IRegistry registry,
-            IFrontendNotifier frontendNotifier,
-            Func<string, IErrorsInbox, IDomainPersistor, IBackendNotifier> frontendBackendNotifierCreator,
-            Func<IBackendNotifier> backendFrontendNotifierCreator,
-            IIdentityProvider identityProvider,
-            Func<IFrontendQueriesFactory, IBackendQueriesFactory, IErrorsInbox, IDomainPersistor, IBackendNotifier, T> resultor,
-            BootstrapSettings settings)
+        public static T Prepare<T>(this IRegistry registry, IFrontendNotifier frontendNotifier, Func<string, IErrorsInbox, IDomainPersistor, IBackendNotifier> frontendBackendNotifierCreator, Func<IBackendNotifier> backendFrontendNotifierCreator, Func<IFrontendQueriesFactory, IBackendQueriesFactory, IErrorsInbox, IDomainPersistor, IBackendNotifier, T> resultor, IIdentityProvider identityProvider, BootstrapSettings settings)
         {
             var ebl = new InMemoryErrorsBacklog();
             var fei = new QueuedErrorsInbox(ebl);

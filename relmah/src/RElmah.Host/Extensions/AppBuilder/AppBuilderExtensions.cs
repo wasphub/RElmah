@@ -39,12 +39,12 @@ namespace RElmah.Host.Extensions.AppBuilder
                    ? settings.IdentityProviderBuilder()
                    : new WindowsPrincipalIdentityProvider();
 
-            var bp = registry.Prepare(frontend,
-                (ep, ei, dh) => new FrontendBackendNotifier(ep, ei, dh),
-                () => new BackendFrontendNotifier(),
-                ip,
+            var bp = registry.Prepare(
+                frontend,
+                (ep, ei, dh)           => new FrontendBackendNotifier(ep, ei, dh),
+                ()                     => new BackendFrontendNotifier(),
                 (fqf, bqf, ei, dh, bn) => new { fqf, bqf, ei, dh, bn },
-                settings);
+                ip, settings);
 
             var dp = new DelegatingUserIdProvider(ip);
 
@@ -62,15 +62,16 @@ namespace RElmah.Host.Extensions.AppBuilder
             if (settings.DomainConfigurator != null)
                 settings.DomainConfigurator(bp.dh);
 
-            builder = settings.ForErrors && settings.UseRandomizer
-                ? builder.UseRElmahMiddleware<RandomSourceErrorsMiddleware>(bp.ei, bp.dh, new ErrorsSettings
-                {
-                    Prefix = settings.ErrorsPrefix
-                })
-                : builder.UseRElmahMiddleware<ErrorsMiddleware>(bp.ei, new ErrorsSettings
-                {
-                    Prefix = settings.ErrorsPrefix
-                });
+            if (settings.ForErrors)
+                builder = settings.UseRandomizer
+                    ? builder.UseRElmahMiddleware<RandomSourceErrorsMiddleware>(bp.ei, bp.dh, new ErrorsSettings
+                    {
+                        Prefix = settings.ErrorsPrefix
+                    })
+                    : builder.UseRElmahMiddleware<ErrorsMiddleware>(bp.ei, new ErrorsSettings
+                    {
+                        Prefix = settings.ErrorsPrefix
+                    });
 
             if (settings.ForDomain)
                 builder = builder.UseRElmahMiddleware<DomainMiddleware>(bp.dh, new DomainSettings
