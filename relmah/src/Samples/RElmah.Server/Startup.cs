@@ -7,6 +7,7 @@ using Owin;
 using RElmah.Extensions;
 using RElmah.Host.Extensions.AppBuilder;
 using RElmah.Host.Services;
+using RElmah.Middleware.Bootstrapping.Builder;
 using RElmah.Models.Settings;
 using RElmah.Server;
 
@@ -34,59 +35,52 @@ namespace RElmah.Server
                     builder.RunSignalR();
                 })
 
-                .UseRElmah(new Settings
-                {
-                    Errors = runErrors.Then(() => new ErrorsSettings
+                .UseRElmah(builder => builder
+                    
+                    .WithOptions(new BootstrapOptions
                     {
-                        Prefix = "relmah-errors"
-                    }),
-
-                    Domain = runDomain.Then(() => new DomainSettings
+                        IdentityProviderBuilderSetter = () => 
+                            () => winAuth
+                                  ? (IIdentityProvider)new WindowsPrincipalIdentityProvider()
+                                  : new ClientTokenIdentityProvider()
+                    })
+                    .AsFrontend()
+                    .ForErrors(runErrors, new ErrorsOptions{ UseRandomizerSetter = () => true })
+                    .ForDomain(runDomain, new DomainOptions
                     {
-                        Prefix  = "relmah-domain"
-                    }),
+                        DomainConfigurator = async conf =>
+                        {
+                            var cFoo = await conf.AddCluster("foo");
+                            var cBar = await conf.AddCluster("bar");
 
-                    Bootstrap = new BootstrapperSettings
-                    {       
-                        //Enable the following line to use the basic client side token for authentication (for test purposes)
-                        IdentityProviderBuilder = () => winAuth 
-                                                        ? (IIdentityProvider)new WindowsPrincipalIdentityProvider() 
-                                                        : new ClientTokenIdentityProvider(),
-
-                        RunBackend = runBackend,
-                        TargetBackendEndpoint = targetBackendEndpoint,
-
-                        Domain = async conf =>
-                        {              
-                            var c1 = await conf.AddCluster("foo");
-                            var c2 = await conf.AddCluster("bar");
-
-                            var a1 = await conf.AddSource("e7001");
-                            var a2 = await conf.AddSource("e7002");
-                            var a3 = await conf.AddSource("e7003");
+                            var e7001 = await conf.AddSource("e7001");
+                            var e7002 = await conf.AddSource("e7002");
+                            var e7003 = await conf.AddSource("e7003");
 
                             //For Windows Auth testing
-                            var u1 = await conf.AddUser(string.Format(@"{0}\{1}", Environment.UserDomainName, Environment.UserName));
-                            
+                            var cu = await conf.AddUser(string.Format(@"{0}\{1}", Environment.UserDomainName, Environment.UserName));
+
                             //For client token testing
-                            var u2 = await conf.AddUser(@"wasp");
-                            var u3 = await conf.AddUser(@"cuki");
-                            var u4 = await conf.AddUser(@"all");
+                            var wasp = await conf.AddUser("wasp");
+                            var cuki = await conf.AddUser("cuki");
+                            var all  = await conf.AddUser("all");
 
                             Task.WaitAll(
-                                conf.AddSourceToCluster(c1.Value.Name, a1.Value.SourceId),
-                                conf.AddSourceToCluster(c2.Value.Name, a2.Value.SourceId),
-                                conf.AddSourceToCluster(c2.Value.Name, a3.Value.SourceId),
+                                conf.AddSourceToCluster(cFoo.Value.Name, e7001.Value.SourceId),
+                                conf.AddSourceToCluster(cBar.Value.Name, e7002.Value.SourceId),
+                                conf.AddSourceToCluster(cBar.Value.Name, e7003.Value.SourceId),
 
-                                conf.AddUserToCluster(c1.Value.Name, u1.Value.Name),
-                                conf.AddUserToCluster(c1.Value.Name, u2.Value.Name),
-                                conf.AddUserToCluster(c1.Value.Name, u4.Value.Name),
+                                conf.AddUserToCluster(cFoo.Value.Name, cu.Value.Name),
+                                conf.AddUserToCluster(cFoo.Value.Name, wasp.Value.Name),
+                                conf.AddUserToCluster(cFoo.Value.Name, all.Value.Name),
 
-                                conf.AddUserToCluster(c2.Value.Name, u3.Value.Name),
-                                conf.AddUserToCluster(c2.Value.Name, u4.Value.Name));
+                                conf.AddUserToCluster(cBar.Value.Name, cuki.Value.Name),
+                                conf.AddUserToCluster(cBar.Value.Name, all.Value.Name));
                         }
-                    }
-                });
+                    })
+                    .Build()
+                    
+                );
         }
     }
 }
