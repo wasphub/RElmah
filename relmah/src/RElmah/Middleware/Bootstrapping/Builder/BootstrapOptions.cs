@@ -9,6 +9,6 @@ namespace RElmah.Middleware.Bootstrapping.Builder
         public Action<IRegistry> InitRegistry { get; set; }
 
         public Func<IVisibilityStore> VisibilityStoreBuilder { get; set; }
-        public Action<IVisibilityPersistor> InitConfiguration { get; set; }
+        public Action<IVisibilityPersistor> InitVisibility { get; set; }
     }
 }

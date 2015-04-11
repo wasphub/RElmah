@@ -38,8 +38,8 @@ namespace RElmah.Middleware.Bootstrapping.Builder
             if (options.InitRegistry != null)
                 _settings.InitRegistry = options.InitRegistry;
 
-            if (options.InitConfiguration != null)
-                _settings.InitConfiguration = options.InitConfiguration;
+            if (options.InitVisibility != null)
+                _settings.InitVisibility = options.InitVisibility;
 
             return new BootstrapSettingsBuilder(_settings);
         }
@@ -98,12 +98,12 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                 return new FrontendForErrorsSettingsBuilder(_settings);
             }
 
-            public FrontendForVisibilitySettingsBuilder ForVisibility(ConfigurationOptions options = null)
+            public FrontendForVisibilitySettingsBuilder ForVisibility(VisibilityOptions options = null)
             {
                 return ForVisibility(true, options);
             }
 
-            public FrontendForVisibilitySettingsBuilder ForVisibility(bool active, ConfigurationOptions options = null)
+            public FrontendForVisibilitySettingsBuilder ForVisibility(bool active, VisibilityOptions options = null)
             {
                 _settings.ForVisibility = active;
 
@@ -129,12 +129,12 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                 _settings = settings;
             }
 
-            public BootstrapSettingsFinalBuilder ExposeConfiguration(ConfigurationOptions options = null)
+            public BootstrapSettingsFinalBuilder ExposeVisibility(VisibilityOptions options = null)
             {
-                return ExposeConfiguration(true, options);
+                return ExposeVisibility(true, options);
             }
 
-            public BootstrapSettingsFinalBuilder ExposeConfiguration(bool active, ConfigurationOptions options = null)
+            public BootstrapSettingsFinalBuilder ExposeVisibility(bool active, VisibilityOptions options = null)
             {
                 _settings.ForVisibility = active;
 

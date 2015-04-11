@@ -46,8 +46,8 @@ namespace RElmah.Host.Extensions.AppBuilder
             if (settings.InitRegistry != null)
                 settings.InitRegistry(registry);
 
-            if (settings.InitConfiguration != null)
-                settings.InitConfiguration(bp.dh);
+            if (settings.InitVisibility != null)
+                settings.InitVisibility(bp.dh);
 
             if (settings.ForErrors)
                 builder = settings.UseRandomizer

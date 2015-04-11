@@ -33,7 +33,7 @@ namespace RElmah.Server
                             () => winAuth
                                   ? (IIdentityProvider)new WindowsPrincipalIdentityProvider()
                                   : new ClientTokenIdentityProvider(),
-                        InitConfiguration = async conf =>
+                        InitVisibility = async conf =>
                         {
                             var c01 = await conf.AddCluster("c01");
 
@@ -55,7 +55,7 @@ namespace RElmah.Server
                     })
                     .RunFrontend()
                     .ReceiveErrors()
-                    .ExposeConfiguration()
+                    .ExposeVisibility()
                     .Build()
                     
                 );
@@ -87,7 +87,7 @@ namespace RElmah.Server
                             () => winAuth
                                   ? (IIdentityProvider)new WindowsPrincipalIdentityProvider()
                                   : new ClientTokenIdentityProvider(),
-                        InitConfiguration = async conf =>
+                        InitVisibility = async conf =>
                         {
                             var c01 = await conf.AddCluster("c01");
                             var c02 = await conf.AddCluster("c02");
@@ -125,7 +125,7 @@ namespace RElmah.Server
                                  } 
                                  : null)
                     .ReceiveErrors(new ErrorsOptions { UseRandomizerSetter = () => true })
-                    .ExposeConfiguration()
+                    .ExposeVisibility()
                     .Build()
 
                 );

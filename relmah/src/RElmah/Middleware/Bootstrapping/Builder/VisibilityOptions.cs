@@ -2,7 +2,7 @@ using System;
 
 namespace RElmah.Middleware.Bootstrapping.Builder
 {
-    public class ConfigurationOptions
+    public class VisibilityOptions
     {
         public Func<string> PrefixSetter { get; set; }
         
