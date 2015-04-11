@@ -132,9 +132,7 @@
 
                 states
                     .filter(function(s){ return s === 'disconnected'; })
-                    .subscribe(function () {
-                        logout();
-                    });
+                    .subscribe(logout);
 
             });
 
