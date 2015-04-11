@@ -47,16 +47,6 @@ namespace RElmah.Client
             try
             {
                 _connection = new HubConnection(_endpoint, string.Format("user={0}", token.Token));
-
-                _connection.StateChanged += change =>
-                {
-                    _states.OnNext((ConnectionState)change.NewState);
-                };
-                _connection.Error += exception =>
-                {
-                    _states.OnNext(ConnectionState.Error);
-                };
-
                 return Connect(_connection);
             }
             catch
@@ -71,16 +61,6 @@ namespace RElmah.Client
             try
             {
                 _connection = new HubConnection(_endpoint) { Credentials = credentials };
-
-                _connection.StateChanged += change =>
-                {
-                    _states.OnNext((ConnectionState)change.NewState);
-                };
-                _connection.Error += exception =>
-                {
-                    _states.OnNext(ConnectionState.Error);
-                };
-
                 return Connect(_connection);
             }
             catch
@@ -204,6 +184,9 @@ namespace RElmah.Client
 
         private Task Connect(HubConnection connection)
         {
+            connection.StateChanged += change    => _states.OnNext((ConnectionState)change.NewState);
+            connection.Error        += exception => _states.OnNext(ConnectionState.Error);
+
             var errorsProxy = connection.CreateHubProxy("relmah-errors");
 
             //streams by error type
