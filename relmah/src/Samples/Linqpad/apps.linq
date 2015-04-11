@@ -17,3 +17,4 @@ var q =
 	select app;
 	 
 q.Subscribe(o => o.Dump());
+//await q.DumpLatest(false);

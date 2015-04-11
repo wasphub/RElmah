@@ -10,10 +10,10 @@
 </Query>
 
 var c = new Connection("http://localhost:9100/");
-await c.Start();
+await c.Start(new ClientToken("u01"));
 
 var q = 
 	from r in c.Recaps
-	select new { r.Name, r.Type, r.Measure };
+	select new { r.SourceId, r.Type, r.Measure };
 	 
 await q.DumpLatest(true);

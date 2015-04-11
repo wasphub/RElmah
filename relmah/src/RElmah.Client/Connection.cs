@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using RElmah.Common;
 using RElmah.Common.Extensions;
-using RElmah.Extensions;
 
 namespace RElmah.Client
 {
@@ -124,27 +123,27 @@ namespace RElmah.Client
 
         public class RecapAggregate
         {
-            public readonly string Name;
+            public readonly string SourceId;
             public readonly string Type;
             public readonly int Measure;
 
-            public RecapAggregate(string name, string type, int measure)
+            public RecapAggregate(string sourceId, string type, int measure)
             {
-                Name    = name;
-                Type    = type;
-                Measure = measure;
+                SourceId  = sourceId;
+                Type      = type;
+                Measure   = measure;
             }
 
             protected bool Equals(RecapAggregate other)
             {
-                return string.Equals(Name, other.Name) && string.Equals(Type, other.Type) && Measure == other.Measure;
+                return string.Equals(SourceId, other.SourceId) && string.Equals(Type, other.Type) && Measure == other.Measure;
             }
 
             public override int GetHashCode()
             {
                 unchecked
                 {
-                    var hashCode = (Name != null ? Name.GetHashCode() : 0);
+                    var hashCode = (SourceId != null ? SourceId.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (Type != null ? Type.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ Measure;
                     return hashCode;

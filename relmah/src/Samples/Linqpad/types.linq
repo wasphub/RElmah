@@ -10,11 +10,11 @@
 </Query>
 
 var c = new Connection("http://localhost:9100/");
-await c.Start();
+await c.Start(new ClientToken("u01"));
 
 var q = c.ErrorTypes.Subscribe(async et => 
 {
 	await et.Scan(0, (a, cur) => a + 1)
-	  .Select(x => string.Format("{0}: {1}", et.Key.Type, x))
+	  .Select(x => string.Format("{0} from {1}: {2}", et.Key.Type, et.Key.SourceId, x))
 	  .DumpLatest(true);
 });
