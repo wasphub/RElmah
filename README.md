@@ -1,27 +1,38 @@
 RElmah - Reactive ELMAH
 ======
 
-If you already used [ElmahR] in the past, you already know what **RElmah** is about. We want to monitor applications and receive real time notifications about unhandled exceptions. But the way things are done behind the scenes are totally redesigned to offer a true **reactive** experience to the developer. Quickly:
+If you already used [ElmahR] in the past, you already know what **RElmah** is about. We want to monitor applications and receive real time notifications about unhandled exceptions. But the way things are done behind the scenes is totally redesigned to offer a true **reactive** experience to the developer. 
 
-- we have a clean separation between server and client portions
-- we have true and independent client libraries for both JavaScript and .NET
-- [Rx] is at the core on both the server side the clients side libraries
-- Errors, applications, basically anything that can go to a client will be managed as a push stream of information
+How is it done?
+------
+
+RElmah has clear goals: being a scalable streaming system for errors, with a modular and extensible design and nevertheless minimal and simple. In order to achieve those goals a strong focus has been put on specific characteristics:
+
+- clean separation between server and client portions
+- true and independent client libraries for both JavaScript and .NET
+- [Rx] at the core on both the server side the clients side libraries
+- Errors, sources, connection status, basically anything that can be delivered to a client will be managed through push streams
 
 Do you want a sneak preview? What about being able to do something like this in Linqpad?
 
 ```c#
-var c = new Connection("http://localhost:50360/");
+var c = new Connection("http://localhost:9100/");
+await c.Start(new ClientToken("u01"));
+
 var q = 
 	from error in c.Errors
-	where error.Detail.Message.StartsWith("B")
-	select error.Detail;
-	
-q.DumpLive();
+	where error.Error.Type.IndexOf("Argument", StringComparison.OrdinalIgnoreCase) > -1
+	select new { error.Error, error.Error.Time, error.Error.Type };
+	  
+await q.DumpLatest(true);
 ```
+
 You get the idea :)
 
-Current version is 0.5, which means some foundations are there, but it's not really ready to be used yet. We have:
+Where we are?
+------
+
+Current version is 0.6, which means some foundations are there, but it's not really ready to be used yet in production. We have:
 
 * Much more reactive structure have been added to the server side logic
 * Introduction of *backend* error and configuration notifications to allow scalability
