@@ -54,6 +54,24 @@ The solution also contains some Linqpad scripts, so you could for example run `b
 
 So, you might want to have a look and see if you like what's happening, and maybe contribute with ideas or coding. And I just added a [Trello] board where I'll try to keep ideas and progress up to date.
 
+That's it?
+------
+
+Well, yes, but there are several other thing it does which require more context. Without documentation it might be difficult to discover them, but it's also true that the API definition is not yet 100% stable, so better wait a bit for that. Just to mention a few:
+
+* RElmah is not about building a full fledged dashboard, is more about providing a reactive API on top of error streams. You don't like the current dashboard (who would anyway?)? Use the client APIs to build your own! Are you more interested in building reactive automation tools to build *non visual* workflows on errors? Again, the client libraries are all you need.
+* RElmah has a simple yet powerful visibility system, which allows you to aggregate sources of errors in clusters, and provide users access to them. Both a code and an HTTP API are available to interact with the visibility system. It means, as of today RElmah does not take care of persisting that information, you do it in your host the way you prefer and then you just pick the preferred API to tell RElmah how to setup visibility. Is this a limitation? Maybe, but it also means you don't have to setup any extra database or deal with `.config` files if you already have that logic in your host application, which is possible. Is it not the case? You white a bunch of lines of code in the bootstrap phase to setup visibility as you like it and it's done. And you can change it live while the application runs, RElmah takes care of streaming the changes where it makes sense!
+
+And several other ideas are there waiting for some time slot to be implemented:
+
+* Introduction of [Akka.NET] for higher scalability and fault tolerance while receiving errors
+* Support for ASP.NET vNext
+* Implementation of satellite services (like persistence) and hopefully a better default dashboard
+* Improving unit tests: there are already several, but more are needed, and I'll get rid of Microsoft Fakes too...
+* And what about Nuget packages for the server portion, or maybe a Bower one for the JS client? I know, we'll get there too... :)
+
+A lot to do!
+
 Yeah, but... what's your goal here?
 ------
 
@@ -63,3 +81,4 @@ This is a disclaimer: **RElmah**, as it was for ElmahR at the beginning, is for 
 [ElmahR]:http://elmahr.apphb.com/
 [Rx]:http://msdn.microsoft.com/en-us/data/gg577609.aspx
 [Trello]:https://trello.com/b/ZBdjmxld/relmah
+[Akka.NET]:http://getakka.net/
