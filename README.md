@@ -39,7 +39,20 @@ Current version is 0.6, which means some foundations are there, but it's not rea
 * Clean .NET and  JS clients are available, sharing a very similar API and again providing observable streams of information
 * A fluent API is available in order to bootstrap RElmah correctly
 
-You might want to have a look and see if you like what's happening, and maybe contribute with ideas or coding. And I just added a [Trello] board where I'll try to keep ideas and progress up to date.
+Can I play with it?
+-----
+
+Inside this repository you find a VS2013 solution that you can build easily, and then you'll have 3 web applications inside a solution folder called Samples:
+
+* *RElmah.Server*: this is a sample server application, which would receive errors and broadcast them to clients
+* *RElmah.Dashboard.Basic*: this is a sample dashboard, very minimal and visually disappointing, but once connected it will display some basic info about each received error, and some running totals
+* *RElmah.Source*: this application has just one page generating random errors, which will be posted to the server and from there broadcast to the connected dashboards
+
+It's quite easy, you just launch the server first, then the dashboard from where you'll "login" into the server, and finally the errors source. You'll just need to refresh the failing page multiple times to see what happens to the dashboard. There are some visibility rules setup, so not every error is displayed, but if you insist in refreshing the failing page you'll definitely see some on the dashboard.
+
+The solution also contains some Linqpad scripts, so you could for example run `basic.linq` and see how errors are streamed to it when triggered by the failing page (again not all of them because of visibility rules I already mentioned, but also because the script itself is doing some filtering, can you guess how?).
+
+So, you might want to have a look and see if you like what's happening, and maybe contribute with ideas or coding. And I just added a [Trello] board where I'll try to keep ideas and progress up to date.
 
 Yeah, but... what's your goal here?
 ------
