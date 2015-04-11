@@ -1,5 +1,4 @@
 using System;
-using RElmah.Domain;
 
 namespace RElmah.Middleware.Bootstrapping.Builder
 {

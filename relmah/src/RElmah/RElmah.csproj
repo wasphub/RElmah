@@ -128,7 +128,7 @@
     <Compile Include="Middleware\Bootstrapping\Builder\ErrorsOptions.cs" />
     <Compile Include="Middleware\Bootstrapping\Builder\FrontendOptions.cs" />
     <Compile Include="Middleware\Bootstrapping\Builder\Side.cs" />
-    <Compile Include="Middleware\DomainMiddleware.cs" />
+    <Compile Include="Middleware\VisibilityMiddleware.cs" />
     <Compile Include="Middleware\ErrorsMiddleware.cs" />
     <Compile Include="Foundation\AtomicImmutableDictionary.cs" />
     <Compile Include="Foundation\ConcurrentReference.cs" />

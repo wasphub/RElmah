@@ -1,17 +1,17 @@
 using System.Threading.Tasks;
 using Microsoft.Owin;
-using RElmah.Domain;
+using RElmah.Visibility;
 
 namespace RElmah.Middleware
 {
-    public class DomainMiddleware : OwinMiddleware
+    public class VisibilityMiddleware : OwinMiddleware
     {
         public override Task Invoke(IOwinContext context)
         {
             return Router.Invoke(context, Next.Invoke);
         }
 
-        public DomainMiddleware(OwinMiddleware next, IDomainPersistor updater, string prefix)
+        public VisibilityMiddleware(OwinMiddleware next, IVisibilityPersistor updater, string prefix)
             : base(next)
         {
             Router.Build(builder => builder

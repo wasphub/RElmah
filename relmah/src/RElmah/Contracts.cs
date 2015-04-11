@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using RElmah.Common;
-using RElmah.Domain;
 using RElmah.Errors;
 using RElmah.Foundation;
 using RElmah.Notifiers;
 using RElmah.Publishers;
+using RElmah.Visibility;
 
 namespace RElmah
 {
@@ -80,8 +80,8 @@ namespace RElmah.Queries
         public IErrorsInbox ErrorsInbox { get; set; }
         public IErrorsInbox BackendErrorsInbox { get; set; }
         public IErrorsBacklog ErrorsBacklog { get; set; }
-        public IDomainPersistor DomainPersistor { get; set; }
-        public IDomainPublisher DomainPublisher { get; set; }
+        public IVisibilityPersistor VisibilityPersistor { get; set; }
+        public IVisibilityPublisher VisibilityPublisher { get; set; }
     }
 }
 
@@ -92,7 +92,7 @@ namespace RElmah.Publishers
         IObservable<ErrorPayload> GetErrorsStream();
     }
 
-    public interface IDomainPublisher
+    public interface IVisibilityPublisher
     {
         IObservable<Delta<Cluster>> GetClustersSequence();
         IObservable<Delta<Source>> GetSourcesSequence();
@@ -116,9 +116,9 @@ namespace RElmah.Errors
     }
 }
 
-namespace RElmah.Domain
+namespace RElmah.Visibility
 {
-    public interface IDomainReader
+    public interface IVisibilityAccessor
     {
         Task<IEnumerable<Cluster>> GetClusters();
         Task<ValueOrError<Cluster>> GetCluster(string name);
@@ -129,7 +129,7 @@ namespace RElmah.Domain
         Task<IEnumerable<Source>> GetUserSources(string user);
     }
 
-    public interface IDomainPersistor : IDomainReader
+    public interface IVisibilityPersistor : IVisibilityAccessor
     {
         Task<ValueOrError<Cluster>> AddCluster(string name, bool fromBackend = false);
         Task<ValueOrError<bool>> RemoveCluster(string name, bool fromBackend = false);
@@ -145,7 +145,7 @@ namespace RElmah.Domain
         Task<ValueOrError<User>> RemoveUserToken(string token);
     }
 
-    public interface IDomainStore : IDomainPersistor
+    public interface IVisibilityStore : IVisibilityPersistor
     {
     }
 }

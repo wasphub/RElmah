@@ -10,7 +10,7 @@ using RElmah.Middleware.Bootstrapping.Builder;
 
 namespace RElmah.Server
 {
-    public class Startup_SimpleFrontendForErrorsAndDomain
+    public class Startup_SimpleFrontendForErrorsAndVisibility
     {
         public void Configuration(IAppBuilder app)
         {
@@ -62,7 +62,7 @@ namespace RElmah.Server
         }
     }
 
-    public class Startup_ComplexFrontendForErrorsAndDomain
+    public class Startup_ComplexFrontendForErrorsAndVisibility
     {
         public void Configuration(IAppBuilder app)
         {

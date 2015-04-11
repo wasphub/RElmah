@@ -54,8 +54,8 @@ namespace RElmah.Host.Extensions.AppBuilder
                     ? builder.UseRElmahMiddleware<RandomSourceErrorsMiddleware>(bp.ei, bp.dh, settings.ErrorsPrefix)
                     : builder.UseRElmahMiddleware<ErrorsMiddleware>(bp.ei, settings.ErrorsPrefix);
 
-            if (settings.ForDomain)
-                builder = builder.UseRElmahMiddleware<DomainMiddleware>(bp.dh, settings.DomainPrefix);
+            if (settings.ForVisibility)
+                builder = builder.UseRElmahMiddleware<VisibilityMiddleware>(bp.dh, settings.VisibilityPrefix);
 
             bp.bqf.Setup();
 

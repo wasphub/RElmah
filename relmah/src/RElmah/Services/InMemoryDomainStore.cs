@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using RElmah.Common;
-using RElmah.Domain;
+using RElmah.Visibility;
 using RElmah.Foundation;
 
 namespace RElmah.Services
 {
-    public class InMemoryDomainStore : IDomainStore
+    public class InMemoryVisibilityStore : IVisibilityStore
     {
         private readonly AtomicImmutableDictionary<string, Cluster> _clusters =
             new AtomicImmutableDictionary<string, Cluster>();

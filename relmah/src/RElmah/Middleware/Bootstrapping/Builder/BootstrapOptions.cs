@@ -1,5 +1,5 @@
 using System;
-using RElmah.Domain;
+using RElmah.Visibility;
 
 namespace RElmah.Middleware.Bootstrapping.Builder
 {
@@ -8,7 +8,7 @@ namespace RElmah.Middleware.Bootstrapping.Builder
         public Func<Func<IIdentityProvider>> IdentityProviderBuilderSetter { get; set; }
         public Action<IRegistry> InitRegistry { get; set; }
 
-        public Func<IDomainStore> DomainStoreBuilder { get; set; }
-        public Action<IDomainPersistor> InitConfiguration { get; set; }
+        public Func<IVisibilityStore> VisibilityStoreBuilder { get; set; }
+        public Action<IVisibilityPersistor> InitConfiguration { get; set; }
     }
 }

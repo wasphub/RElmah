@@ -1,11 +1,9 @@
 ﻿using System;
-using RElmah.Common;
 using RElmah.Common.Extensions;
-using RElmah.Domain;
 using RElmah.Errors;
-using RElmah.Extensions;
 using RElmah.Notifiers;
 using RElmah.Publishers;
+using RElmah.Visibility;
 
 namespace RElmah.Queries.Backend
 {
@@ -13,19 +11,19 @@ namespace RElmah.Queries.Backend
     {
         private readonly IErrorsInbox _errorsInbox;
         private readonly IErrorsBacklog _errorsBacklog;
-        private readonly IDomainPublisher _domainPublisher;
-        private readonly IDomainPersistor _domainPersistor;
+        private readonly IVisibilityPublisher _visibilityPublisher;
+        private readonly IVisibilityPersistor _visibilityPersistor;
         private readonly IBackendNotifier _backendNotifier;
         private readonly Func<IBackendQuery>[] _subscriptors;
 
-        public QueriesFactory(IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IDomainPublisher domainPublisher, IDomainPersistor domainPersistor,
+        public QueriesFactory(IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IVisibilityPublisher visibilityPublisher, IVisibilityPersistor visibilityPersistor,
             IBackendNotifier backendNotifier,
             params Func<IBackendQuery>[] subscriptors)
         {
             _errorsInbox = errorsInbox;
             _errorsBacklog = errorsBacklog;
-            _domainPublisher = domainPublisher;
-            _domainPersistor = domainPersistor;
+            _visibilityPublisher = visibilityPublisher;
+            _visibilityPersistor = visibilityPersistor;
             _backendNotifier = backendNotifier;
             _subscriptors = subscriptors;
         }
@@ -38,8 +36,8 @@ namespace RElmah.Queries.Backend
                     BackendNotifier = _backendNotifier,
                     ErrorsInbox = _errorsInbox,
                     ErrorsBacklog = _errorsBacklog,
-                    DomainPersistor = _domainPersistor,
-                    DomainPublisher = _domainPublisher
+                    VisibilityPersistor = _visibilityPersistor,
+                    VisibilityPublisher = _visibilityPublisher
                 }));
         }
     }

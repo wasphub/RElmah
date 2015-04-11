@@ -6,13 +6,13 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Microsoft.Reactive.Testing;
 using RElmah.Common;
-using RElmah.Domain.Fakes;
 using RElmah.Errors.Fakes;
 using RElmah.Foundation;
 using RElmah.Notifiers.Fakes;
 using RElmah.Publishers.Fakes;
 using RElmah.Queries;
 using RElmah.Queries.Frontend;
+using RElmah.Visibility.Fakes;
 using Xunit;
 
 namespace RElmah.Tests.Queries.Frontend
@@ -51,11 +51,11 @@ namespace RElmah.Tests.Queries.Frontend
                     {
                         GetSourcesRecapIEnumerableOfSourceFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, Enumerable.Empty<Recap.Source>())))
                     },
-                    DomainPersistor = new StubIDomainPersistor
+                    VisibilityPersistor = new StubIVisibilityPersistor
                     {
                         GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1", "a1") })
                     },
-                    DomainPublisher = new StubIDomainPublisher
+                    VisibilityPublisher = new StubIVisibilityPublisher
                     {
                         GetClusterSourcesSequence = () => Observable.Empty<Delta<Relationship<Cluster, Source>>>(),
                         GetClusterUsersSequence = () => Observable.Empty<Delta<Relationship<Cluster, User>>>()
@@ -117,11 +117,11 @@ namespace RElmah.Tests.Queries.Frontend
                                     DateTime.UtcNow,
                                     Enumerable.Empty<Recap.Source>())))
                     },
-                    DomainPersistor = new StubIDomainPersistor
+                    VisibilityPersistor = new StubIVisibilityPersistor
                     {
                         GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { source })
                     },
-                    DomainPublisher = new StubIDomainPublisher
+                    VisibilityPublisher = new StubIVisibilityPublisher
                     {
                         GetClusterSourcesSequence = () => clusterSourcesStream,
                         GetClusterUsersSequence = () => clusterUsersStream

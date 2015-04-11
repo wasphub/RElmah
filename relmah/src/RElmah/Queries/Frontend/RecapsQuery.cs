@@ -5,9 +5,9 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using RElmah.Common;
 using RElmah.Common.Extensions;
-using RElmah.Domain;
 using RElmah.Errors;
 using RElmah.Foundation;
+using RElmah.Visibility;
 
 namespace RElmah.Queries.Frontend
 {
@@ -18,7 +18,7 @@ namespace RElmah.Queries.Frontend
             var name = user.Value.Name;
 
             //Initial recap
-            var initialRecap = await InitialRecap(name, targets.DomainPersistor, targets.ErrorsBacklog, (a, r) => new { Sources = a, Recap = r });
+            var initialRecap = await InitialRecap(name, targets.VisibilityPersistor, targets.ErrorsBacklog, (a, r) => new { Sources = a, Recap = r });
             var rs =
                 from r in initialRecap.ToSingleton().ToObservable()
                 select new
@@ -30,7 +30,7 @@ namespace RElmah.Queries.Frontend
 
             //Deltas
             var clusterSources =
-                from p in targets.DomainPublisher.GetClusterSourcesSequence()
+                from p in targets.VisibilityPublisher.GetClusterSourcesSequence()
                 let deltas = p.Target.Secondary.ToSingleton()
                 let target = p.Target.Secondary.SourceId
                 from u in p.Target.Primary.Users
@@ -42,7 +42,7 @@ namespace RElmah.Queries.Frontend
                     Removals  = p.Type == DeltaType.Removed ? deltas : Enumerable.Empty<Source>()
                 };
             var userSources =
-                from p in targets.DomainPublisher.GetClusterUsersSequence()
+                from p in targets.VisibilityPublisher.GetClusterUsersSequence()
                 let deltas = p.Target.Primary.Sources
                 where p.Target.Secondary.Name == name
                 select new
@@ -67,11 +67,11 @@ namespace RElmah.Queries.Frontend
 
         static async Task<T> InitialRecap<T>(
             string name, 
-            IDomainReader domainPersistor, 
+            IVisibilityAccessor visibilityPersistor, 
             IErrorsBacklog errorsBacklog,
             Func<IEnumerable<Source>, ValueOrError<Recap>, T> resultor)
         {
-            var sources = (await domainPersistor.GetUserSources(name)).ToArray();
+            var sources = (await visibilityPersistor.GetUserSources(name)).ToArray();
 
             var recap   = await errorsBacklog.GetSourcesRecap(sources, xs => xs.Count());
 

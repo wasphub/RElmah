@@ -3,13 +3,13 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using RElmah.Common;
-using RElmah.Domain.Fakes;
 using RElmah.Errors.Fakes;
 using RElmah.Foundation;
 using RElmah.Notifiers.Fakes;
 using RElmah.Publishers.Fakes;
 using RElmah.Queries;
 using RElmah.Queries.Frontend;
+using RElmah.Visibility.Fakes;
 using Xunit;
 
 namespace RElmah.Tests.Queries.Frontend
@@ -45,11 +45,11 @@ namespace RElmah.Tests.Queries.Frontend
                         GetErrorsStream = () => Observable.Empty<ErrorPayload>()
                     },
                     ErrorsBacklog = new StubIErrorsBacklog(),
-                    DomainPersistor = new StubIDomainPersistor
+                    VisibilityPersistor = new StubIVisibilityPersistor
                     {
                         GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1", "a1") })
                     },
-                    DomainPublisher = new StubIDomainPublisher()
+                    VisibilityPublisher = new StubIVisibilityPublisher()
                 });
 
             //Assert
@@ -84,11 +84,11 @@ namespace RElmah.Tests.Queries.Frontend
                         ).ToObservable()
                     },
                     ErrorsBacklog = new StubIErrorsBacklog(),
-                    DomainPersistor = new StubIDomainPersistor
+                    VisibilityPersistor = new StubIVisibilityPersistor
                     {
                         GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1", "a1") })
                     },
-                    DomainPublisher = new StubIDomainPublisher()
+                    VisibilityPublisher = new StubIVisibilityPublisher()
                 });
 
             //Assert
@@ -125,11 +125,11 @@ namespace RElmah.Tests.Queries.Frontend
                         ).ToObservable()
                     },
                     ErrorsBacklog = new StubIErrorsBacklog(),
-                    DomainPersistor = new StubIDomainPersistor
+                    VisibilityPersistor = new StubIVisibilityPersistor
                     {
                         GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1", "a1") })
                     },
-                    DomainPublisher = new StubIDomainPublisher()
+                    VisibilityPublisher = new StubIVisibilityPublisher()
                 });
 
             //Assert

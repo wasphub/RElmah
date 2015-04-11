@@ -16,7 +16,7 @@ namespace RElmah.Queries.Frontend
             if (user.Value.Tokens.Count() > 1) return Disposable.Empty;
 
             var name = user.Value.Name;
-            Func<Task<IEnumerable<Source>>> getUserSources = async () => await targets.DomainPersistor.GetUserSources(name);
+            Func<Task<IEnumerable<Source>>> getUserSources = async () => await targets.VisibilityPersistor.GetUserSources(name);
 
             var frontend = targets.ErrorsInbox != null 
                          ? targets.ErrorsInbox.GetErrorsStream() 

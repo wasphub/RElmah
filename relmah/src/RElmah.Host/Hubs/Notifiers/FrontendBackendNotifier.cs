@@ -1,10 +1,10 @@
 using System.Net;
 using Microsoft.AspNet.SignalR.Client;
 using RElmah.Common;
-using RElmah.Domain;
 using RElmah.Errors;
 using RElmah.Foundation;
 using RElmah.Notifiers;
+using RElmah.Visibility;
 
 namespace RElmah.Host.Hubs.Notifiers
 {
@@ -12,7 +12,7 @@ namespace RElmah.Host.Hubs.Notifiers
     {
         private readonly IHubProxy _proxy;
 
-        public FrontendBackendNotifier(string endpoint, IErrorsInbox errorsInbox, IDomainPersistor domainPublisher)
+        public FrontendBackendNotifier(string endpoint, IErrorsInbox errorsInbox, IVisibilityPersistor visibilityPublisher)
         {
             var connection = new HubConnection(endpoint)
             {
@@ -27,8 +27,8 @@ namespace RElmah.Host.Hubs.Notifiers
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddCluster(p.Target.Name, true);    break;
-                    case DeltaType.Removed: domainPublisher.RemoveCluster(p.Target.Name, true); break;
+                    case DeltaType.Added:   visibilityPublisher.AddCluster(p.Target.Name, true);    break;
+                    case DeltaType.Removed: visibilityPublisher.RemoveCluster(p.Target.Name, true); break;
                 }
             });
 
@@ -36,8 +36,8 @@ namespace RElmah.Host.Hubs.Notifiers
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddSource(p.Target.SourceId, p.Target.Description, true); break;
-                    case DeltaType.Removed: domainPublisher.RemoveSource(p.Target.SourceId, true); break;
+                    case DeltaType.Added:   visibilityPublisher.AddSource(p.Target.SourceId, p.Target.Description, true); break;
+                    case DeltaType.Removed: visibilityPublisher.RemoveSource(p.Target.SourceId, true); break;
                 }
             });
 
@@ -45,8 +45,8 @@ namespace RElmah.Host.Hubs.Notifiers
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddUser(p.Target.Name, true); break;
-                    case DeltaType.Removed: domainPublisher.RemoveUser(p.Target.Name, true); break;
+                    case DeltaType.Added:   visibilityPublisher.AddUser(p.Target.Name, true); break;
+                    case DeltaType.Removed: visibilityPublisher.RemoveUser(p.Target.Name, true); break;
                 }
             });
 
@@ -54,8 +54,8 @@ namespace RElmah.Host.Hubs.Notifiers
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddSourceToCluster(p.Target.Primary.Name, p.Target.Secondary.SourceId, true); break;
-                    case DeltaType.Removed: domainPublisher.RemoveSourceFromCluster(p.Target.Primary.Name, p.Target.Secondary.SourceId, true); break;
+                    case DeltaType.Added:   visibilityPublisher.AddSourceToCluster(p.Target.Primary.Name, p.Target.Secondary.SourceId, true); break;
+                    case DeltaType.Removed: visibilityPublisher.RemoveSourceFromCluster(p.Target.Primary.Name, p.Target.Secondary.SourceId, true); break;
                 }
             });
 
@@ -63,8 +63,8 @@ namespace RElmah.Host.Hubs.Notifiers
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddUserToCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
-                    case DeltaType.Removed: domainPublisher.RemoveUserFromCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
+                    case DeltaType.Added:   visibilityPublisher.AddUserToCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
+                    case DeltaType.Removed: visibilityPublisher.RemoveUserFromCluster(p.Target.Primary.Name, p.Target.Secondary.Name, true); break;
                 }
             });
 

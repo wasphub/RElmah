@@ -32,8 +32,8 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                 _settings.IdentityProviderBuilder = identityProviderBuilderSetter;
             }
 
-            if (options.DomainStoreBuilder != null)
-                _settings.DomainStoreBuilder = options.DomainStoreBuilder;
+            if (options.VisibilityStoreBuilder != null)
+                _settings.VisibilityStoreBuilder = options.VisibilityStoreBuilder;
 
             if (options.InitRegistry != null)
                 _settings.InitRegistry = options.InitRegistry;
@@ -98,20 +98,20 @@ namespace RElmah.Middleware.Bootstrapping.Builder
                 return new FrontendForErrorsSettingsBuilder(_settings);
             }
 
-            public FrontendForDomainSettingsBuilder ForDomain(ConfigurationOptions options = null)
+            public FrontendForVisibilitySettingsBuilder ForVisibility(ConfigurationOptions options = null)
             {
-                return ForDomain(true, options);
+                return ForVisibility(true, options);
             }
 
-            public FrontendForDomainSettingsBuilder ForDomain(bool active, ConfigurationOptions options = null)
+            public FrontendForVisibilitySettingsBuilder ForVisibility(bool active, ConfigurationOptions options = null)
             {
-                _settings.ForDomain = active;
+                _settings.ForVisibility = active;
 
-                _settings.DomainPrefix = options != null && options.PrefixSetter != null
-                                       ? options.PrefixSetter()
-                                       : "relmah-domain";
+                _settings.VisibilityPrefix = options != null && options.PrefixSetter != null
+                                           ? options.PrefixSetter()
+                                           : "relmah-visibility";
 
-                return new FrontendForDomainSettingsBuilder(_settings);
+                return new FrontendForVisibilitySettingsBuilder(_settings);
             }
 
             public BootstrapSettings Build()
@@ -136,11 +136,11 @@ namespace RElmah.Middleware.Bootstrapping.Builder
 
             public BootstrapSettingsFinalBuilder ExposeConfiguration(bool active, ConfigurationOptions options = null)
             {
-                _settings.ForDomain = active;
+                _settings.ForVisibility = active;
 
-                _settings.DomainPrefix = options != null && options.PrefixSetter != null
-                                       ? options.PrefixSetter()
-                                       : "relmah-domain";
+                _settings.VisibilityPrefix = options != null && options.PrefixSetter != null
+                                           ? options.PrefixSetter()
+                                           : "relmah-visibility";
 
                 return new BootstrapSettingsFinalBuilder(_settings);
             }
@@ -151,11 +151,11 @@ namespace RElmah.Middleware.Bootstrapping.Builder
             }
         }
 
-        public class FrontendForDomainSettingsBuilder
+        public class FrontendForVisibilitySettingsBuilder
         {
             readonly BootstrapSettings _settings;
 
-            internal FrontendForDomainSettingsBuilder(BootstrapSettings settings)
+            internal FrontendForVisibilitySettingsBuilder(BootstrapSettings settings)
             {
                 _settings = settings;
             }

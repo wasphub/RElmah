@@ -5,7 +5,7 @@ using Xunit;
 
 namespace RElmah.Tests.Services
 {
-    public class InMemoryDomainStoreTester
+    public class InMemoryVisibilityStoreTester
     {
         const string ClusterName     = "c1";
         const string SourceName      = "a1";
@@ -15,7 +15,7 @@ namespace RElmah.Tests.Services
         public async Task AddCluster()
         {
             //Arrange
-            var sut = new InMemoryDomainStore();
+            var sut = new InMemoryVisibilityStore();
 
             //Act
             var answer = await sut.AddCluster(ClusterName);
@@ -40,7 +40,7 @@ namespace RElmah.Tests.Services
         public async Task AddClusterThenRemoveCluster()
         {
             //Arrange
-            var sut = new InMemoryDomainStore();
+            var sut = new InMemoryVisibilityStore();
 
             //Act
             var answer = await sut.AddCluster(ClusterName);
@@ -69,7 +69,7 @@ namespace RElmah.Tests.Services
         public async Task AddSource()
         {
             //Arrange
-            var sut = new InMemoryDomainStore();
+            var sut = new InMemoryVisibilityStore();
 
             //Act
             var answer = await sut.AddSource(SourceName, SourceName);
@@ -94,7 +94,7 @@ namespace RElmah.Tests.Services
         public async Task AddSourceThenRemoveSource()
         {
             //Arrange
-            var sut = new InMemoryDomainStore();
+            var sut = new InMemoryVisibilityStore();
 
             //Act
             var answer = await sut.AddSource(SourceName, SourceName);
@@ -123,7 +123,7 @@ namespace RElmah.Tests.Services
         public async Task AddUser()
         {
             //Arrange
-            var sut = new InMemoryDomainStore();
+            var sut = new InMemoryVisibilityStore();
 
             //Act
             var answer = await sut.AddUser(UserName);
@@ -148,7 +148,7 @@ namespace RElmah.Tests.Services
         public async Task AddUserThenAddToken()
         {
             //Arrange
-            var sut = new InMemoryDomainStore();
+            var sut = new InMemoryVisibilityStore();
             const string token = "foo";
 
             //Act
@@ -178,7 +178,7 @@ namespace RElmah.Tests.Services
         public async Task AddUserThenAddTokenThenRemoveToken()
         {
             //Arrange
-            var sut = new InMemoryDomainStore();
+            var sut = new InMemoryVisibilityStore();
             const string token = "foo";
 
             //Act
@@ -223,7 +223,7 @@ namespace RElmah.Tests.Services
         public async Task AddUserThenRemoveUser()
         {
             //Arrange
-            var sut = new InMemoryDomainStore();
+            var sut = new InMemoryVisibilityStore();
 
             //Act
             var answer = await sut.AddUser(UserName);
@@ -251,7 +251,7 @@ namespace RElmah.Tests.Services
         public async Task AddUserToCluster()
         {
             //Arrange
-            var sut = new InMemoryDomainStore();
+            var sut = new InMemoryVisibilityStore();
 
             //Act
             var cAnswer = await sut.AddCluster(ClusterName);
@@ -276,7 +276,7 @@ namespace RElmah.Tests.Services
         public async Task AddUserToClusterThenRemoveIt()
         {
             //Arrange
-            var sut = new InMemoryDomainStore();
+            var sut = new InMemoryVisibilityStore();
 
             //Act
             var cAnswer = await sut.AddCluster(ClusterName);
@@ -303,7 +303,7 @@ namespace RElmah.Tests.Services
         public async Task AddSourceToCluster()
         {
             //Arrange 
-            var sut = new InMemoryDomainStore();
+            var sut = new InMemoryVisibilityStore();
 
             //Act
             var cAnswer = await sut.AddCluster(ClusterName);
@@ -334,7 +334,7 @@ namespace RElmah.Tests.Services
         {
             //Arrange
 
-            var sut = new InMemoryDomainStore();
+            var sut = new InMemoryVisibilityStore();
 
             var cAnswer = await sut.AddCluster(ClusterName);
             var uAnswer = await sut.AddUser(UserName);

@@ -2,16 +2,16 @@
 using System.Linq;
 using System.Threading.Tasks;
 using RElmah.Common;
-using RElmah.Domain;
 using RElmah.Foundation;
+using RElmah.Visibility;
 
 namespace RElmah.Services.Nulls
 {
-    class NullDomainStore : IDomainStore
+    class NullVisibilityStore : IVisibilityStore
     {
-        private NullDomainStore() { }
+        private NullVisibilityStore() { }
 
-        public static IDomainStore Instance = new NullDomainStore();
+        public static IVisibilityStore Instance = new NullVisibilityStore();
 
         public Task<ValueOrError<Cluster>> AddCluster(string name, bool fromBackend = false)
         {

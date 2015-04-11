@@ -16,35 +16,35 @@ namespace RElmah.Queries.Backend
 
         public Task<IDisposable> Run(RunTargets targets)
         {
-            var clusters = targets.DomainPublisher.GetClustersSequence()
+            var clusters = targets.VisibilityPublisher.GetClustersSequence()
                 .Where(p => !_skipEventsFromBackend || !p.FromBackend)
                 .Subscribe(payload =>
             {
                 targets.BackendNotifier.Cluster(payload);
             });
 
-            var sources = targets.DomainPublisher.GetSourcesSequence()
+            var sources = targets.VisibilityPublisher.GetSourcesSequence()
                 .Where(p => !_skipEventsFromBackend || !p.FromBackend)
                 .Subscribe(payload =>
             {
                 targets.BackendNotifier.Source(payload);
             });
 
-            var users = targets.DomainPublisher.GetUsersSequence()
+            var users = targets.VisibilityPublisher.GetUsersSequence()
                 .Where(p => !_skipEventsFromBackend || !p.FromBackend)
                 .Subscribe(payload =>
             {
                 targets.BackendNotifier.User(payload);
             });
 
-            var clusterSources = targets.DomainPublisher.GetClusterSourcesSequence()
+            var clusterSources = targets.VisibilityPublisher.GetClusterSourcesSequence()
                 .Where(p => !_skipEventsFromBackend || !p.FromBackend)
                 .Subscribe(payload =>
             {
                 targets.BackendNotifier.ClusterSource(payload);
             });
 
-            var clusterUsers = targets.DomainPublisher.GetClusterUsersSequence()
+            var clusterUsers = targets.VisibilityPublisher.GetClusterUsersSequence()
                 .Where(p => !_skipEventsFromBackend || !p.FromBackend)
                 .Subscribe(payload =>
             {

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RElmah.Common;
-using RElmah.Domain.Fakes;
 using RElmah.Foundation;
 using RElmah.Services;
+using RElmah.Visibility.Fakes;
 using Xunit;
 
 namespace RElmah.Tests.Services
 {
-    public class DomainHolderTester
+    public class VisibilityHolderTester
     {
         const string ClusterName     = "c1";
         const string SourceName      = "a1";
@@ -26,7 +26,7 @@ namespace RElmah.Tests.Services
                 store.Add(n, Cluster.Create(n));
                 return store[n];
             });
-            var sut = new DomainHolder(new StubIDomainStore
+            var sut = new VisibilityHolder(new StubIVisibilityStore
             {
                 AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(adder(n))),
                 GetClusters      = () => Task.FromResult((IEnumerable<Cluster>)store.Values),
@@ -73,7 +73,7 @@ namespace RElmah.Tests.Services
             });
             var remover = new Func<string, bool>(store.Remove);
 
-            var sut = new DomainHolder(new StubIDomainStore
+            var sut = new VisibilityHolder(new StubIVisibilityStore
             {
                 AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(adder(n))),
                 GetClusters = () => Task.FromResult((IEnumerable<Cluster>)store.Values),
@@ -126,7 +126,7 @@ namespace RElmah.Tests.Services
                 store.Add(n, Source.Create(n, d));
                 return store[n];
             });
-            var sut = new DomainHolder(new StubIDomainStore
+            var sut = new VisibilityHolder(new StubIVisibilityStore
             {
                 AddSourceStringStringBoolean = (n, d, _) => Task.FromResult(new ValueOrError<Source>(adder(n, d))),
                 GetSources = () => Task.FromResult((IEnumerable<Source>)store.Values),
@@ -173,7 +173,7 @@ namespace RElmah.Tests.Services
             });
             var remover = new Func<string, bool>(store.Remove);
 
-            var sut = new DomainHolder(new StubIDomainStore
+            var sut = new VisibilityHolder(new StubIVisibilityStore
             {
                 AddSourceStringStringBoolean = (n, d, _) => Task.FromResult(new ValueOrError<Source>(adder(n, d))),
                 GetSources = () => Task.FromResult((IEnumerable<Source>)store.Values),
@@ -226,7 +226,7 @@ namespace RElmah.Tests.Services
                 store.Add(n, User.Create(n));
                 return store[n];
             });
-            var sut = new DomainHolder(new StubIDomainStore
+            var sut = new VisibilityHolder(new StubIVisibilityStore
             {
                 AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(adder(n))),
                 GetUsers = () => Task.FromResult((IEnumerable<User>)store.Values),
@@ -273,7 +273,7 @@ namespace RElmah.Tests.Services
             });
             var remover = new Func<string, bool>(store.Remove);
 
-            var sut = new DomainHolder(new StubIDomainStore
+            var sut = new VisibilityHolder(new StubIVisibilityStore
             {
                 AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(adder(n))),
                 GetUsers = () => Task.FromResult((IEnumerable<User>)store.Values),
@@ -342,7 +342,7 @@ namespace RElmah.Tests.Services
                 var user = store.Users[store.ClusterUsers[c][0]];
                 return new Relationship<Cluster, User>(Cluster.Create(c).SetUser(user), user);
             });
-            var sut = new DomainHolder(new StubIDomainStore
+            var sut = new VisibilityHolder(new StubIVisibilityStore
             {
                 AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
                 AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(uAdder(n))),
@@ -411,7 +411,7 @@ namespace RElmah.Tests.Services
                 var user = store.Users[u];
                 return new Relationship<Cluster, User>(Cluster.Create(c), user);
             });
-            var sut = new DomainHolder(new StubIDomainStore
+            var sut = new VisibilityHolder(new StubIVisibilityStore
             {
                 AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
                 AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(uAdder(n))),
@@ -493,7 +493,7 @@ namespace RElmah.Tests.Services
                 store.Clusters[c] = cluster;
                 return new Relationship<Cluster, Source>(cluster, app);
             });
-            var sut = new DomainHolder(new StubIDomainStore
+            var sut = new VisibilityHolder(new StubIVisibilityStore
             {
                 AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
                 AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(uAdder(n))),
@@ -595,7 +595,7 @@ namespace RElmah.Tests.Services
                 var user = store.Sources[u];
                 return new Relationship<Cluster, Source>(Cluster.Create(c), user);
             });
-            var sut = new DomainHolder(new StubIDomainStore
+            var sut = new VisibilityHolder(new StubIVisibilityStore
             {
                 AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
                 AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(uAdder(n))),

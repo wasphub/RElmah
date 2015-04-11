@@ -1,5 +1,5 @@
 using System;
-using RElmah.Domain;
+using RElmah.Visibility;
 using RElmah.Errors;
 using RElmah.Middleware.Bootstrapping.Builder;
 using RElmah.Notifiers;
@@ -16,18 +16,18 @@ namespace RElmah.Middleware.Bootstrapping
 {
     public static class Bootstrapper
     {
-        public static T Prepare<T>(this IRegistry registry, IFrontendNotifier frontendNotifier, Func<string, IErrorsInbox, IDomainPersistor, IBackendNotifier> frontendBackendNotifierCreator, Func<IBackendNotifier> backendFrontendNotifierCreator, Func<IFrontendQueriesFactory, IBackendQueriesFactory, IErrorsInbox, IDomainPersistor, IBackendNotifier, T> resultor, IIdentityProvider identityProvider, BootstrapSettings settings)
+        public static T Prepare<T>(this IRegistry registry, IFrontendNotifier frontendNotifier, Func<string, IErrorsInbox, IVisibilityPersistor, IBackendNotifier> frontendBackendNotifierCreator, Func<IBackendNotifier> backendFrontendNotifierCreator, Func<IFrontendQueriesFactory, IBackendQueriesFactory, IErrorsInbox, IVisibilityPersistor, IBackendNotifier, T> resultor, IIdentityProvider identityProvider, BootstrapSettings settings)
         {
             var ebl = new InMemoryErrorsBacklog();
             var fei = new QueuedErrorsInbox(ebl);
 
             var bei = new QueuedErrorsInbox();   //for backend only
 
-            var ds  = settings.DomainStoreBuilder != null
-                    ? settings.DomainStoreBuilder()
-                    : new InMemoryDomainStore();
+            var ds  = settings.VisibilityStoreBuilder != null
+                    ? settings.VisibilityStoreBuilder()
+                    : new InMemoryVisibilityStore();
 
-            var dh  = new DomainHolder(ds);
+            var dh  = new VisibilityHolder(ds);
 
             var fqf = new QueriesFactory(fei, bei, ebl, dh, dh, frontendNotifier,
                 () => new ErrorsQuery(),
@@ -46,9 +46,9 @@ namespace RElmah.Middleware.Bootstrapping
             //Infrastructure
             registry.Register(typeof(IErrorsBacklog),          () => ebl);
             registry.Register(typeof(IErrorsInbox),            () => fei);
-            registry.Register(typeof(IDomainPublisher),        () => dh);
-            registry.Register(typeof(IDomainPersistor),        () => dh);
-            registry.Register(typeof(IDomainStore),            () => ds);
+            registry.Register(typeof(IVisibilityPublisher),        () => dh);
+            registry.Register(typeof(IVisibilityPersistor),        () => dh);
+            registry.Register(typeof(IVisibilityStore),            () => ds);
             registry.Register(typeof(IFrontendQueriesFactory), () => fqf);
             registry.Register(typeof(IBackendQueriesFactory),  () => bqf);
 
