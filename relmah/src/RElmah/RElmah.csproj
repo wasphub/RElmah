@@ -134,10 +134,8 @@
     <Compile Include="Foundation\ConcurrentReference.cs" />
     <Compile Include="Middleware\RandomSourceErrorsMiddleware.cs" />
     <Compile Include="Middleware\Router.cs" />
-    <Compile Include="Models\Settings\BootstrapperSettings.cs" />
     <Compile Include="Models\Settings\DomainSettings.cs" />
     <Compile Include="Models\Settings\ErrorsSettings.cs" />
-    <Compile Include="Models\Settings\Settings.cs" />
     <Compile Include="Foundation\Relationship.cs" />
     <Compile Include="Foundation\ValueOrError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
