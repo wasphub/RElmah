@@ -12,18 +12,6 @@ namespace RElmah.Host.Extensions.AppBuilder
 {
     public static class AppBuilderExtensions
     {
-        static IAppBuilder UseRElmahMiddleware<T>(this IAppBuilder builder, params object[] args)
-        {
-            return builder.Use(typeof(T), args);
-        }
-
-        public static IAppBuilder RunSignalR(this IAppBuilder builder)
-        {
-            OwinExtensions.RunSignalR(builder);
-
-            return builder;
-        }
-
         public static IAppBuilder UseRElmah(this IAppBuilder builder, Func<BootstrapSettingsBuilder, BootstrapSettings> bootstrapper)
         {
             var settings = bootstrapper(new BootstrapSettingsBuilder());
@@ -72,6 +60,18 @@ namespace RElmah.Host.Extensions.AppBuilder
             bp.bqf.Setup();
 
             return builder;
+        }
+
+        public static IAppBuilder RunSignalR(this IAppBuilder builder)
+        {
+            OwinExtensions.RunSignalR(builder);
+
+            return builder;
+        }
+
+        static IAppBuilder UseRElmahMiddleware<T>(this IAppBuilder builder, params object[] args)
+        {
+            return builder.Use(typeof(T), args);
         }
     }
 }
