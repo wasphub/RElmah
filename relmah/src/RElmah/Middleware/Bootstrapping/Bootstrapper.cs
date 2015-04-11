@@ -10,6 +10,7 @@ using RElmah.Queries.Frontend;
 using RElmah.Services;
 using RElmah.Services.Inbox;
 using RElmah.Services.Nulls;
+using ErrorsQuery = RElmah.Queries.Backend.ErrorsQuery;
 using QueriesFactory = RElmah.Queries.Frontend.QueriesFactory;
 
 namespace RElmah.Middleware.Bootstrapping
@@ -30,7 +31,7 @@ namespace RElmah.Middleware.Bootstrapping
             var dh  = new VisibilityHolder(ds);
 
             var fqf = new QueriesFactory(fei, bei, ebl, dh, dh, frontendNotifier,
-                () => new ErrorsQuery(),
+                () => new Queries.Frontend.ErrorsQuery(),
                 () => new RecapsQuery());
 
             var ben = settings.Side == Side.Frontend && !string.IsNullOrWhiteSpace(settings.TargetBackendEndpoint)
@@ -40,8 +41,8 @@ namespace RElmah.Middleware.Bootstrapping
                       : NullBackendNotifier.Instance;
 
             var bqf = new Queries.Backend.QueriesFactory(fei, ebl, dh, dh, ben,
-                () => new ErrorsBusQuery(),
-                () => new VisibilityBusQuery(settings.Side == Side.Frontend));
+                () => new ErrorsQuery(),
+                () => new VisibilityQuery(settings.Side == Side.Frontend));
 
             //Infrastructure
             registry.Register(typeof(IErrorsBacklog),          () => ebl);

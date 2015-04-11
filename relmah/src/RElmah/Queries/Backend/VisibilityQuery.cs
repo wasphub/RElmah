@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace RElmah.Queries.Backend
 {
-    public class VisibilityBusQuery : IBackendQuery
+    public class VisibilityQuery : IBackendQuery
     {
         private readonly bool _skipEventsFromBackend;
 
-        public VisibilityBusQuery(bool skipEventsFromBackend = false)
+        public VisibilityQuery(bool skipEventsFromBackend = false)
         {
             _skipEventsFromBackend = skipEventsFromBackend;
         }
