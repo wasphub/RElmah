@@ -1,7 +1,9 @@
 RElmah - Reactive ELMAH
 ======
 
-If you already used [ElmahR] in the past, you already know what **RElmah** is about. We want to monitor applications and receive real time notifications about unhandled exceptions. But the way things are done behind the scenes is totally redesigned to offer a true **reactive** experience to the developer. RElmah has clear goals: being a scalable streaming system for errors, with a modular and extensible design, and nevertheless minimal and simple.
+If you already used [ElmahR] in the past, you already know what **RElmah** is about. We want to monitor applications and receive real time notifications about unhandled exceptions. But the way things are done behind the scenes is totally redesigned to offer a true **reactive** experience to the developer.
+
+RElmah has clear goals: being a scalable streaming system for errors, with a modular and extensible design, and nevertheless minimal and simple.
 
 How is it done?
 ------
