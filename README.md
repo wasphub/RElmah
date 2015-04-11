@@ -32,12 +32,12 @@ You get the idea :)
 Where we are?
 ------
 
-Current version is 0.6, which means some foundations are there, but it's not really ready to be used yet in production. We have:
+Current version is 0.6, which means some foundations are there, but it's not really ready to be used yet in production. The main features of the current implementation are:
 
-* Much more reactive structure have been added to the server side logic
-* Introduction of *backend* error and configuration notifications to allow scalability
-* Cleaner JS client
-* More unit tests, with a decent, although not optimal, coverage
+* A deeply reactive-based structure pervades the server side logic: errors streams and configuration deltas are all managed through queries over observables
+* A *backend* system allows for horizontal scalability
+* Clean .NET and  JS clients are available, sharing a very similar API and again providing observable streams of information
+* A fluent API is available in order to bootstrap RElmah correctly
 
 You might want to have a look and see if you like what's happening, and maybe contribute with ideas or coding. And I just added a [Trello] board where I'll try to keep ideas and progress up to date.
 
