@@ -6,7 +6,7 @@ If you already used [ElmahR] in the past, you already know what **RElmah** is ab
 How is it done?
 ------
 
-RElmah has clear goals: being a scalable streaming system for errors, with a modular and extensible design and nevertheless minimal and simple. In order to achieve those goals a strong focus has been put on specific characteristics:
+RElmah has clear goals: being a scalable streaming system for errors, with a modular and extensible design, and nevertheless minimal and simple. In order to achieve those goals a strong focus has been put on specific characteristics:
 
 - clean separation between server and client portions
 - true and independent client libraries for both JavaScript and .NET
