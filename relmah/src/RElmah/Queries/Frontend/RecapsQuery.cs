@@ -29,32 +29,36 @@ namespace RElmah.Queries.Frontend
                 };
 
             //Deltas
+
             var clusterSources =
                 from p in targets.VisibilityPublisher.GetClusterSourcesSequence()
+                let sources = p.Target.Primary.Sources
                 let deltas = p.Target.Secondary.ToSingleton()
                 let target = p.Target.Secondary.SourceId
                 from u in p.Target.Primary.Users
                 where u.Name == name
                 select new
                 {
-                    Sources = p.Target.Primary.Sources,
+                    Sources   = sources,
                     Additions = p.Type == DeltaType.Added   ? deltas : Enumerable.Empty<Source>(),
                     Removals  = p.Type == DeltaType.Removed ? deltas : Enumerable.Empty<Source>()
                 };
+
             var userSources =
                 from p in targets.VisibilityPublisher.GetClusterUsersSequence()
-                let deltas = p.Target.Primary.Sources
+                let sources = p.Target.Primary.Sources
                 where p.Target.Secondary.Name == name
                 select new
                 {
-                    Sources = deltas,
-                    Additions    = p.Type == DeltaType.Added   ? deltas : Enumerable.Empty<Source>(),
-                    Removals     = p.Type == DeltaType.Removed ? deltas : Enumerable.Empty<Source>()
+                    Sources   = sources,
+                    Additions = p.Type == DeltaType.Added   ? sources : Enumerable.Empty<Source>(),
+                    Removals  = p.Type == DeltaType.Removed ? sources : Enumerable.Empty<Source>()
                 };
-            var sources = clusterSources.Merge(userSources);
+
+            var mergedSources = clusterSources.Merge(userSources);
 
             //Stream
-            return rs.Concat(sources).Subscribe(async payload =>
+            return rs.Concat(mergedSources).Subscribe(async payload =>
             {
                 var recap = await targets.ErrorsBacklog.GetSourcesRecap(payload.Sources, xs => xs.Count());
                 if (!recap.HasValue) return;
