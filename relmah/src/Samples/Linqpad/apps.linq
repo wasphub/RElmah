@@ -11,9 +11,14 @@
 
 var c = new Connection("http://localhost:9100/");
 
-var q = 
-	from app in c.States
+var apps = 
+	from app in c.Sources
 	select app;
-q.Subscribe(o => o.Dump());
+apps.Subscribe(o => o.Dump());
+
+var sts = 
+	from s in c.States
+	select s;
+sts.Subscribe(o => o.Dump());
 
 await c.Start(new ClientToken("u01"));
