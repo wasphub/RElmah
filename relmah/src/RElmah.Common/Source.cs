@@ -1,6 +1,6 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
-namespace RElmah.Models
+namespace RElmah.Common
 {
     public class Source : ISerializable
     {

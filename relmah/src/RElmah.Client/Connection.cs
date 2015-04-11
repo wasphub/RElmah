@@ -92,27 +92,27 @@ namespace RElmah.Client
 
         public class SourceOperation
         {
-            public readonly string SourceId;
+            public readonly Source Source;
             public readonly SourceOperationType Type;
 
-            public SourceOperation(string sourceId, SourceOperationType type)
+            public SourceOperation(Source source, SourceOperationType type)
             {
-                SourceId = sourceId;
-                Type     = type;
+                Source = source;
+                Type   = type;
             }
 
             public override int GetHashCode()
             {
                 unchecked
                 {
-                    return ((SourceId != null ? SourceId.GetHashCode() : 0) * 397) ^ (Type.GetHashCode());
+                    return ((Source != null ? Source.GetHashCode() : 0) * 397) ^ (Type.GetHashCode());
                 }
             }
 
             public bool Equals(SourceOperation target)
             {
                 if (target == null) return false;
-                return string.Equals(SourceId, target.SourceId) && Type == target.Type;
+                return string.Equals(Source.SourceId, target.Source.SourceId) && Type == target.Type;
             }
             public override bool Equals(object obj)
             {
@@ -173,19 +173,19 @@ namespace RElmah.Client
 
             //sources visibility
             var sources = new HashSet<string>();
-            errorsProxy.On<IEnumerable<string>, IEnumerable<string>>(
+            errorsProxy.On<IEnumerable<Source>, IEnumerable<Source>>(
                 "sources",
                 (es, rs) =>
                 {
-                    foreach (var e in es.Where(e => !sources.Contains(e)))
+                    foreach (var e in es.Where(e => !sources.Contains(e.SourceId)))
                     {
-                        _sources.OnNext(new SourceOperation(e,  SourceOperationType.Added));
-                        sources.Add(e);
+                        _sources.OnNext(new SourceOperation(e, SourceOperationType.Added));
+                        sources.Add(e.SourceId);
                     }
-                    foreach (var r in rs.Where(e => sources.Contains(e)))
+                    foreach (var r in rs.Where(e => sources.Contains(e.SourceId)))
                     {
                         _sources.OnNext(new SourceOperation(r, SourceOperationType.Removed));
-                        sources.Remove(r);
+                        sources.Remove(r.SourceId);
                     } 
                 });
 

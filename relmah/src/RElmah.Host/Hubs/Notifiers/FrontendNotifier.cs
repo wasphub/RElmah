@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using RElmah.Common;
+using RElmah.Models;
 using RElmah.Notifiers;
 
 namespace RElmah.Host.Hubs.Notifiers
@@ -16,7 +17,7 @@ namespace RElmah.Host.Hubs.Notifiers
             ErrorsHub.Error(user, payload);
         }
 
-        public void UserSources(string user, IEnumerable<string> added, IEnumerable<string> removed)
+        public void UserSources(string user, IEnumerable<Source> added, IEnumerable<Source> removed)
         {
             ErrorsHub.UserSources(user, added, removed);
         }

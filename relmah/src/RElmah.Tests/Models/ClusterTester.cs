@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using RElmah.Common;
 using RElmah.Models;
 using Xunit;
 

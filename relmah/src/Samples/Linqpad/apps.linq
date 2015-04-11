@@ -10,10 +10,10 @@
 </Query>
 
 var c = new Connection("http://localhost:9100/");
-await c.Start();
+await c.Start(new ClientToken("u01"));
 
 var q = 
-	from app in c.Applications
-	select new { app.Name, app.Type };
+	from app in c.Sources
+	select app;
 	 
-q.Subscribe(o => new { o.Name, o.Type }.Dump());
+q.Subscribe(o => o.Dump());

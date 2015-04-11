@@ -20,34 +20,40 @@
                 $groups = $('#groups'),
                 $recaps = $('#recaps');
 
-            //streams
-
             r.starting(function() {
-                var errors     = r.getErrors(),
+
+                //streams
+
+                var errors = r.getErrors(),
                     apps       = r.getApplications(),
                     errorTypes = r.getErrorTypes(),
                     recaps     = r.getRecaps();
 
                 //subscriptions
 
+                //app deltas
+
                 apps
                     .filter(function (a) { return a.action === 'added'; })
                     .subscribe(function (app) {
-                        var name = app.name;
-                        if (!$('#app-' + name).length)
+                        var id = app.source.SourceId,
+                            desc = app.source.Description;
+                        if (!$('#app-' + id).length)
                             $('<li/>')
-                                .attr('id', 'app-' + name)
-                                .append($('<p/>').text(name))
-                                .append($('<ul/>').attr('id', 'errors-' + name))
+                                .attr('id', 'app-' + id)
+                                .append($('<p/>').text(desc))
+                                .append($('<ul/>').attr('id', 'errors-' + id))
                                 .appendTo($apps);
-                        $('#app-' + name).css({ 'background-color': 'yellow' });
+                        $('#app-' + id).css({ 'background-color': 'yellow' });
                     });
 
                 apps
                     .filter(function (a) { return a.action === 'removed'; })
                     .subscribe(function (app) {
-                        $('#app-' + app.name).css({ 'background-color': 'grey' });
+                        $('#app-' + app.source.SourceId).css({ 'background-color': 'grey' });
                     });
+
+                //errors
 
                 errors
                     .subscribe(function (e) {
@@ -55,6 +61,8 @@
                             .append($('<span/>').text(e.Error.Message))
                             .prependTo($('#errors-' + e.SourceId));
                     });
+
+                //error types
 
                 errorTypes
                     .subscribe(function (et) {
@@ -67,6 +75,8 @@
                                 g.text(et.key.app + '-' + et.key.type + ': ' + e);
                             });
                     });
+
+                //recaps
 
                 recaps
                     .subscribe(function (et) {

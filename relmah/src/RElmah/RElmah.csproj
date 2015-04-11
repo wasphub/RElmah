@@ -136,7 +136,6 @@
     <Compile Include="Foundation\ConcurrentReference.cs" />
     <Compile Include="Middleware\RandomSourceErrorsMiddleware.cs" />
     <Compile Include="Middleware\Router.cs" />
-    <Compile Include="Models\Source.cs" />
     <Compile Include="Models\Cluster.cs" />
     <Compile Include="Models\Settings\BootstrapperSettings.cs" />
     <Compile Include="Models\Settings\DomainSettings.cs" />

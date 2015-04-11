@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.Serialization;
+using RElmah.Common;
 using RElmah.Extensions;
 
 namespace RElmah.Models
@@ -111,7 +112,7 @@ namespace RElmah.Models
 
         public Cluster RemoveUser(User user)
         {
-            return RemoveUser(user.Name);
+            return RemoveUser((string) user.Name);
         }
 
         public Cluster RemoveUser(string name)
@@ -121,7 +122,7 @@ namespace RElmah.Models
 
         public bool HasUser(string user)
         {
-            return _users.Keys.Contains(user);
+            return Enumerable.Contains(_users.Keys, user);
         }
 
         #region Serialization
@@ -129,8 +130,8 @@ namespace RElmah.Models
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Name", Name);
-            info.AddValue("_sources", _sources);
-            info.AddValue("_users", _users);
+            info.AddValue((string) "_sources", (object) _sources);
+            info.AddValue((string) "_users", (object) _users);
         }
 
         public Cluster(SerializationInfo info, StreamingContext context)

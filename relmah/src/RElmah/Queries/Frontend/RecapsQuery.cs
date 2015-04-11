@@ -62,8 +62,7 @@ namespace RElmah.Queries.Frontend
 
                 targets.FrontendNotifier.Recap(name, recap.Value);
                 targets.FrontendNotifier.UserSources(name,
-                    payload.Additions.Select(a => a.SourceId),
-                    payload.Removals.Select(a => a.SourceId));
+                    payload.Additions, payload.Removals);
             });
         }
 

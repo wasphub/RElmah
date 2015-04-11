@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using RElmah.Common;
+using RElmah.Models;
 using RElmah.Queries;
 
 namespace RElmah.Host.Hubs
@@ -22,15 +23,7 @@ namespace RElmah.Host.Hubs
 
         public override Task OnConnected()
         {
-            var sources = Enumerable.Empty<string>();
-
-            _frontendQueriesFactory.Setup(_userIdProvider.GetUserId(Context.Request), Context.ConnectionId, a =>
-            {
-                sources = sources.Concat(new[] { a });
-            });
-
-            Clients.Caller
-                .sources(sources);
+            _frontendQueriesFactory.Setup(_userIdProvider.GetUserId(Context.Request), Context.ConnectionId, a => {});
 
             return base.OnConnected();
         }
@@ -52,7 +45,7 @@ namespace RElmah.Host.Hubs
             GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>().Clients.User(user).error(payload);
         }
 
-        public static void UserSources(string user, IEnumerable<string> added, IEnumerable<string> removed)
+        public static void UserSources(string user, IEnumerable<Source> added, IEnumerable<Source> removed)
         {
             GlobalHost.ConnectionManager.GetHubContext<ErrorsHub>().Clients.User(user)
                 .sources(added, removed);

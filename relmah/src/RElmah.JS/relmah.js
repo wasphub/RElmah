@@ -36,12 +36,14 @@
                     });
 
                     proxy.on('sources', function (existingApps, removedApps) {
-                        existingApps.forEach(function(k) {
-                            !apps[k] && sources.onNext({ name: k, action: 'added' });
+                        existingApps.forEach(function (s) {
+                            var k = s.SourceId;
+                            !apps[k] && sources.onNext({ source: s, action: 'added' });
                             apps[k] = true;
                         });
-                        removedApps && removedApps.forEach(function (k) {
-                            apps[k] && sources.onNext({ name: k, action: 'removed' });
+                        removedApps && removedApps.forEach(function (s) {
+                            var k = s.SourceId;
+                            apps[k] && sources.onNext({ source: s, action: 'removed' });
                             apps[k] = false;
                         });
                     });
