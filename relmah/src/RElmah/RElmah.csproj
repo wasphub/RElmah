@@ -115,8 +115,6 @@
     </Compile>
     <Compile Include="Contracts.cs" />
     <Compile Include="Extensions\BooleanExtensions.cs" />
-    <Compile Include="Extensions\DictionaryExtensions.cs" />
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\OwinExtensions.cs" />
     <Compile Include="Extensions\DisposableExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -136,12 +134,10 @@
     <Compile Include="Foundation\ConcurrentReference.cs" />
     <Compile Include="Middleware\RandomSourceErrorsMiddleware.cs" />
     <Compile Include="Middleware\Router.cs" />
-    <Compile Include="Models\Cluster.cs" />
     <Compile Include="Models\Settings\BootstrapperSettings.cs" />
     <Compile Include="Models\Settings\DomainSettings.cs" />
     <Compile Include="Models\Settings\ErrorsSettings.cs" />
     <Compile Include="Models\Settings\Settings.cs" />
-    <Compile Include="Models\User.cs" />
     <Compile Include="Foundation\Relationship.cs" />
     <Compile Include="Foundation\ValueOrError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

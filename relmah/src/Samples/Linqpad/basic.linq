@@ -10,11 +10,11 @@
 </Query>
 
 var c = new Connection("http://localhost:9100/");
-await c.Start();
+await c.Start(new ClientToken("u01"));
 
 var q = 
 	from error in c.Errors
 	where error.Error.Type.IndexOf("Argument", StringComparison.OrdinalIgnoreCase) > -1
 	select new { error.Error, error.Error.Time, error.Error.Type };
 	  
-q.DumpLatest(true);
+await q.DumpLatest(true);

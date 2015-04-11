@@ -7,6 +7,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using RElmah.Common;
+using RElmah.Common.Extensions;
 using RElmah.Extensions;
 
 namespace RElmah.Client

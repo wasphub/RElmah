@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RElmah.Extensions
+namespace RElmah.Common.Extensions
 {
     public static class DictionaryExtensions
     {

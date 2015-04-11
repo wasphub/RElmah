@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using Newtonsoft.Json;
+using RElmah.Common;
+using RElmah.Common.Extensions;
 using RElmah.Extensions;
 
 namespace RElmah.Middleware

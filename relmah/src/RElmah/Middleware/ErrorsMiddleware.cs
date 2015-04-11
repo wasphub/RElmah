@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using RElmah.Common;
+using RElmah.Common.Extensions;
 using RElmah.Errors;
-using RElmah.Extensions;
 using RElmah.Models.Settings;
 
 namespace RElmah.Middleware

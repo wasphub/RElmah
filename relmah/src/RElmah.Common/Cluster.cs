@@ -2,10 +2,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.Serialization;
-using RElmah.Common;
-using RElmah.Extensions;
+using RElmah.Common.Extensions;
 
-namespace RElmah.Models
+namespace RElmah.Common
 {
     public class Cluster : ISerializable
     {

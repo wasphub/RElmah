@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using RElmah.Extensions;
+using RElmah.Common.Extensions;
 
-namespace RElmah.Models
+namespace RElmah.Common
 {
     public class User : ISerializable
     {
@@ -27,12 +27,12 @@ namespace RElmah.Models
 
         public User AddToken(string token)
         {
-            return new User(Name, Tokens.EmptyIfNull().Concat(token.ToSingleton()));
+            return new User(Name, Enumerable.Concat<string>(Tokens.EmptyIfNull(), token.ToSingleton()));
         }
 
         public User RemoveToken(string token)
         {
-            return new User(Name, Tokens.EmptyIfNull().Except(token.ToSingleton()));
+            return new User(Name, Enumerable.Except<string>(Tokens.EmptyIfNull(), token.ToSingleton()));
         }
 
         #region Serialization
