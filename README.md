@@ -88,7 +88,7 @@ This is just a short list of stuff already there, but several other ideas are th
 
 * Introduction of [Akka.NET] for higher scalability and fault tolerance while receiving errors
 * Support for [ASP.NET 5]
-* Implementation of satellite services (like persistence), and hopefully a better default dashboard too
+* Implementation of satellite services (like persistence or IoC containers integration), and hopefully a better default dashboard too
 * Improving unit tests: there are already several, but more are needed, and I'll get rid of Microsoft Fakes...
 * And what about Nuget packages for the server portion and the .NET client, and maybe even a Bower one for the JS client? I know, we'll get there too... :)
 
