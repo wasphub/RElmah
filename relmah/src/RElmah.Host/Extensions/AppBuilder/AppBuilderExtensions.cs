@@ -7,7 +7,6 @@ using RElmah.Host.Services;
 using RElmah.Middleware;
 using RElmah.Middleware.Bootstrapping;
 using RElmah.Middleware.Bootstrapping.Builder;
-using RElmah.Models.Settings;
 
 namespace RElmah.Host.Extensions.AppBuilder
 {
@@ -64,20 +63,11 @@ namespace RElmah.Host.Extensions.AppBuilder
 
             if (settings.ForErrors)
                 builder = settings.UseRandomizer
-                    ? builder.UseRElmahMiddleware<RandomSourceErrorsMiddleware>(bp.ei, bp.dh, new ErrorsSettings
-                    {
-                        Prefix = settings.ErrorsPrefix
-                    })
-                    : builder.UseRElmahMiddleware<ErrorsMiddleware>(bp.ei, new ErrorsSettings
-                    {
-                        Prefix = settings.ErrorsPrefix
-                    });
+                    ? builder.UseRElmahMiddleware<RandomSourceErrorsMiddleware>(bp.ei, bp.dh, settings.ErrorsPrefix)
+                    : builder.UseRElmahMiddleware<ErrorsMiddleware>(bp.ei, settings.ErrorsPrefix);
 
             if (settings.ForDomain)
-                builder = builder.UseRElmahMiddleware<DomainMiddleware>(bp.dh, new DomainSettings
-                {
-                    Prefix = settings.DomainPrefix
-                });
+                builder = builder.UseRElmahMiddleware<DomainMiddleware>(bp.dh, settings.DomainPrefix);
 
             bp.bqf.Setup();
 

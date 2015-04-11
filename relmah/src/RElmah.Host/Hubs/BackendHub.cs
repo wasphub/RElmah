@@ -2,7 +2,6 @@
 using Microsoft.AspNet.SignalR.Hubs;
 using RElmah.Common;
 using RElmah.Foundation;
-using RElmah.Models;
 
 namespace RElmah.Host.Hubs
 {

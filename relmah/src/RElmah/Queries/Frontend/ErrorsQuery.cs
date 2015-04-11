@@ -6,7 +6,6 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using RElmah.Common;
 using RElmah.Foundation;
-using RElmah.Models;
 
 namespace RElmah.Queries.Frontend
 {

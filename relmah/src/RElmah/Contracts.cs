@@ -6,7 +6,6 @@ using RElmah.Common;
 using RElmah.Domain;
 using RElmah.Errors;
 using RElmah.Foundation;
-using RElmah.Models;
 using RElmah.Notifiers;
 using RElmah.Publishers;
 

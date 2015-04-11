@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using RElmah.Common;
 using RElmah.Domain;
 using RElmah.Foundation;
-using RElmah.Models;
 
 namespace RElmah.Services
 {

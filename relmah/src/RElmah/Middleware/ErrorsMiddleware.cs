@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using RElmah.Common;
 using RElmah.Common.Extensions;
 using RElmah.Errors;
-using RElmah.Models.Settings;
 
 namespace RElmah.Middleware
 {
@@ -18,12 +17,12 @@ namespace RElmah.Middleware
             return Router.Invoke(context, Next.Invoke);
         }
 
-        public ErrorsMiddleware(OwinMiddleware next, IErrorsInbox inbox, ErrorsSettings settings)
+        public ErrorsMiddleware(OwinMiddleware next, IErrorsInbox inbox, string prefix)
             : base(next)
         {
             Router.Build(builder => builder
 
-                .WithPrefix(settings.Prefix)
+                .WithPrefix(prefix)
 
                 .ForRoute("post-error", route => route
                     .Post(async (environment, keys, form) =>

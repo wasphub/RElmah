@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Owin;
 using RElmah.Domain;
 using RElmah.Errors;
-using RElmah.Models.Settings;
 
 namespace RElmah.Middleware
 {
@@ -13,8 +12,8 @@ namespace RElmah.Middleware
         private readonly IDomainPersistor _domainPersistor;
         private readonly Random _random = new Random();
 
-        public RandomSourceErrorsMiddleware(OwinMiddleware next, IErrorsInbox inbox, IDomainPersistor domainPersistor, ErrorsSettings settings)
-            : base(next, inbox, settings)
+        public RandomSourceErrorsMiddleware(OwinMiddleware next, IErrorsInbox inbox, IDomainPersistor domainPersistor, string prefix)
+            : base(next, inbox, prefix)
         {
             _domainPersistor = domainPersistor;
         }

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using RElmah.Common;
 using RElmah.Domain.Fakes;
 using RElmah.Foundation;
-using RElmah.Models;
 using RElmah.Services;
 using Xunit;
 

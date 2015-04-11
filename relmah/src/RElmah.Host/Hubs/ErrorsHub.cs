@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using RElmah.Common;
-using RElmah.Models;
 using RElmah.Queries;
 
 namespace RElmah.Host.Hubs

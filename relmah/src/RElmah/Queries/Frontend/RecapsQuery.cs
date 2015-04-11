@@ -7,9 +7,7 @@ using RElmah.Common;
 using RElmah.Common.Extensions;
 using RElmah.Domain;
 using RElmah.Errors;
-using RElmah.Extensions;
 using RElmah.Foundation;
-using RElmah.Models;
 
 namespace RElmah.Queries.Frontend
 {

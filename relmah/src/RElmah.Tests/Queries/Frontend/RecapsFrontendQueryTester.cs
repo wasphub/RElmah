@@ -9,7 +9,6 @@ using RElmah.Common;
 using RElmah.Domain.Fakes;
 using RElmah.Errors.Fakes;
 using RElmah.Foundation;
-using RElmah.Models;
 using RElmah.Notifiers.Fakes;
 using RElmah.Publishers.Fakes;
 using RElmah.Queries;

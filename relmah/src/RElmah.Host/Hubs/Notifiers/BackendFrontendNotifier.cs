@@ -1,7 +1,6 @@
 using Microsoft.AspNet.SignalR;
 using RElmah.Common;
 using RElmah.Foundation;
-using RElmah.Models;
 using RElmah.Notifiers;
 
 namespace RElmah.Host.Hubs.Notifiers
