@@ -34,10 +34,10 @@
                 //app deltas
 
                 apps
-                    .filter(function (a) { return a.action === 'added'; })
+                    .filter(function (a) { return a.Action === 'added'; })
                     .subscribe(function (app) {
-                        var id = app.source.SourceId,
-                            desc = app.source.Description;
+                        var id = app.Source.SourceId,
+                            desc = app.Source.Description;
                         if (!$('#app-' + id).length)
                             $('<li/>')
                                 .attr('id', 'app-' + id)
@@ -48,9 +48,9 @@
                     });
 
                 apps
-                    .filter(function (a) { return a.action === 'removed'; })
+                    .filter(function (a) { return a.Action === 'removed'; })
                     .subscribe(function (app) {
-                        $('#app-' + app.source.SourceId).css({ 'background-color': 'grey' });
+                        $('#app-' + app.Source.SourceId).css({ 'background-color': 'grey' });
                     });
 
                 //errors
@@ -72,7 +72,7 @@
                         et
                             .scan(0, function (a) { return a + 1; })
                             .subscribe(function(e) {
-                                g.text(et.key.app + '-' + et.key.type + ': ' + e);
+                                g.text(et.key.SourceId + '-' + et.key.Type + ': ' + e);
                             });
                     });
 
@@ -85,7 +85,7 @@
 
                         et
                             .subscribe(function(e) {
-                                g.text(et.key.app + '-' + et.key.type + ': ' + e.measure);
+                                g.text(et.key.SourceId + '-' + et.key.Type + ': ' + e.Measure);
                             });
                     });
             });

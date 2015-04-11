@@ -14,9 +14,9 @@
                 valueOf = function () { return JSON.stringify(this); },
                 getErrorTypes = function () {
                     return errors.groupBy(
-                        function (e)    { return { app: e.SourceId, type: e.Error.Type, valueOf: valueOf }; },
+                        function (e)    { return { SourceId: e.SourceId, Type: e.Error.Type, valueOf: valueOf }; },
                         function (e)    { return e; },
-                        function (a, b) { return a.app === b.app && a.type === b.type; });
+                        function (a, b) { return a.SourceId === b.SourceId && a.Type === b.Type; });
                 };
 
             subs = subs || {};
@@ -38,12 +38,12 @@
                     proxy.on('sources', function (existingApps, removedApps) {
                         existingApps.forEach(function (s) {
                             var k = s.SourceId;
-                            !apps[k] && sources.onNext({ source: s, action: 'added' });
+                            !apps[k] && sources.onNext({ Source: s, Action: 'added' });
                             apps[k] = true;
                         });
                         removedApps && removedApps.forEach(function (s) {
                             var k = s.SourceId;
-                            apps[k] && sources.onNext({ source: s, action: 'removed' });
+                            apps[k] && sources.onNext({ Source: s, Action: 'removed' });
                             apps[k] = false;
                         });
                     });
@@ -56,24 +56,24 @@
                         var irs = recap.Sources
                             .map(function(a) {
                                 return a.Types
-                                    .map(function(b) { return { app: a.SourceId, type: b.Name, measure: b.Measure }; });
+                                    .map(function (b) { return { SourceId: a.SourceId, Type: b.Name, Measure: b.Measure }; });
                             });
 
                         [].concat.apply([], irs)
                             .forEach(function(ir) {
-                                recaps.onNext({ app: ir.app, type: ir.type, measure: ir.measure });
+                                recaps.onNext({ SourceId: ir.SourceId, Type: ir.Type, Measure: ir.Measure });
                             });
 
                         groups['*'] = getErrorTypes()
                             .subscribe(function(et) {
-                                var key = et.key.app + '-' + et.key.type;
+                                var key = et.key.SourceId + '-' + et.key.Type;
                                 groups[key] && groups[key].dispose();
 
                                 var rs = recap.Sources
-                                    .filter(function(a) { return a.SourceId === et.key.app; })
+                                    .filter(function (a) { return a.SourceId === et.key.SourceId; })
                                     .map(function(a) {
                                         return a.Types
-                                            .filter(function(b) { return b.Name === et.key.type; })
+                                            .filter(function(b) { return b.Name === et.key.Type; })
                                             .map(function(b) { return b.Measure; });
                                     });
                         
@@ -83,7 +83,7 @@
                                 groups[key] = et
                                     .scan(0, function (a) { return a + 1; })
                                     .subscribe(function (e) {
-                                        recaps.onNext({ app: et.key.app, type: et.key.type, measure: e + r });
+                                        recaps.onNext({ SourceId: et.key.SourceId, Type: et.key.Type, Measure: e + r });
                                     });
                             });
                     });
@@ -99,9 +99,9 @@
                 getApplications: function () { return sources; },
                 getRecaps: function () {
                     return recaps.groupBy(
-                        function (e)    { return { app: e.app, type: e.type, valueOf: valueOf }; },
+                        function (e)    { return { SourceId: e.SourceId, Type: e.Type, valueOf: valueOf }; },
                         function (e)    { return e; },
-                        function (a, b) { return a.app === b.app && a.type === b.type; });
+                        function (a, b) { return a.SourceId === b.SourceId && a.Type === b.Type; });
                 },
                 stop: function () {
                     apps = {};
