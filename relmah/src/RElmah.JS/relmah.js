@@ -9,6 +9,7 @@
                 errors,
                 sources,
                 recaps,
+                states,
                 apps = {},
                 starting,
                 valueOf = function () { return JSON.stringify(this); },
@@ -30,6 +31,7 @@
                     errors  = new Rx.Subject();
                     sources = new Rx.Subject();
                     recaps  = new Rx.Subject();
+                    states  = new Rx.Subject();
 
                     proxy.on('error', function (p) {
                         errors.onNext(p);
@@ -90,13 +92,33 @@
 
                     starting && starting();
 
+                    var statesMap = {};
+                    statesMap[$.signalR.connectionState.connecting]   = 'connecting';
+                    statesMap[$.signalR.connectionState.connected]    = 'connected';
+                    statesMap[$.signalR.connectionState.reconnecting] = 'reconnecting';
+                    statesMap[$.signalR.connectionState.disconnected] = 'disconnected';
+                    statesMap['error']                                = 'error';
+
+                    conn.stateChanged(function(delta) {
+                        var state = statesMap[delta.newState];
+                        states.onNext(state);
+                    });
+
                     conn.qs = { user: opts && opts.user };
 
-                    return conn.start();
+                    return conn.start()
+                        .done(function () {
+                        
+                        })
+                        .fail(function (e) {
+                            var state = statesMap['error'];
+                            states.onNext(state);
+                        });
                 },
                 getErrors: function () { return errors; },
                 getErrorTypes: getErrorTypes,
                 getApplications: function () { return sources; },
+                getStates: function () { return states; },
                 getRecaps: function () {
                     return recaps.groupBy(
                         function (e)    { return { SourceId: e.SourceId, Type: e.Type, valueOf: valueOf }; },

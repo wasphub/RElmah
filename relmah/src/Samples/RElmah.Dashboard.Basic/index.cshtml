@@ -20,14 +20,48 @@
                 $groups = $('#groups'),
                 $recaps = $('#recaps');
 
+            //Enable the following line to use the basic client side token for authentication (for test purposes)
+            var userGetter = function () { return $('#user').val(); };
+
+            //Enable the following line to use Windows authentication (for test purposes)
+            //var userGetter = null;
+
+            var logout = function () {
+                $('#logout').hide();
+                $('#login').show();
+                $('#display').hide();
+                $('#user').attr('disabled', null);
+
+                r.stop();
+            };
+            var login = function () {
+                $('#login').hide();
+                $('#logout').show();
+                $('#display').show();
+                $('#user').attr('disabled', 'disabled');
+
+                var opts = userGetter && { user: userGetter() };
+
+                r.start(opts).done(function () {
+                    r.disconnected(function () {
+                        $('#groups').empty();
+                        $('#recaps').empty();
+                        $('#apps').empty();
+
+                        logout();
+                    });
+                });
+            };
+
             r.starting(function() {
 
                 //streams
 
-                var errors = r.getErrors(),
+                var errors     = r.getErrors(),
                     apps       = r.getApplications(),
                     errorTypes = r.getErrorTypes(),
-                    recaps     = r.getRecaps();
+                    recaps     = r.getRecaps(),
+                    states     = r.getStates();
 
                 //subscriptions
 
@@ -88,42 +122,29 @@
                                 g.text(et.key.SourceId + '-' + et.key.Type + ': ' + e.Measure);
                             });
                     });
+
+                //states
+
+                states
+                    .subscribe(function (s) {
+                        $("#conn-state").text(s);
+                    });
+
+                states
+                    .filter(function(s){ return s === 'disconnected'; })
+                    .subscribe(function () {
+                        logout();
+                    });
+
             });
-
-            //Enable the following line to use the basic client side token for authentication (for test purposes)
-            var userGetter = function () { return $('#user').val(); };
-
-            //Enable the following line to use Windows authentication (for test purposes)
-            //var userGetter = null;
 
             userGetter && $('#user').show();
 
             //startup
-            $('#login').click(function () {
-                $('#login').hide();
-                $('#logout').show();
-                $('#display').show();
-                $('#user').attr('disabled', 'disabled');
 
-                var opts = userGetter && { user: userGetter() };
+            $('#login').click(login);
+            $('#logout').click(logout);
 
-                r.start(opts).done(function () {
-                    r.disconnected(function () {
-                        $('#groups').empty();
-                        $('#recaps').empty();
-                        $('#apps').empty();
-                    });
-                });
-            });
-
-            $('#logout').click(function () {
-                $('#logout').hide();
-                $('#login').show();
-                $('#display').hide();
-                $('#user').attr('disabled', null);
-
-                r.stop();
-            });
         });
     </script>
 </head>
@@ -131,7 +152,8 @@
     <div>
         <button id="login">Login</button>
         <button id="logout" style="display: none">Logout</button>
-        <input type="text" id="user" style="display: none" />
+        <input  type="text" id="user" style="display: none"/>
+        <div    id="conn-state">Ready</div>
     </div>
     <div id="display" style="display: none">
         <div>

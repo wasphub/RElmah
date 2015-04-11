@@ -26,6 +26,13 @@ namespace RElmah.Host.Hubs
             return base.OnConnected();
         }
 
+        public override Task OnReconnected()
+        {
+            _frontendQueriesFactory.Setup(_userIdProvider.GetUserId(Context.Request), Context.ConnectionId, a => { });
+
+            return base.OnReconnected();
+        }
+
         public override Task OnDisconnected(bool stopCalled)
         {
             _frontendQueriesFactory.Teardown(Context.ConnectionId);
