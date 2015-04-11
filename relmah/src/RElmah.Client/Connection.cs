@@ -11,15 +11,25 @@ using RElmah.Common.Extensions;
 
 namespace RElmah.Client
 {
+    public enum ConnectionState
+    {
+        Connecting,
+        Connected,
+        Reconnecting,
+        Disconnected,
+        Error        
+    }
+
     public class Connection : IDisposable
     {
         private readonly string _endpoint;
 
         private HubConnection _connection;
 
-        private readonly ISubject<ErrorPayload>         _errors = new Subject<ErrorPayload>();
+        private readonly ISubject<ErrorPayload>    _errors  = new Subject<ErrorPayload>();
         private readonly ISubject<SourceOperation> _sources = new Subject<SourceOperation>();
-        private readonly ISubject<RecapAggregate>       _recaps = new Subject<RecapAggregate>();
+        private readonly ISubject<RecapAggregate>  _recaps  = new Subject<RecapAggregate>();
+        private readonly ISubject<ConnectionState> _states  = new Subject<ConnectionState>();
 
         public Connection(string endpoint)
         {
@@ -28,23 +38,56 @@ namespace RElmah.Client
 
         public IObservable<ErrorPayload> Errors { get { return _errors; } }
         public IObservable<IGroupedObservable<ErrorType, ErrorPayload>> ErrorTypes { get; private set; }
-
         public IObservable<SourceOperation> Sources { get { return _sources; } }
-
         public IObservable<RecapAggregate> Recaps { get { return _recaps; } }
+        public IObservable<ConnectionState> States { get { return _states; } }
 
         public Task Start(ClientToken token)
         {
-            _connection = new HubConnection(_endpoint, string.Format("user={0}", token.Token));
+            try
+            {
+                _connection = new HubConnection(_endpoint, string.Format("user={0}", token.Token));
 
-            return Connect(_connection);
+                _connection.StateChanged += change =>
+                {
+                    _states.OnNext((ConnectionState)change.NewState);
+                };
+                _connection.Error += exception =>
+                {
+                    _states.OnNext(ConnectionState.Error);
+                };
+
+                return Connect(_connection);
+            }
+            catch
+            {
+                _states.OnNext(ConnectionState.Error);
+                throw;
+            }
         }
 
         public Task Start(ICredentials credentials)
         {
-            _connection = new HubConnection(_endpoint) { Credentials = credentials };
+            try
+            {
+                _connection = new HubConnection(_endpoint) { Credentials = credentials };
 
-            return Connect(_connection);
+                _connection.StateChanged += change =>
+                {
+                    _states.OnNext((ConnectionState)change.NewState);
+                };
+                _connection.Error += exception =>
+                {
+                    _states.OnNext(ConnectionState.Error);
+                };
+
+                return Connect(_connection);
+            }
+            catch
+            {
+                _states.OnNext(ConnectionState.Error);
+                throw;
+            }
         }
 
         public Task Start()
