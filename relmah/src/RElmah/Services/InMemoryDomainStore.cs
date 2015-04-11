@@ -42,9 +42,9 @@ namespace RElmah.Services
             return Task.FromResult(new ValueOrError<Cluster>(_clusters[name]));
         }
 
-        public Task<ValueOrError<Source>> AddSource(string name, bool fromBackend = false)
+        public Task<ValueOrError<Source>> AddSource(string name, string description, bool fromBackend = false)
         {
-            var source = Source.Create(name);
+            var source = Source.Create(name, description);
             _sources.Add(source.SourceId, source);
 
             return Task.FromResult(ValueOrError.Create(source));

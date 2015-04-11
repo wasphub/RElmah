@@ -34,9 +34,9 @@ namespace RElmah.Services.Nulls
             return Task.FromResult(new ValueOrError<Cluster>(Cluster.Create(name)));
         }
 
-        public Task<ValueOrError<Source>> AddSource(string name, bool fromBackend = false)
+        public Task<ValueOrError<Source>> AddSource(string name, string description, bool fromBackend = false)
         {
-            return Task.FromResult(new ValueOrError<Source>(Source.Create(name)));
+            return Task.FromResult(new ValueOrError<Source>(Source.Create(name, description)));
         }
 
         public Task<ValueOrError<bool>> RemoveSource(string name, bool fromBackend = false)
@@ -51,7 +51,7 @@ namespace RElmah.Services.Nulls
 
         public Task<ValueOrError<Source>> GetSource(string name)
         {
-            return Task.FromResult(new ValueOrError<Source>(Source.Create(name)));
+            return Task.FromResult(new ValueOrError<Source>(Source.Create(name, string.Empty)));
         }
 
         public Task<ValueOrError<User>> AddUser(string name, bool fromBackend = false)
@@ -86,12 +86,12 @@ namespace RElmah.Services.Nulls
 
         public Task<ValueOrError<Relationship<Cluster, Source>>> AddSourceToCluster(string cluster, string source, bool fromBackend = false)
         {
-            return Task.FromResult(new ValueOrError<Relationship<Cluster, Source>>(new Relationship<Cluster, Source>(Cluster.Create(cluster), Source.Create(source))));
+            return Task.FromResult(new ValueOrError<Relationship<Cluster, Source>>(new Relationship<Cluster, Source>(Cluster.Create(cluster), Source.Create(source, string.Empty))));
         }
 
         public Task<ValueOrError<Relationship<Cluster, Source>>> RemoveSourceFromCluster(string cluster, string source, bool fromBackend = false)
         {
-            return Task.FromResult(new ValueOrError<Relationship<Cluster, Source>>(new Relationship<Cluster, Source>(Cluster.Create(cluster), Source.Create(source))));
+            return Task.FromResult(new ValueOrError<Relationship<Cluster, Source>>(new Relationship<Cluster, Source>(Cluster.Create(cluster), Source.Create(source, string.Empty))));
         }
 
         public Task<IEnumerable<Source>> GetUserSources(string user)

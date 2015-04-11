@@ -9,7 +9,7 @@ namespace RElmah.Tests.Models
         [Fact]
         public void CreateWithSources()
         {
-            var c = Cluster.Create("c", new[] {Source.Create("a")});
+            var c = Cluster.Create("c", new[] {Source.Create("a", "a")});
 
             Assert.Equal(1, c.Sources.Count());
             Assert.Equal(1, c.Sources.Count(a => a.SourceId == "a"));
@@ -31,7 +31,7 @@ namespace RElmah.Tests.Models
         [Fact]
         public void CreateWithSourcesAndUsers()
         {
-            var c = Cluster.Create("c", new[] { Source.Create("a") }, new[] { User.Create("a") });
+            var c = Cluster.Create("c", new[] { Source.Create("a", "a") }, new[] { User.Create("a") });
 
             Assert.Equal(1, c.Sources.Count());
             Assert.Equal(1, c.Sources.Count(a => a.SourceId == "a"));

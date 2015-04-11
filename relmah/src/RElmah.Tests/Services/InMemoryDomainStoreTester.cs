@@ -72,7 +72,7 @@ namespace RElmah.Tests.Services
             var sut = new InMemoryDomainStore();
 
             //Act
-            var answer = await sut.AddSource(SourceName);
+            var answer = await sut.AddSource(SourceName, SourceName);
             var check  = (await sut.GetSources()).Single();
             var single = await sut.GetSource(SourceName);
 
@@ -97,7 +97,7 @@ namespace RElmah.Tests.Services
             var sut = new InMemoryDomainStore();
 
             //Act
-            var answer = await sut.AddSource(SourceName);
+            var answer = await sut.AddSource(SourceName, SourceName);
             var check = (await sut.GetSources()).SingleOrDefault();
 
             //Assert
@@ -308,7 +308,7 @@ namespace RElmah.Tests.Services
             //Act
             var cAnswer = await sut.AddCluster(ClusterName);
             var uAnswer = await sut.AddUser(UserName);
-            var aAnswer = await sut.AddSource(SourceName);
+            var aAnswer = await sut.AddSource(SourceName, SourceName);
 
             //Assert
             Assert.NotNull(cAnswer);
@@ -338,7 +338,7 @@ namespace RElmah.Tests.Services
 
             var cAnswer = await sut.AddCluster(ClusterName);
             var uAnswer = await sut.AddUser(UserName);
-            var aAnswer = await sut.AddSource(SourceName);
+            var aAnswer = await sut.AddSource(SourceName, SourceName);
             Assert.NotNull(cAnswer);
             Assert.True(cAnswer.HasValue);
             Assert.NotNull(uAnswer);

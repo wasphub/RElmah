@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using RElmah.Common;
 using RElmah.Domain.Fakes;
@@ -122,14 +123,14 @@ namespace RElmah.Tests.Services
         {
             //Arrange
             var store = new Dictionary<string, Source>();
-            var adder = new Func<string, Source>(n =>
+            var adder = new Func<string, string, Source>((n, d) =>
             {
-                store.Add(n, Source.Create(n));
+                store.Add(n, Source.Create(n, d));
                 return store[n];
             });
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddSourceStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Source>(adder(n))),
+                AddSourceStringStringBoolean = (n, d, _) => Task.FromResult(new ValueOrError<Source>(adder(n, d))),
                 GetSources = () => Task.FromResult((IEnumerable<Source>)store.Values),
                 GetSourceString = n => Task.FromResult(new ValueOrError<Source>(store[n]))
             });
@@ -141,7 +142,7 @@ namespace RElmah.Tests.Services
             });
 
             //Act
-            var answer = await sut.AddSource(SourceName);
+            var answer = await sut.AddSource(SourceName, SourceName);
             var check = (await sut.GetSources()).Single();
             var single = await sut.GetSource(SourceName);
 
@@ -167,16 +168,16 @@ namespace RElmah.Tests.Services
         {
             //Arrange
             var store = new Dictionary<string, Source>();
-            var adder = new Func<string, Source>(n =>
+            var adder = new Func<string, string, Source>((n, d) =>
             {
-                store.Add(n, Source.Create(n));
+                store.Add(n, Source.Create(n, d));
                 return store[n];
             });
             var remover = new Func<string, bool>(store.Remove);
 
             var sut = new DomainHolder(new StubIDomainStore
             {
-                AddSourceStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Source>(adder(n))),
+                AddSourceStringStringBoolean = (n, d, _) => Task.FromResult(new ValueOrError<Source>(adder(n, d))),
                 GetSources = () => Task.FromResult((IEnumerable<Source>)store.Values),
                 RemoveSourceStringBoolean = (n, _) => Task.FromResult(new ValueOrError<bool>(remover(n)))
             });
@@ -188,7 +189,7 @@ namespace RElmah.Tests.Services
             });
 
             //Act
-            var answer = await sut.AddSource(SourceName);
+            var answer = await sut.AddSource(SourceName, SourceName);
             var check = (await sut.GetSources()).Single();
 
             //Assert
@@ -468,9 +469,9 @@ namespace RElmah.Tests.Services
                 store.Clusters.Add(n, Cluster.Create(n));
                 return store.Clusters[n];
             });
-            var aAdder = new Func<string, Source>(n =>
+            var aAdder = new Func<string, string, Source>((n, d) =>
             {
-                store.Sources.Add(n, Source.Create(n));
+                store.Sources.Add(n, Source.Create(n, d));
                 return store.Sources[n];
             });
             var uAdder = new Func<string, User>(n =>
@@ -498,7 +499,7 @@ namespace RElmah.Tests.Services
             {
                 AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
                 AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(uAdder(n))),
-                AddSourceStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Source>(aAdder(n))),
+                AddSourceStringStringBoolean = (n, d, _) => Task.FromResult(new ValueOrError<Source>(aAdder(n, d))),
                 AddUserToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuAdder(c, u))),
                 AddSourceToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, Source>>(caAdder(c, u)))
             });
@@ -510,7 +511,7 @@ namespace RElmah.Tests.Services
             });
             var cAnswer = await sut.AddCluster(ClusterName);
             var uAnswer = await sut.AddUser(UserName);
-            var aAnswer = await sut.AddSource(SourceName);
+            var aAnswer = await sut.AddSource(SourceName, SourceName);
             Assert.NotNull(cAnswer);
             Assert.True(cAnswer.HasValue);
             Assert.NotNull(uAnswer);
@@ -564,9 +565,9 @@ namespace RElmah.Tests.Services
                 store.Clusters.Add(n, Cluster.Create(n));
                 return store.Clusters[n];
             });
-            var aAdder = new Func<string, Source>(n =>
+            var aAdder = new Func<string, string, Source>((n, d) =>
             {
-                store.Sources.Add(n, Source.Create(n));
+                store.Sources.Add(n, Source.Create(n, d));
                 return store.Sources[n];
             });
             var uAdder = new Func<string, User>(n =>
@@ -600,7 +601,7 @@ namespace RElmah.Tests.Services
             {
                 AddClusterStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Cluster>(cAdder(n))),
                 AddUserStringBoolean = (n, _) => Task.FromResult(new ValueOrError<User>(uAdder(n))),
-                AddSourceStringBoolean = (n, _) => Task.FromResult(new ValueOrError<Source>(aAdder(n))),
+                AddSourceStringStringBoolean = (n, d, _) => Task.FromResult(new ValueOrError<Source>(aAdder(n, d))),
                 AddUserToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, User>>(cuAdder(c, u))),
                 AddSourceToClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, Source>>(caAdder(c, u))),
                 RemoveSourceFromClusterStringStringBoolean = (c, u, _) => Task.FromResult(new ValueOrError<Relationship<Cluster, Source>>(caRemover(c, u)))
@@ -613,7 +614,7 @@ namespace RElmah.Tests.Services
             });
             var cAnswer = await sut.AddCluster(ClusterName);
             var uAnswer = await sut.AddUser(UserName);
-            var aAnswer = await sut.AddSource(SourceName);
+            var aAnswer = await sut.AddSource(SourceName, SourceName);
             Assert.NotNull(cAnswer);
             Assert.True(cAnswer.HasValue);
             Assert.NotNull(uAnswer);

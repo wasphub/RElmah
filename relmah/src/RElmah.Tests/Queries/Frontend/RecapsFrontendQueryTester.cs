@@ -54,7 +54,7 @@ namespace RElmah.Tests.Queries.Frontend
                     },
                     DomainPersistor = new StubIDomainPersistor
                     {
-                        GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1") })
+                        GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1", "a1") })
                     },
                     DomainPublisher = new StubIDomainPublisher
                     {
@@ -78,7 +78,7 @@ namespace RElmah.Tests.Queries.Frontend
 
             //Act
             var user          = User.Create("u1");
-            var source        = Source.Create("a1");
+            var source        = Source.Create("a1", "a1");
             var cluster       = Cluster.Create("c1", new[] {user});
 
             var rca = Relationship.Create(cluster, source);

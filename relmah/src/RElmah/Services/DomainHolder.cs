@@ -116,9 +116,9 @@ namespace RElmah.Services
             return _sourceDeltasStream;
         }
 
-        public async Task<ValueOrError<Source>> AddSource(string name, bool fromBackend = false)
+        public async Task<ValueOrError<Source>> AddSource(string name, string description, bool fromBackend = false)
         {
-            var s = await _domainStore.AddSource(name, fromBackend);
+            var s = await _domainStore.AddSource(name, description, fromBackend);
 
             if (s.HasValue) _sourceDeltas.OnNext(Delta.Create(s.Value, DeltaType.Added, fromBackend));
 
@@ -129,7 +129,7 @@ namespace RElmah.Services
         {
             var s = await _domainStore.RemoveSource(name, fromBackend);
 
-            if (s.HasValue) _sourceDeltas.OnNext(Delta.Create(Source.Create(name), DeltaType.Removed, fromBackend));
+            if (s.HasValue) _sourceDeltas.OnNext(Delta.Create(Source.Create(name, string.Empty), DeltaType.Removed, fromBackend));
 
             return s;
         }

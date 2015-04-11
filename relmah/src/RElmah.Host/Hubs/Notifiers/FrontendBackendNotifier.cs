@@ -37,7 +37,7 @@ namespace RElmah.Host.Hubs.Notifiers
             {
                 switch (p.Type)
                 {
-                    case DeltaType.Added:   domainPublisher.AddSource(p.Target.SourceId, true); break;
+                    case DeltaType.Added:   domainPublisher.AddSource(p.Target.SourceId, p.Target.Description, true); break;
                     case DeltaType.Removed: domainPublisher.RemoveSource(p.Target.SourceId, true); break;
                 }
             });

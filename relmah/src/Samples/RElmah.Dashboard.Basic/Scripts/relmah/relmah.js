@@ -4,7 +4,7 @@
 
     var relmah = (function () {
 
-        return function (endpoint, subs) {
+        return function (endpoint, hub, subs) {
             var conn,
                 errors,
                 sources,
@@ -25,7 +25,7 @@
                 start: function (opts) {
                     conn         = $.hubConnection(endpoint);
 
-                    var proxy    = conn.createHubProxy('relmah-errors');
+                    var proxy    = conn.createHubProxy(hub || 'relmah-errors');
 
                     errors  = new Rx.Subject();
                     sources = new Rx.Subject();

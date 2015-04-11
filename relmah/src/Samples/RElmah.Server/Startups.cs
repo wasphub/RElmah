@@ -37,7 +37,7 @@ namespace RElmah.Server
                         {
                             var c01 = await conf.AddCluster("c01");
 
-                            var s01 = await conf.AddSource("s01");
+                            var s01 = await conf.AddSource("s01", "Source 01");
 
                             //For Windows Auth testing
                             var wcu = await conf.AddUser(string.Format(@"{0}\{1}", Environment.UserDomainName, Environment.UserName));
@@ -92,9 +92,9 @@ namespace RElmah.Server
                             var c01 = await conf.AddCluster("c01");
                             var c02 = await conf.AddCluster("c02");
 
-                            var s01 = await conf.AddSource("s01");
-                            var s02 = await conf.AddSource("s02");
-                            var s03 = await conf.AddSource("s03");
+                            var s01 = await conf.AddSource("s01", "Source 01");
+                            var s02 = await conf.AddSource("s02", "Source 02");
+                            var s03 = await conf.AddSource("s03", "Source 03");
 
                             //For Windows Auth testing
                             var wcu = await conf.AddUser(string.Format(@"{0}\{1}", Environment.UserDomainName, Environment.UserName));

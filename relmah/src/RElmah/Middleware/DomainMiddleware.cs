@@ -117,8 +117,8 @@ namespace RElmah.Middleware
                         await updater.RemoveSource(keys["source"]))
                 )
                 .ForRoute("sources", route => route
-                    .Post(async (environment, keys, form) => 
-                        await updater.AddSource(form["name"]))
+                    .Post(async (environment, keys, form) =>
+                        await updater.AddSource(form["name"], form["description"]))
                     .Get(async (environment, keys, _) =>
                         await updater.GetSources())
                 )

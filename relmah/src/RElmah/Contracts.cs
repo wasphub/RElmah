@@ -134,7 +134,7 @@ namespace RElmah.Domain
     {
         Task<ValueOrError<Cluster>> AddCluster(string name, bool fromBackend = false);
         Task<ValueOrError<bool>> RemoveCluster(string name, bool fromBackend = false);
-        Task<ValueOrError<Source>> AddSource(string name, bool fromBackend = false);
+        Task<ValueOrError<Source>> AddSource(string name, string description, bool fromBackend = false);
         Task<ValueOrError<bool>> RemoveSource(string name, bool fromBackend = false);
         Task<ValueOrError<User>> AddUser(string name, bool fromBackend = false);
         Task<ValueOrError<bool>> RemoveUser(string name, bool fromBackend = false);
