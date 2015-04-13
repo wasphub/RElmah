@@ -78,7 +78,6 @@ async conf =>
 	Task.WaitAll(
 		conf.AddSourceToCluster(c01.Value.Name, s01.Value.SourceId),
 
-		conf.AddUserToCluster(c01.Value.Name, wcu.Value.Name),
 		conf.AddUserToCluster(c01.Value.Name, u01.Value.Name)
 	);
 }
