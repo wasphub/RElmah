@@ -13,13 +13,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Tests", "RElmah.Tests\RElmah.Tests.csproj", "{8EB9853F-41B2-4650-931F-9BC3DC26B8A9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{45DE8F9D-E3D9-425F-BEFC-E904E75D3765}"
-	ProjectSection(SolutionItems) = preProject
-		Samples\Linqpad\apps.linq = Samples\Linqpad\apps.linq
-		Samples\Linqpad\basic.linq = Samples\Linqpad\basic.linq
-		Samples\Linqpad\recaps.linq = Samples\Linqpad\recaps.linq
-		Samples\Linqpad\scan.linq = Samples\Linqpad\scan.linq
-		Samples\Linqpad\types.linq = Samples\Linqpad\types.linq
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Server", "Samples\RElmah.Server\RElmah.Server.csproj", "{5A31FC67-9707-41D7-BB12-A307C9A7B9FB}"
 EndProject
@@ -41,6 +34,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{31B5F81F-14D1-438B-99B0-840C33668EA4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RElmah.Host", "RElmah.Host\RElmah.Host.csproj", "{8C7B3D26-F32A-4845-9DDF-7359AA5B232E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Linqpad", "Linqpad", "{6304582E-E6BE-45E8-9BA3-28198DCF81CB}"
+	ProjectSection(SolutionItems) = preProject
+		Samples\Linqpad\apps.linq = Samples\Linqpad\apps.linq
+		Samples\Linqpad\basic.linq = Samples\Linqpad\basic.linq
+		Samples\Linqpad\recaps.linq = Samples\Linqpad\recaps.linq
+		Samples\Linqpad\scan.linq = Samples\Linqpad\scan.linq
+		Samples\Linqpad\types.linq = Samples\Linqpad\types.linq
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,5 +95,6 @@ Global
 		{5A31FC67-9707-41D7-BB12-A307C9A7B9FB} = {45DE8F9D-E3D9-425F-BEFC-E904E75D3765}
 		{813CAA47-8B20-40CF-8017-7CF0918366B5} = {45DE8F9D-E3D9-425F-BEFC-E904E75D3765}
 		{7A43F767-7FDD-40BE-94AD-906F491BAE47} = {45DE8F9D-E3D9-425F-BEFC-E904E75D3765}
+		{6304582E-E6BE-45E8-9BA3-28198DCF81CB} = {45DE8F9D-E3D9-425F-BEFC-E904E75D3765}
 	EndGlobalSection
 EndGlobal
