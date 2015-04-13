@@ -6,6 +6,7 @@ using Microsoft.Owin;
 using Newtonsoft.Json;
 using RElmah.Common;
 using RElmah.Common.Extensions;
+using RElmah.Common.Model;
 using RElmah.Errors;
 
 namespace RElmah.Middleware

@@ -1,4 +1,5 @@
 ﻿using RElmah.Common;
+using RElmah.Common.Model;
 using RElmah.Foundation;
 using RElmah.Notifiers;
 

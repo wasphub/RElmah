@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using Microsoft.AspNet.SignalR;
 
-namespace RElmah.Host
+namespace RElmah.Host.Services
 {
     class Registry : IRegistry
     {

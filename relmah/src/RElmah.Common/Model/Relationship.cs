@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace RElmah.Foundation
+namespace RElmah.Common.Model
 {
     public static class Relationship
     {

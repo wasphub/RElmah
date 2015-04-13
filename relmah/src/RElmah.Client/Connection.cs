@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using RElmah.Common;
 using RElmah.Common.Extensions;
+using RElmah.Common.Model;
 
 namespace RElmah.Client
 {

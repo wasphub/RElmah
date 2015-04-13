@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using RElmah.Common;
+using RElmah.Common.Model;
 using RElmah.Errors;
 using RElmah.Foundation;
 using RElmah.Notifiers;

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using RElmah.Common;
+using RElmah.Common.Model;
 using Xunit;
 
 namespace RElmah.Tests.Models

@@ -1,4 +1,4 @@
-﻿namespace RElmah.Common
+﻿namespace RElmah.Common.Model
 {
     public class ErrorPayload
     {

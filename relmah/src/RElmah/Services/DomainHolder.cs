@@ -7,6 +7,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using RElmah.Common;
 using RElmah.Common.Extensions;
+using RElmah.Common.Model;
 using RElmah.Foundation;
 using RElmah.Publishers;
 using RElmah.Services.Nulls;

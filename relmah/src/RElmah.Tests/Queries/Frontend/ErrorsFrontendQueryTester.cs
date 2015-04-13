@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using RElmah.Common;
+using RElmah.Common.Model;
 using RElmah.Errors.Fakes;
 using RElmah.Foundation;
 using RElmah.Notifiers.Fakes;

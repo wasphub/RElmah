@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.AspNet.SignalR.Client;
 using RElmah.Common;
+using RElmah.Common.Model;
 using RElmah.Errors;
 using RElmah.Foundation;
 using RElmah.Notifiers;

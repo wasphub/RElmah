@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace RElmah.Common
+namespace RElmah.Common.Model
 {
     public enum DeltaType
     {

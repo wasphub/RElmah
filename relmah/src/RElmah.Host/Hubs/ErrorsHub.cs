@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using RElmah.Common;
+using RElmah.Common.Model;
 using RElmah.Queries;
 
 namespace RElmah.Host.Hubs

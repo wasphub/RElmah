@@ -3,7 +3,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using RElmah.Common.Extensions;
 
-namespace RElmah.Common
+namespace RElmah.Common.Model
 {
     public class User : ISerializable
     {

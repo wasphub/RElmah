@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using RElmah.Common;
+using RElmah.Common.Model;
 using RElmah.Notifiers;
 
 namespace RElmah.Host.Hubs.Notifiers

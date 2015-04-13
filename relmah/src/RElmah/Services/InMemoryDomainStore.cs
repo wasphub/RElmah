@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using RElmah.Common;
+using RElmah.Common.Model;
 using RElmah.Visibility;
 using RElmah.Foundation;
 

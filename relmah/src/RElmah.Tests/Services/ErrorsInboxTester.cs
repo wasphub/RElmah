@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using RElmah.Common;
+using RElmah.Common.Model;
 using RElmah.Services;
 using RElmah.Services.Inbox;
 using Xunit;

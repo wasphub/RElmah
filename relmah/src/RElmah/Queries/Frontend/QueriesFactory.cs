@@ -5,6 +5,7 @@ using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using RElmah.Common;
 using RElmah.Common.Extensions;
+using RElmah.Common.Model;
 using RElmah.Errors;
 using RElmah.Extensions;
 using RElmah.Foundation;
