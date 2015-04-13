@@ -19,7 +19,7 @@ Do you want a sneak preview? What about being able to do something like this in 
 
 ```c#
 var c = new Connection("http://localhost:9100/");
-await c.Start(new ClientToken("u01"));
+await c.Start();
 
 var q = 
 	from error in c.Errors
@@ -78,7 +78,6 @@ async conf =>
 	Task.WaitAll(
 		conf.AddSourceToCluster(c01.Value.Name, s01.Value.SourceId),
 
-		conf.AddUserToCluster(c01.Value.Name, wcu.Value.Name),
 		conf.AddUserToCluster(c01.Value.Name, u01.Value.Name)
 	);
 }
