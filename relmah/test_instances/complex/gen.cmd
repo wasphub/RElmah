@@ -35,7 +35,7 @@ goto :end
 
 :gen
 set local
-robocopy ../src/Samples/RElmah.%2 %3%1 *.* /MIR /XF %4
+robocopy ../../src/Samples/RElmah.%2 %3%1 *.* /MIR /XF %4
 echo "%programfiles(x86)%\IIS Express\iisexpress.exe" /path:%cd%\%3%1 /port:%1 ^& exit > run_%3_%1.cmd
 goto :eof
 
