@@ -138,7 +138,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\Backend\VisibilityQuery.cs" />
     <Compile Include="Queries\Backend\ErrorsQuery.cs" />
-    <Compile Include="Queries\Backend\Nulls\QueriesFactory.cs" />
     <Compile Include="Queries\Backend\QueriesFactory.cs" />
     <Compile Include="Queries\Frontend\ErrorsQuery.cs" />
     <Compile Include="Queries\Frontend\QueriesFactory.cs" />
