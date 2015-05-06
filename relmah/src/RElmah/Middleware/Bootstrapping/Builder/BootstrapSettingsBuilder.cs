@@ -4,6 +4,9 @@ namespace RElmah.Middleware.Bootstrapping.Builder
 {
     public class BootstrapSettingsBuilder
     {
+        private const string ErrorsEndpointSegment     = "relmah-errors";
+        private const string VisibilityEndpointSegment = "relmah-visibility";
+
         readonly BootstrapSettings _settings;
 
         internal BootstrapSettingsBuilder(BootstrapSettings settings)
@@ -89,7 +92,7 @@ namespace RElmah.Middleware.Bootstrapping.Builder
 
                 _settings.ErrorsPrefix  = options != null && options.PrefixSetter != null
                                         ? options.PrefixSetter()
-                                        : "relmah-errors";
+                                        : ErrorsEndpointSegment;
 
                 _settings.UseRandomizer = options != null && options.UseRandomizerSetter != null
                                         ? options.UseRandomizerSetter()
@@ -109,7 +112,7 @@ namespace RElmah.Middleware.Bootstrapping.Builder
 
                 _settings.VisibilityPrefix = options != null && options.PrefixSetter != null
                                            ? options.PrefixSetter()
-                                           : "relmah-visibility";
+                                           : VisibilityEndpointSegment;
 
                 return new FrontendForVisibilitySettingsBuilder(_settings);
             }
@@ -140,7 +143,7 @@ namespace RElmah.Middleware.Bootstrapping.Builder
 
                 _settings.VisibilityPrefix = options != null && options.PrefixSetter != null
                                            ? options.PrefixSetter()
-                                           : "relmah-visibility";
+                                           : VisibilityEndpointSegment;
 
                 return new BootstrapSettingsFinalBuilder(_settings);
             }
@@ -171,7 +174,7 @@ namespace RElmah.Middleware.Bootstrapping.Builder
 
                 _settings.ErrorsPrefix  = options != null && options.PrefixSetter != null
                                         ? options.PrefixSetter()
-                                        : "relmah-errors";
+                                        : ErrorsEndpointSegment;
 
                 _settings.UseRandomizer = options != null && options.UseRandomizerSetter != null
                                         ? options.UseRandomizerSetter()
