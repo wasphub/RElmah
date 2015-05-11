@@ -45,9 +45,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Linqpad", "Linqpad", "{6304
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{BEC1C9BF-246F-4908-9925-F2A69DFA758B}"
-	ProjectSection(SolutionItems) = preProject
-		Docs\SOTW.md = Docs\SOTW.md
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
