@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using RElmah.Common;
 using RElmah.Common.Model;
 using RElmah.Errors;
-using RElmah.Foundation;
 using RElmah.Services.Nulls;
 
 namespace RElmah.Services.Inbox
@@ -39,11 +35,6 @@ namespace RElmah.Services.Inbox
         public IObservable<ErrorPayload> GetErrorsStream()
         {
             return _publishedErrors;
-        }
-
-        public Task<ValueOrError<Recap>> GetSourcesRecap(IEnumerable<Source> sources, Func<IEnumerable<ErrorPayload>, int> reducer)
-        {
-            return _errorsBacklog.GetSourcesRecap(sources, xs => xs.Count());
         }
     }
 }
