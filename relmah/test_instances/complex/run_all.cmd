@@ -8,6 +8,8 @@
 set local
 cls
 
+pushd Deploy
+
 ::backend
 start cmd /k call run_b_9000
 timeout 3
@@ -29,3 +31,5 @@ start cmd /k call run_d_7001
 timeout 1
 start cmd /k call run_d_7002
 timeout 1
+
+popd
