@@ -172,3 +172,7 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+# RElmah stuff
+
+**/test_instances/**/deploy
