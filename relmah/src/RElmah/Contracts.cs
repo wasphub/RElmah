@@ -80,6 +80,7 @@ namespace RElmah.Queries
         public IErrorsInbox ErrorsInbox { get; set; }
         public IErrorsInbox BackendErrorsInbox { get; set; }
         public IErrorsBacklog ErrorsBacklog { get; set; }
+        public IErrorsBacklogReader ErrorsBacklogReader { get; set; }
         public IVisibilityPersistor VisibilityPersistor { get; set; }
         public IVisibilityPublisher VisibilityPublisher { get; set; }
     }
@@ -112,7 +113,11 @@ namespace RElmah.Errors
     public interface IErrorsBacklog
     {
         Task Store(ErrorPayload payload);
-        Task<ValueOrError<Recap>> GetSourcesRecap(IEnumerable<Source> sources, Func<IEnumerable<ErrorPayload>, int> reducer);
+    }
+
+    public interface IErrorsBacklogReader
+    {
+        Task<ValueOrError<Recap>> GetSourcesRecap(IEnumerable<Source> sources);
     }
 }
 

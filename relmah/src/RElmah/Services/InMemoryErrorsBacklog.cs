@@ -8,7 +8,7 @@ using RElmah.Foundation;
 
 namespace RElmah.Services
 {
-    public class InMemoryErrorsBacklog : IErrorsBacklog
+    public class InMemoryErrorsBacklog : IErrorsBacklog, IErrorsBacklogReader
     {
         private readonly AtomicImmutableList<ErrorPayload> _errors =
             new AtomicImmutableList<ErrorPayload>();
@@ -18,7 +18,7 @@ namespace RElmah.Services
             return Task.Factory.StartNew(() => _errors.Add(payload));
         }
 
-        public Task<ValueOrError<Recap>> GetSourcesRecap(IEnumerable<Source> sources, Func<IEnumerable<ErrorPayload>, int> reducer)
+        public Task<ValueOrError<Recap>> GetSourcesRecap(IEnumerable<Source> sources)
         {
             var errors =
                 from e in _errors
@@ -31,7 +31,7 @@ namespace RElmah.Services
                 let types = 
                     from t in g
                     group t by t.Error.Type into x
-                    select new Recap.Type(x.Key, reducer(x))
+                    select new Recap.Type(x.Key, x.Count())
                 select new Recap.Source(g.Key, types);
 
             return Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, grouped)));

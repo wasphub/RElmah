@@ -48,9 +48,9 @@ namespace RElmah.Tests.Queries.Frontend
                     {
                         GetErrorsStream = () => Observable.Empty<ErrorPayload>()
                     },
-                    ErrorsBacklog = new StubIErrorsBacklog
+                    ErrorsBacklogReader = new StubIErrorsBacklogReader
                     {
-                        GetSourcesRecapIEnumerableOfSourceFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, Enumerable.Empty<Recap.Source>())))
+                        GetSourcesRecapIEnumerableOfSource = apps => Task.FromResult(new ValueOrError<Recap>(new Recap(DateTime.UtcNow, Enumerable.Empty<Recap.Source>())))
                     },
                     VisibilityPersistor = new StubIVisibilityPersistor
                     {
@@ -110,9 +110,9 @@ namespace RElmah.Tests.Queries.Frontend
                     {
                         GetErrorsStream = () => errorsStream
                     },
-                    ErrorsBacklog = new StubIErrorsBacklog
+                    ErrorsBacklogReader = new StubIErrorsBacklogReader()
                     {
-                        GetSourcesRecapIEnumerableOfSourceFuncOfIEnumerableOfErrorPayloadInt32 = (apps, _) => Task.FromResult(
+                        GetSourcesRecapIEnumerableOfSource = apps => Task.FromResult(
                             new ValueOrError<Recap>(
                                 new Recap(
                                     DateTime.UtcNow,
