@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using RElmah.Common;
 using RElmah.Common.Model;
 using RElmah.Foundation;
 

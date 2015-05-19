@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RElmah.Common;
 using RElmah.Common.Model;
 using RElmah.Errors;
 using RElmah.Foundation;
