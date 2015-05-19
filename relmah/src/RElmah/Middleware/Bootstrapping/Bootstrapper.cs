@@ -33,7 +33,7 @@ namespace RElmah.Middleware.Bootstrapping
 
             var dh  = new VisibilityHolder(ds);
 
-            var fqf = new FrontendQueriesFactory(fei, bei, ebl, dh, dh, frontendNotifier,
+            var fqf = new FrontendQueriesFactory(fei, bei, ebl, ebl, dh, dh, frontendNotifier,
                 () => new FrontendErrorsQuery(),
                 () => new RecapsQuery());
 
@@ -43,7 +43,7 @@ namespace RElmah.Middleware.Bootstrapping
                       ? backendFrontendNotifierCreator()
                       : NullBackendNotifier.Instance;
 
-            var bqf = new BackendQueriesFactory(fei, ebl, dh, dh, ben,
+            var bqf = new BackendQueriesFactory(fei, ebl, ebl, dh, dh, ben,
                 () => new BackendErrorsQuery(),
                 () => new VisibilityQuery(settings.Side == Side.Frontend));
 

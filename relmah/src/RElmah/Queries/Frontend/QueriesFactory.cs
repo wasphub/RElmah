@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
-using RElmah.Common;
 using RElmah.Common.Extensions;
 using RElmah.Common.Model;
 using RElmah.Errors;
@@ -20,6 +19,7 @@ namespace RElmah.Queries.Frontend
         private readonly IErrorsInbox  _errorsInbox;
         private readonly IErrorsInbox _backendErrorsInbox;
         private readonly IErrorsBacklog _errorsBacklog;
+        private readonly IErrorsBacklogReader _errorsBacklogReader;
         private readonly IVisibilityPublisher _visibilityPublisher;
         private readonly IVisibilityPersistor _visibilityPersistor;
         private readonly IFrontendNotifier _frontendNotifier;
@@ -27,13 +27,14 @@ namespace RElmah.Queries.Frontend
 
         private readonly AtomicImmutableDictionary<string, LayeredDisposable> _subscriptions = new AtomicImmutableDictionary<string, LayeredDisposable>();
 
-        public QueriesFactory(IErrorsInbox errorsInbox, IErrorsInbox backendErrorsInbox, IErrorsBacklog errorsBacklog, IVisibilityPublisher visibilityPublisher, IVisibilityPersistor visibilityPersistor,  
+        public QueriesFactory(IErrorsInbox errorsInbox, IErrorsInbox backendErrorsInbox, IErrorsBacklog errorsBacklog, IErrorsBacklogReader errorsBacklogReader,  IVisibilityPublisher visibilityPublisher, IVisibilityPersistor visibilityPersistor,  
             IFrontendNotifier frontendNotifier,
             params Func<IFrontendQuery>[] subscriptors)
         {
             _errorsInbox  = errorsInbox;
             _backendErrorsInbox = backendErrorsInbox;
             _errorsBacklog = errorsBacklog;
+            _errorsBacklogReader = errorsBacklogReader;
             _visibilityPublisher = visibilityPublisher;
             _visibilityPersistor = visibilityPersistor;
             _frontendNotifier = frontendNotifier;
@@ -54,6 +55,7 @@ namespace RElmah.Queries.Frontend
                     ErrorsInbox = _errorsInbox,
                     BackendErrorsInbox = _backendErrorsInbox,
                     ErrorsBacklog = _errorsBacklog,
+                    ErrorsBacklogReader = _errorsBacklogReader,
                     VisibilityPersistor = _visibilityPersistor,
                     VisibilityPublisher = _visibilityPublisher
                 });

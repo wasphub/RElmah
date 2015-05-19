@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using RElmah.Common;
 using RElmah.Common.Extensions;
 using RElmah.Common.Model;
 using RElmah.Errors;
@@ -19,7 +18,7 @@ namespace RElmah.Queries.Frontend
             var name = user.Value.Name;
 
             //Initial recap
-            var initialRecap = await InitialRecap(name, targets.VisibilityPersistor, targets.ErrorsBacklog, (a, r) => new { Sources = a, Recap = r });
+            var initialRecap = await InitialRecap(name, targets.VisibilityPersistor, targets.ErrorsBacklogReader, (a, r) => new { Sources = a, Recap = r });
             var rs =
                 from r in initialRecap.ToSingleton().ToObservable()
                 select new
@@ -61,7 +60,7 @@ namespace RElmah.Queries.Frontend
             //Stream
             return rs.Concat(mergedSources).Subscribe(async payload =>
             {
-                var recap = await targets.ErrorsBacklog.GetSourcesRecap(payload.Sources, xs => xs.Count());
+                var recap = await targets.ErrorsBacklogReader.GetSourcesRecap(payload.Sources);
                 if (!recap.HasValue) return;
 
                 targets.FrontendNotifier.Recap(name, recap.Value);
@@ -73,12 +72,12 @@ namespace RElmah.Queries.Frontend
         static async Task<T> InitialRecap<T>(
             string name, 
             IVisibilityAccessor visibilityPersistor, 
-            IErrorsBacklog errorsBacklog,
+            IErrorsBacklogReader errorsBacklog,
             Func<IEnumerable<Source>, ValueOrError<Recap>, T> resultor)
         {
             var sources = (await visibilityPersistor.GetUserSources(name)).ToArray();
 
-            var recap   = await errorsBacklog.GetSourcesRecap(sources, xs => xs.Count());
+            var recap   = await errorsBacklog.GetSourcesRecap(sources);
 
             return resultor(sources, recap);
         }
