@@ -20,38 +20,23 @@ namespace RElmah.Queries.Backend
 
             var clusters = targets.VisibilityPublisher.GetClustersSequence()
                 .Where(p => filter(p.FromBackend))
-                .Subscribe(payload =>
-            {
-                targets.BackendNotifier.Cluster(payload);
-            });
+                .Subscribe(payload => targets.BackendNotifier.Cluster(payload));
 
             var sources = targets.VisibilityPublisher.GetSourcesSequence()
                 .Where(p => filter(p.FromBackend))
-                .Subscribe(payload =>
-            {
-                targets.BackendNotifier.Source(payload);
-            });
+                .Subscribe(payload => targets.BackendNotifier.Source(payload));
 
             var users = targets.VisibilityPublisher.GetUsersSequence()
                 .Where(p => filter(p.FromBackend))
-                .Subscribe(payload =>
-            {
-                targets.BackendNotifier.User(payload);
-            });
+                .Subscribe(payload => targets.BackendNotifier.User(payload));
 
             var clusterSources = targets.VisibilityPublisher.GetClusterSourcesSequence()
                 .Where(p => filter(p.FromBackend))
-                .Subscribe(payload =>
-            {
-                targets.BackendNotifier.ClusterSource(payload);
-            });
+                .Subscribe(payload => targets.BackendNotifier.ClusterSource(payload));
 
             var clusterUsers = targets.VisibilityPublisher.GetClusterUsersSequence()
                 .Where(p => filter(p.FromBackend))
-                .Subscribe(payload =>
-            {
-                targets.BackendNotifier.ClusterUser(payload);
-            });
+                .Subscribe(payload => targets.BackendNotifier.ClusterUser(payload));
 
             return Task.FromResult((IDisposable)new CompositeDisposable(clusters, sources, users, clusterSources, clusterUsers));
         }
