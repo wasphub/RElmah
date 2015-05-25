@@ -11,7 +11,7 @@ namespace RElmah.Services.Inbox
 {
     public class SerializedErrorsInbox : IErrorsInbox
     {
-        private readonly IErrorsBacklog _errorsBacklog;
+        private readonly IErrorsBacklogWriter _errorsBacklog;
         private readonly int _bufferSize;
         private readonly int _bufferPeriod;
 
@@ -20,7 +20,7 @@ namespace RElmah.Services.Inbox
 
         public SerializedErrorsInbox() : this(NullErrorsBacklog.Instance, 30, 1) { }
 
-        public SerializedErrorsInbox(IErrorsBacklog errorsBacklog, int bufferSize, int bufferPeriod)
+        public SerializedErrorsInbox(IErrorsBacklogWriter errorsBacklog, int bufferSize, int bufferPeriod)
         {
             _errorsBacklog = errorsBacklog;
 

@@ -8,7 +8,7 @@ using RElmah.Foundation;
 
 namespace RElmah.Services
 {
-    public class InMemoryErrorsBacklog : IErrorsBacklog, IErrorsBacklogReader
+    public class InMemoryErrorsBacklog : IErrorsBacklogWriter, IErrorsBacklogReader
     {
         private readonly AtomicImmutableList<ErrorPayload> _errors =
             new AtomicImmutableList<ErrorPayload>();

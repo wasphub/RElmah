@@ -18,7 +18,7 @@ namespace RElmah.Queries.Frontend
     {
         private readonly IErrorsInbox  _errorsInbox;
         private readonly IErrorsInbox _backendErrorsInbox;
-        private readonly IErrorsBacklog _errorsBacklog;
+        private readonly IErrorsBacklogWriter _errorsBacklog;
         private readonly IErrorsBacklogReader _errorsBacklogReader;
         private readonly IVisibilityPublisher _visibilityPublisher;
         private readonly IVisibilityPersistor _visibilityPersistor;
@@ -27,7 +27,7 @@ namespace RElmah.Queries.Frontend
 
         private readonly AtomicImmutableDictionary<string, LayeredDisposable> _subscriptions = new AtomicImmutableDictionary<string, LayeredDisposable>();
 
-        public QueriesFactory(IErrorsInbox errorsInbox, IErrorsInbox backendErrorsInbox, IErrorsBacklog errorsBacklog, IErrorsBacklogReader errorsBacklogReader,  IVisibilityPublisher visibilityPublisher, IVisibilityPersistor visibilityPersistor,  
+        public QueriesFactory(IErrorsInbox errorsInbox, IErrorsInbox backendErrorsInbox, IErrorsBacklogWriter errorsBacklog, IErrorsBacklogReader errorsBacklogReader,  IVisibilityPublisher visibilityPublisher, IVisibilityPersistor visibilityPersistor,  
             IFrontendNotifier frontendNotifier,
             params Func<IFrontendQuery>[] subscriptors)
         {

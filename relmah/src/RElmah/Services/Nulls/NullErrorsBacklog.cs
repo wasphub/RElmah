@@ -8,11 +8,11 @@ using RElmah.Foundation;
 
 namespace RElmah.Services.Nulls
 {
-    class NullErrorsBacklog : IErrorsBacklog
+    class NullErrorsBacklog : IErrorsBacklogWriter
     {
         private NullErrorsBacklog() { }
 
-        public static IErrorsBacklog Instance = new NullErrorsBacklog();
+        public static IErrorsBacklogWriter Instance = new NullErrorsBacklog();
 
         public Task Store(ErrorPayload payload)
         {

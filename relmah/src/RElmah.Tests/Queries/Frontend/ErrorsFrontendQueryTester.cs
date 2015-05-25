@@ -45,7 +45,7 @@ namespace RElmah.Tests.Queries.Frontend
                     {
                         GetErrorsStream = () => Observable.Empty<ErrorPayload>()
                     },
-                    ErrorsBacklog = new StubIErrorsBacklog(),
+                    ErrorsBacklog = new StubIErrorsBacklogWriter(),
                     VisibilityPersistor = new StubIVisibilityPersistor
                     {
                         GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1", "a1") })
@@ -84,7 +84,7 @@ namespace RElmah.Tests.Queries.Frontend
                         }
                         ).ToObservable()
                     },
-                    ErrorsBacklog = new StubIErrorsBacklog(),
+                    ErrorsBacklog = new StubIErrorsBacklogWriter(),
                     VisibilityPersistor = new StubIVisibilityPersistor
                     {
                         GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1", "a1") })
@@ -125,7 +125,7 @@ namespace RElmah.Tests.Queries.Frontend
                         }
                         ).ToObservable()
                     },
-                    ErrorsBacklog = new StubIErrorsBacklog(),
+                    ErrorsBacklog = new StubIErrorsBacklogWriter(),
                     VisibilityPersistor = new StubIVisibilityPersistor
                     {
                         GetUserSourcesString = _ => Task.FromResult((IEnumerable<Source>)new[] { Source.Create("a1", "a1") })

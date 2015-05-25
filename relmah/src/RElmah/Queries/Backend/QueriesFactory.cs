@@ -10,14 +10,14 @@ namespace RElmah.Queries.Backend
     public class QueriesFactory : IBackendQueriesFactory
     {
         private readonly IErrorsInbox _errorsInbox;
-        private readonly IErrorsBacklog _errorsBacklog;
+        private readonly IErrorsBacklogWriter _errorsBacklog;
         private readonly IErrorsBacklogReader _errorsBacklogReader;
         private readonly IVisibilityPublisher _visibilityPublisher;
         private readonly IVisibilityPersistor _visibilityPersistor;
         private readonly IBackendNotifier _backendNotifier;
         private readonly Func<IBackendQuery>[] _subscriptors;
 
-        public QueriesFactory(IErrorsInbox errorsInbox, IErrorsBacklog errorsBacklog, IErrorsBacklogReader errorsBacklogReader, IVisibilityPublisher visibilityPublisher, IVisibilityPersistor visibilityPersistor,
+        public QueriesFactory(IErrorsInbox errorsInbox, IErrorsBacklogWriter errorsBacklog, IErrorsBacklogReader errorsBacklogReader, IVisibilityPublisher visibilityPublisher, IVisibilityPersistor visibilityPersistor,
             IBackendNotifier backendNotifier,
             params Func<IBackendQuery>[] subscriptors)
         {

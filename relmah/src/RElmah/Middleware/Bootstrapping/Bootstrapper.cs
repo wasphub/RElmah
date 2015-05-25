@@ -48,7 +48,7 @@ namespace RElmah.Middleware.Bootstrapping
                 () => new VisibilityQuery(settings.Side == Side.Frontend));
 
             //Infrastructure
-            registry.Register(typeof(IErrorsBacklog),          () => ebl);
+            registry.Register(typeof(IErrorsBacklogWriter),          () => ebl);
             registry.Register(typeof(IErrorsInbox),            () => fei);
             registry.Register(typeof(IVisibilityPublisher),        () => dh);
             registry.Register(typeof(IVisibilityPersistor),        () => dh);
