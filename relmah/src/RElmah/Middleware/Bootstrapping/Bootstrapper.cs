@@ -23,9 +23,11 @@ namespace RElmah.Middleware.Bootstrapping
         public static T Prepare<T>(this IRegistry registry, IFrontendNotifier frontendNotifier, Func<string, IErrorsInbox, IVisibilityPersistor, IBackendNotifier> frontendBackendNotifierCreator, Func<IBackendNotifier> backendFrontendNotifierCreator, Func<IFrontendQueriesFactory, IBackendQueriesFactory, IErrorsInbox, IVisibilityPersistor, IBackendNotifier, T> resultor, IIdentityProvider identityProvider, BootstrapSettings settings)
         {
             var ebl = new InMemoryErrorsBacklog();
-            var fei = new QueuedErrorsInbox(ebl, 30, 1);
 
-            var bei = new QueuedErrorsInbox();   //for backend only
+            var bufferSize   = 10;
+            var bufferPeriod = 1;
+            var fei = new QueuedErrorsInbox(ebl, bufferSize, bufferPeriod);
+            var bei = new QueuedErrorsInbox(bufferSize, bufferPeriod);   //for backend only
 
             var ds  = settings.VisibilityStoreBuilder != null
                     ? settings.VisibilityStoreBuilder()
@@ -48,11 +50,11 @@ namespace RElmah.Middleware.Bootstrapping
                 () => new VisibilityQuery(settings.Side == Side.Frontend));
 
             //Infrastructure
-            registry.Register(typeof(IErrorsBacklogWriter),          () => ebl);
+            registry.Register(typeof(IErrorsBacklogWriter),    () => ebl);
             registry.Register(typeof(IErrorsInbox),            () => fei);
-            registry.Register(typeof(IVisibilityPublisher),        () => dh);
-            registry.Register(typeof(IVisibilityPersistor),        () => dh);
-            registry.Register(typeof(IVisibilityStore),            () => ds);
+            registry.Register(typeof(IVisibilityPublisher),    () => dh);
+            registry.Register(typeof(IVisibilityPersistor),    () => dh);
+            registry.Register(typeof(IVisibilityStore),        () => ds);
             registry.Register(typeof(IFrontendQueriesFactory), () => fqf);
             registry.Register(typeof(IBackendQueriesFactory),  () => bqf);
 

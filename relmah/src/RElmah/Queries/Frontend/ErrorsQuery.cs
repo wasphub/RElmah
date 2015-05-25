@@ -4,7 +4,9 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using RElmah.Common.Extensions;
 using RElmah.Common.Model;
+using RElmah.Errors;
 using RElmah.Foundation;
 
 namespace RElmah.Queries.Frontend
@@ -18,12 +20,21 @@ namespace RElmah.Queries.Frontend
             var name = user.Value.Name;
             Func<Task<IEnumerable<Source>>> getUserSources = async () => await targets.VisibilityPersistor.GetUserSources(name);
 
-            var frontend = targets.FrontendErrorsInbox != null 
-                         ? targets.FrontendErrorsInbox.GetErrorsStream() 
-                         : Observable.Empty<ErrorPayload>();
-            var backend  = targets.BackendErrorsInbox != null 
-                         ? targets.BackendErrorsInbox.GetErrorsStream() 
-                         : Observable.Empty<ErrorPayload>();
+            Func<IErrorsInbox, IObservable<ErrorPayload>> bufferThenStreamGen = ei =>
+                Observable.Return(ei)
+                          .Where(i => i != null)
+                          .SelectMany(i => i.GetErrorBuffersStream()
+                                            .Take(1)
+                                            .SelectMany(es => i.GetErrorsStream()
+                                                              .Where(s => !es.Select(e => e.ErrorId).Contains(s.ErrorId))
+                                                              .StartWith(es)));
+
+            var frontend = 
+                bufferThenStreamGen(targets.FrontendErrorsInbox);
+
+            var backend =
+                bufferThenStreamGen(targets.BackendErrorsInbox);
+
             var errors =
                 from e in frontend.Merge(backend)
                 from sources in getUserSources()
