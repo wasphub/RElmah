@@ -79,7 +79,7 @@ namespace RElmah.Queries.Frontend
             var name         = u.Value.Name;
             var subscription = _subscriptions.Get(name);
 
-            if (subscription)
+            if (subscription != null)
             {
                 if (!subscription.IsDisposed)
                     subscription.Dispose();
