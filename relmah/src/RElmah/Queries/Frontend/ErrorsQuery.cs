@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using RElmah.Common.Extensions;
 using RElmah.Common.Model;
 using RElmah.Errors;
+using RElmah.Extensions;
 using RElmah.Foundation;
 
 namespace RElmah.Queries.Frontend
@@ -29,11 +30,9 @@ namespace RElmah.Queries.Frontend
                                                               .Where(s => !es.Select(e => e.ErrorId).Contains(s.ErrorId))
                                                               .StartWith(es)));
 
-            var frontend = 
-                bufferThenStreamGen(targets.FrontendErrorsInbox);
+            var frontend = bufferThenStreamGen(targets.FrontendErrorsInbox);
 
-            var backend =
-                bufferThenStreamGen(targets.BackendErrorsInbox);
+            var backend  = bufferThenStreamGen(targets.BackendErrorsInbox);
 
             var errors =
                 from e in frontend.Merge(backend)
