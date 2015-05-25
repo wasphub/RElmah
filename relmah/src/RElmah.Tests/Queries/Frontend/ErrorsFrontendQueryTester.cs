@@ -41,7 +41,7 @@ namespace RElmah.Tests.Queries.Frontend
                             notifications.Add(new NamedPayload { Name = n, Payload = p });
                         }
                     },
-                    ErrorsInbox = new StubIErrorsInbox
+                    FrontendErrorsInbox = new StubIErrorsInbox
                     {
                         GetErrorsStream = () => Observable.Empty<ErrorPayload>()
                     },
@@ -75,7 +75,7 @@ namespace RElmah.Tests.Queries.Frontend
                             notifications.Add(new NamedPayload { Name = n, Payload = p });
                         }
                     },
-                    ErrorsInbox = new StubIErrorsInbox
+                    FrontendErrorsInbox = new StubIErrorsInbox
                     {
                         GetErrorsStream = () => (
                             new[]
@@ -114,7 +114,7 @@ namespace RElmah.Tests.Queries.Frontend
                             notifications.Add(new NamedPayload { Name = n, Payload = p });
                         }
                     },
-                    ErrorsInbox = new StubIErrorsInbox
+                    FrontendErrorsInbox = new StubIErrorsInbox
                     {
                         GetErrorsStream = () => (
                             new[]

@@ -44,7 +44,7 @@ namespace RElmah.Tests.Queries.Frontend
                             notifications.Add(new NamedRecap { Name = n, Recap = r });
                         }
                     },
-                    ErrorsInbox = new StubIErrorsInbox
+                    FrontendErrorsInbox = new StubIErrorsInbox
                     {
                         GetErrorsStream = () => Observable.Empty<ErrorPayload>()
                     },
@@ -106,7 +106,7 @@ namespace RElmah.Tests.Queries.Frontend
                             notifications.Add(new NamedRecap { Name = n, Recap = r });
                         }
                     },
-                    ErrorsInbox = new StubIErrorsInbox
+                    FrontendErrorsInbox = new StubIErrorsInbox
                     {
                         GetErrorsStream = () => errorsStream
                     },

@@ -52,7 +52,7 @@ namespace RElmah.Queries.Frontend
                 select subscriptor().Run(ut, new RunTargets
                 {
                     FrontendNotifier = _frontendNotifier,
-                    ErrorsInbox = _errorsInbox,
+                    FrontendErrorsInbox = _errorsInbox,
                     BackendErrorsInbox = _backendErrorsInbox,
                     ErrorsBacklog = _errorsBacklog,
                     ErrorsBacklogReader = _errorsBacklogReader,

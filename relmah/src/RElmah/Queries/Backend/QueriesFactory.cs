@@ -36,7 +36,7 @@ namespace RElmah.Queries.Backend
                 subscriptor => subscriptor().Run(new RunTargets
                 {
                     BackendNotifier = _backendNotifier,
-                    ErrorsInbox = _errorsInbox,
+                    FrontendErrorsInbox = _errorsInbox,
                     ErrorsBacklog = _errorsBacklog,
                     ErrorsBacklogReader = _errorsBacklogReader,
                     VisibilityPersistor = _visibilityPersistor,

@@ -18,8 +18,8 @@ namespace RElmah.Queries.Frontend
             var name = user.Value.Name;
             Func<Task<IEnumerable<Source>>> getUserSources = async () => await targets.VisibilityPersistor.GetUserSources(name);
 
-            var frontend = targets.ErrorsInbox != null 
-                         ? targets.ErrorsInbox.GetErrorsStream() 
+            var frontend = targets.FrontendErrorsInbox != null 
+                         ? targets.FrontendErrorsInbox.GetErrorsStream() 
                          : Observable.Empty<ErrorPayload>();
             var backend  = targets.BackendErrorsInbox != null 
                          ? targets.BackendErrorsInbox.GetErrorsStream() 
