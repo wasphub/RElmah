@@ -23,7 +23,7 @@ namespace RElmah.Middleware.Bootstrapping
         public static T Prepare<T>(this IRegistry registry, IFrontendNotifier frontendNotifier, Func<string, IErrorsInbox, IVisibilityPersistor, IBackendNotifier> frontendBackendNotifierCreator, Func<IBackendNotifier> backendFrontendNotifierCreator, Func<IFrontendQueriesFactory, IBackendQueriesFactory, IErrorsInbox, IVisibilityPersistor, IBackendNotifier, T> resultor, IIdentityProvider identityProvider, BootstrapSettings settings)
         {
             var ebl = new InMemoryErrorsBacklog();
-            var fei = new QueuedErrorsInbox(ebl);
+            var fei = new QueuedErrorsInbox(ebl, 30, 1);
 
             var bei = new QueuedErrorsInbox();   //for backend only
 

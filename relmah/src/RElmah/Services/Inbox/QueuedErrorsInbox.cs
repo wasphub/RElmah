@@ -6,23 +6,29 @@ using System.Threading.Tasks;
 using RElmah.Common.Model;
 using RElmah.Errors;
 using RElmah.Services.Nulls;
+using System.Collections.Generic;
 
 namespace RElmah.Services.Inbox
 {
     public class QueuedErrorsInbox : IErrorsInbox
     {
         private readonly IErrorsBacklog _errorsBacklog;
+        private readonly int _bufferSize;
+        private readonly int _bufferPeriod;
 
         private readonly BlockingCollection<ErrorPayload> _queue = new BlockingCollection<ErrorPayload>(new ConcurrentQueue<ErrorPayload>());
 
         private readonly Subject<ErrorPayload> _errors;
         private readonly IObservable<ErrorPayload> _publishedErrors;
 
-        public QueuedErrorsInbox() : this(NullErrorsBacklog.Instance) { }
+        public QueuedErrorsInbox() : this(NullErrorsBacklog.Instance, 30, 1) { }
 
-        public QueuedErrorsInbox(IErrorsBacklog errorsBacklog)
+        public QueuedErrorsInbox(IErrorsBacklog errorsBacklog, int bufferSize, int bufferPeriod)
         {
             _errorsBacklog = errorsBacklog;
+
+            _bufferSize = bufferSize;
+            _bufferPeriod = bufferPeriod;
 
             Task.Run(() =>
             {
@@ -47,6 +53,13 @@ namespace RElmah.Services.Inbox
         public IObservable<ErrorPayload> GetErrorsStream()
         {
             return _publishedErrors;
+        }
+
+        public IObservable<IList<ErrorPayload>> GetErrorBuffersStream()
+        {
+            return _publishedErrors.Buffer(
+                TimeSpan.FromSeconds(_bufferSize), 
+                TimeSpan.FromSeconds(_bufferPeriod));
         }
     }
 }

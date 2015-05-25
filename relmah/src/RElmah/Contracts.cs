@@ -91,6 +91,7 @@ namespace RElmah.Publishers
     public interface IErrorsPublisher
     {
         IObservable<ErrorPayload> GetErrorsStream();
+        IObservable<IList<ErrorPayload>> GetErrorBuffersStream();
     }
 
     public interface IVisibilityPublisher
