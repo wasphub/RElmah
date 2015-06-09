@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -9,6 +10,7 @@ using RElmah.Common.Model;
 using RElmah.Errors;
 using RElmah.Extensions;
 using RElmah.Foundation;
+using System.Diagnostics;
 
 namespace RElmah.Queries.Frontend
 {
@@ -16,23 +18,24 @@ namespace RElmah.Queries.Frontend
     {
         public async Task<IDisposable> Run(ValueOrError<User> user, RunTargets targets)
         {
-            if (user.Value.Tokens.Count() > 1) return Disposable.Empty;
-
             var name = user.Value.Name;
             Func<Task<IEnumerable<Source>>> getUserSources = async () => await targets.VisibilityPersistor.GetUserSources(name);
 
-            Func<IErrorsInbox, IObservable<ErrorPayload>> bufferThenStreamGen = ei =>
-                Observable.Return(ei)
-                          .Where(i => i != null)
-                          .SelectMany(i => i.GetErrorBuffersStream()
-                                            .Take(1)
-                                            .SelectMany(es => i.GetErrorsStream()
-                                                              .Where(s => !es.Select(e => e.ErrorId).Contains(s.ErrorId))
-                                                              .StartWith(es)));
+            Func<IErrorsInbox, IObservable<ErrorPayload>> bufferGen = ei => 
+                from i in Observable.Return(ei)
+                where i != null
+                from ss in i.GetErrorBuffersStream().Take(1)
+                from s in ss
+                select s;
 
-            var frontend = bufferThenStreamGen(targets.FrontendErrorsInbox);
+            Func<IErrorsInbox, IObservable<ErrorPayload>> streamGen = ei => ei.GetErrorsStream();
 
-            var backend  = bufferThenStreamGen(targets.BackendErrorsInbox);
+            var frontend = user.Value.Tokens.Count() == 1
+                         ? bufferGen(targets.FrontendErrorsInbox).Concat(streamGen(targets.FrontendErrorsInbox))
+                         : bufferGen(targets.FrontendErrorsInbox);
+            var backend  = user.Value.Tokens.Count() == 1
+                         ? bufferGen(targets.BackendErrorsInbox).Concat(streamGen(targets.BackendErrorsInbox))
+                         : bufferGen(targets.BackendErrorsInbox);
 
             var errors =
                 from e in frontend.Merge(backend)

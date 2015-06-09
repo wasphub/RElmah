@@ -45,9 +45,7 @@ namespace RElmah.Services.Inbox
 
             _errors                = new Subject<ErrorPayload>();
             _publishedErrors       = _errors.Publish().RefCount();
-            var connectable        = GenerateErrorBuffersStream().Publish();
-            _publishedErrorBuffers = connectable;
-            connectable.Connect();
+            _publishedErrorBuffers = GenerateErrorBuffersStream().Publish().RefCount();
         }
 
         public Task Post(ErrorPayload payload)
@@ -70,14 +68,14 @@ namespace RElmah.Services.Inbox
         IObservable<IList<ErrorPayload>> GenerateErrorBuffersStream()
         {
             var running =
-                _errors.Buffer(TimeSpan.FromSeconds(_bufferSize), TimeSpan.FromSeconds(_bufferPeriod))
-                       .Do(onNext: es => { Trace.WriteLine(string.Format("running -> {0}", es.Count)); });
+                _publishedErrors.Buffer(TimeSpan.FromSeconds(_bufferSize), TimeSpan.FromSeconds(_bufferPeriod))
+                                .Do(onNext: es => { Trace.WriteLine(string.Format("running -> {0}", es.Count)); });
 
             var gen =
                 Observable.Range(1, _bufferSize / _bufferPeriod)
-                          .SelectMany(x => _errors.Buffer(TimeSpan.FromSeconds(x * _bufferPeriod), TimeSpan.FromSeconds(_bufferPeriod))
-                                                  .Take(1)
-                                                  .Do(onNext: es => { Trace.WriteLine(string.Format("gen {0} -> {1}", x, es.Count)); }));
+                          .SelectMany(x => _publishedErrors.Buffer(TimeSpan.FromSeconds(x * _bufferPeriod), TimeSpan.FromSeconds(_bufferPeriod))
+                                                           .Take(1)
+                                                           .Do(onNext: es => { Trace.WriteLine(string.Format("gen {0} -> {1}", x, es.Count)); }));
             var intro = Observable.Concat(gen);
 
             var pi = intro.Publish();
