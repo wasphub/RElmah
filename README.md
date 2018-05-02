@@ -5,7 +5,7 @@ If you already used [ElmahR] in the past, you already know what **RElmah** is ab
 
 RElmah has clear goals: being a scalable streaming system for errors, with a modular and extensible design, and nevertheless minimal and simple.
 
-How is it done?
+How is it done??
 ------
 
 In order to achieve its goals a strong focus has been put on specific characteristics:
